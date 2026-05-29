@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the SMN paper (preferred-citation below)."
+title: "smn-lab: an experimental bench for cognitive science based on the SMN architecture"
+authors:
+  - given-names: G.
+    family-names: Nagarjuna
+  - given-names: Durgaprasad
+    family-names: Karnam
+license: GPL-3.0-or-later
+repository-code: "https://github.com/REPLACE-ME/smn-lab"  # set once published
+keywords:
+  - embodied cognition
+  - cognitive science
+  - sensorimotor
+  - reafference
+  - MuJoCo
+  - Sensation Modulating Network
+preferred-citation:
+  type: article
+  title: "The Sensation Modulating Network"
+  authors:
+    - given-names: G.
+      family-names: Nagarjuna
+    - given-names: Durgaprasad
+      family-names: Karnam
+  year: 2026
+  url: "https://arxiv.org/abs/2605.26856"
+  notes: "arXiv:2605.26856"
