@@ -153,4 +153,10 @@ if __name__ == "__main__":
     print(f"  dead-reckoning drift: {drift*100:.2f} cm (final true-vs-estimated)")
     print("  verdict:", "PASS — built from its own body geometry + proprioception."
           if cov > 0.6 and prec > 0.6 else "PARTIAL — tune.")
+    datadir = os.path.join(here, "..", "data")
+    os.makedirs(datadir, exist_ok=True)
+    np.savez_compressed(os.path.join(datadir, "p2_world_model.npz"),
+                        hits=np.array(occ.pts), true_traj=true_traj, est_traj=est_traj,
+                        cov=cov, prec=prec, drift=drift)
+    print("[saved] data/p2_world_model.npz")
     plot(occ, true_traj, est_traj, cov, prec, drift, os.path.join(figdir, "p2_world_model.png"))

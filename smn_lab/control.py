@@ -124,7 +124,8 @@ class HAPExplorer:
 
     def __init__(self, angles_rad, d_halt: float = 0.4, d_go: float = 0.7,
                  turn: float = 0.9, steer_gain: float = 0.5, d_cap: float = 1.6,
-                 wander: float = 0.05, flip_prob: float = 0.15, seed: int = 0):
+                 wander: float = 0.05, flip_prob: float = 0.15,
+                 routing: str = "flat", seed: int = 0):
         self.angles = np.asarray(angles_rad, dtype=float)
         self.d_halt = d_halt
         self.d_go = d_go
@@ -133,10 +134,29 @@ class HAPExplorer:
         self.d_cap = d_cap
         self.wander = wander
         self.flip_prob = flip_prob
+        self.routing = routing            # "flat" | "hierarchical" -- the balance-beam topology
         self.rng = np.random.default_rng(seed)
         self.front_mask = np.abs(self.angles) <= np.radians(45) + 1e-6
+        # whisker groups for hierarchical (layered) routing
+        self._groups = [self.angles > np.radians(15),
+                        np.abs(self.angles) <= np.radians(15),
+                        self.angles < -np.radians(15)]
         self.turning = False
         self.sign = 1.0
+
+    def _steer_offset(self, d):
+        """Route whisker clearances into a steering angle. `flat`: pool all
+        whiskers at once (distributed). `hierarchical`: summarize each whisker
+        group first (layer 1), then combine the group summaries (layer 2)."""
+        if self.routing == "flat":
+            return float((self.angles * d).sum() / max(d.sum(), 1e-6))
+        ga, gc = [], []
+        for m in self._groups:
+            if m.any():
+                ga.append(float(self.angles[m].mean()))
+                gc.append(float(d[m].mean()))
+        ga, gc = np.array(ga), np.array(gc)
+        return float((ga * gc).sum() / max(gc.sum(), 1e-6))
 
     def command(self, dists):
         d = np.clip(np.asarray(dists, dtype=float), 0.0, self.d_cap)
@@ -153,8 +173,8 @@ class HAPExplorer:
                 self.turning = False
             else:
                 return self.sign * self.turn, 0.0     # halt and rotate in place
-        # cruise: steer gently toward the clearance-weighted open direction
-        offset = self.steer_gain * float((self.angles * d).sum() / max(d.sum(), 1e-6))
+        # cruise: steer toward open space, via the configured routing topology
+        offset = self.steer_gain * self._steer_offset(d)
         offset += self.rng.normal(0.0, self.wander)
         gate = float(np.clip((front - self.d_halt) / (self.d_go - self.d_halt), 0.0, 1.0))
         return offset, gate

@@ -72,9 +72,21 @@ cd experiments && ../.venv/bin/python p1_world_model.py
 - **Done** — single-CAZ reafference (the self/world register) in the body.
 - **Done** — multi-CAZ agent explores an arena and builds a faithful world model.
 - **Done** — body-geometry-relative, self-localized world model: an explicit body schema (located drive zones + whiskers), locomotion from located opponent drive zones, and a map built from proprioceptive dead-reckoning rather than any absolute pose (~97% coverage, ~0.2 cm drift).
-- **Next** — swappable balance-beam topology; sweeps over {layered/non-layered, hierarchical/distributed, ±BAP, ±HAP}; measure how the constructed state-space changes.
-- Multi-agent (shared intentionality / self-world-other).
+- **Done** — the balance-beam sweep: the constructed world model measured across information-routing topology (flat vs hierarchical), body morphology (whisker count, drive track width), the ±BAP/±HAP toggles, and proprioceptive noise. **Findings:** removing the basal drive (−BAP) or the haltable affordance-action (−HAP) collapses coverage (20% / 44% vs 97%) — both are necessary to build a world model; proprioceptive noise smears the map (precision 100% → 74%, drift 6.7 cm); routing and morphology are robust at this task difficulty. See `figures/p2_topology_sweep.png`.
+- **Next** — multi-agent (shared intentionality / self-world-other).
 - Configuration-driven scenarios and rendering for reuse and presentation.
+
+## See the setup
+`experiments/scene_geometry.py` draws the **body schema** (every zone's
+body-frame location, the opponent drive pair, the whisker fan) and the **agent
+placed in the scene** → `figures/agent_geometry.png`, plus a top-down MuJoCo
+render `figures/scene_render.png` when a GL backend is available.
+
+## Data & reproducibility
+All randomness is seeded, so runs are byte-reproducible.
+- **Generated data → `data/`** (gitignored by directory name): each experiment writes its **point clouds + true/estimated trajectories** (`.npz`) and a `sweep_results.csv`. The data coverage/precision are computed from these. Regenerable, so kept out of git.
+- **Curated demo data → `samples/`** (tracked): small example files with a [README](samples/README.md) explaining the format, so you can inspect the data without running anything.
+- For a paper, a versioned snapshot (and a Zenodo DOI) will provide a frozen, citable dataset.
 
 ## Layout
 - `smn_lab/body.py` — `MouseSchema`: the explicit body geometry (every zone's body-frame location), shared by the model builder and the agent.
@@ -84,6 +96,8 @@ cd experiments && ../.venv/bin/python p1_world_model.py
 - `experiments/p0_reafference.py` — single-CAZ reafference.
 - `experiments/p1_world_model.py` — multi-CAZ agent builds a world model (uses true pose).
 - `experiments/p2_world_model.py` — body-geometry-relative, self-localized world model (proprioception only).
+- `experiments/p2_topology_sweep.py` — the balance-beam sweep (routing × morphology × ±BAP/±HAP × proprioceptive noise).
+- `experiments/scene_geometry.py` — draws the body schema + the agent in the scene (and a MuJoCo render).
 
 ## Citation
 If you use this bench in published work, please cite the SMN paper:

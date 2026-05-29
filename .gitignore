@@ -1,3 +1,10 @@
 .venv/
 __pycache__/
 *.pyc
+
+# Dynamically generated, reproducible run data (point clouds, trajectories,
+# summaries) is written here by the experiments. Regenerable from fixed seeds,
+# so it is ignored by DIRECTORY name (not by extension -- an extension rule
+# would also catch the curated samples). Curated demo data lives in samples/
+# and IS tracked.
+data/

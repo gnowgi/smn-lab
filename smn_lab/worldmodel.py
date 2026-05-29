@@ -104,3 +104,11 @@ def coverage_precision(hit_pts, truth_pts, eps: float = 0.06, max_hits: int = 80
         return hit / len(A)
 
     return float(frac_within(T, H, eps)), float(frac_within(H, T, eps))
+
+
+def dump_npz(path: str, **arrays) -> None:
+    """Persist run data (point clouds, trajectories, metrics) for reanalysis.
+    A lab keeps its raw data; coverage/precision are derived, not the record."""
+    import os
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    np.savez_compressed(path, **arrays)
