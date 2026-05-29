@@ -8,3 +8,6 @@ __pycache__/
 # would also catch the curated samples). Curated demo data lives in samples/
 # and IS tracked.
 data/
+
+# built documentation site (mkdocs)
+site/

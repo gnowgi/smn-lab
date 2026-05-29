@@ -82,6 +82,18 @@ body-frame location, the opponent drive pair, the whisker fan) and the **agent
 placed in the scene** → `figures/agent_geometry.png`, plus a top-down MuJoCo
 render `figures/scene_render.png` when a GL backend is available.
 
+## Documentation
+Full, per-experiment documentation lives in [`docs/`](docs/index.md) — Markdown,
+**MkDocs / Read-the-Docs-ready** (`pip install -r docs/requirements.txt && mkdocs serve`).
+
+## What the simulation assumes
+[`docs/assumptions.md`](docs/assumptions.md) is a living record separating what
+the physics engine **simulates**, what the control code **computes**, and what is
+an **idealization**. Assumptions are *layered* — a common core plus per-experiment
+specifics that can add or override — and stated plainly (e.g. the whiskers are
+distal rays, not tactile bristles; the map does not yet decay; co-activation data
+at rest is not modelled).
+
 ## Data & reproducibility
 All randomness is seeded, so runs are byte-reproducible.
 - **Generated data → `data/`** (gitignored by directory name): each experiment writes its **point clouds + true/estimated trajectories** (`.npz`) and a `sweep_results.csv`. The data coverage/precision are computed from these. Regenerable, so kept out of git.

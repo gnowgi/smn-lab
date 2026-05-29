@@ -1,0 +1,18 @@
+site_name: smn-lab
+site_description: An experimental bench for cognitive science based on the SMN architecture
+repo_url: https://github.com/REPLACE-ME/smn-lab
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Concepts: concepts.md
+  - Assumptions: assumptions.md
+  - Experiments:
+      - P0 — reafference: experiments/p0_reafference.md
+      - P1 — world model: experiments/p1_world_model.md
+      - P2 — self-localized: experiments/p2_world_model.md
+      - Balance-beam sweep: experiments/p2_topology_sweep.md
+markdown_extensions:
+  - tables
+  - admonition
+  - pymdownx.superfences
