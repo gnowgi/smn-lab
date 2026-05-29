@@ -71,16 +71,19 @@ cd experiments && ../.venv/bin/python p1_world_model.py
 ## Roadmap
 - **Done** — single-CAZ reafference (the self/world register) in the body.
 - **Done** — multi-CAZ agent explores an arena and builds a faithful world model.
+- **Done** — body-geometry-relative, self-localized world model: an explicit body schema (located drive zones + whiskers), locomotion from located opponent drive zones, and a map built from proprioceptive dead-reckoning rather than any absolute pose (~97% coverage, ~0.2 cm drift).
 - **Next** — swappable balance-beam topology; sweeps over {layered/non-layered, hierarchical/distributed, ±BAP, ±HAP}; measure how the constructed state-space changes.
 - Multi-agent (shared intentionality / self-world-other).
 - Configuration-driven scenarios and rendering for reuse and presentation.
 
 ## Layout
-- `smn_lab/model.py` — MJCF body/world builders.
-- `smn_lab/control.py` — `OpponentBoard` (a zone's communication board), `ReafferencePredictor` (a self-state forward model), `CPG` (the BAP drive), `HAPExplorer` (affordance-recruited haltable action); the balance beam lives here.
+- `smn_lab/body.py` — `MouseSchema`: the explicit body geometry (every zone's body-frame location), shared by the model builder and the agent.
+- `smn_lab/model.py` — MJCF body/world builders (`build_p0/p1/p2_xml`).
+- `smn_lab/control.py` — `OpponentBoard`, `ReafferencePredictor`, `CPG` (BAP drive), `HAPExplorer`, `DifferentialDrive` (located drive zones), `DeadReckoner` (proprioceptive self-localization); the balance beam lives here.
 - `smn_lab/worldmodel.py` — `OccupancyMap` and the point-based map score (the constructed "picture").
-- `experiments/p0_reafference.py` — the single-CAZ reafference experiment.
-- `experiments/p1_world_model.py` — the multi-CAZ agent that builds and scores a world model.
+- `experiments/p0_reafference.py` — single-CAZ reafference.
+- `experiments/p1_world_model.py` — multi-CAZ agent builds a world model (uses true pose).
+- `experiments/p2_world_model.py` — body-geometry-relative, self-localized world model (proprioception only).
 
 ## Citation
 If you use this bench in published work, please cite the SMN paper:

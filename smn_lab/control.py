@@ -158,3 +158,50 @@ class HAPExplorer:
         offset += self.rng.normal(0.0, self.wander)
         gate = float(np.clip((front - self.d_halt) / (self.d_go - self.d_halt), 0.0, 1.0))
         return offset, gate
+
+
+class DifferentialDrive:
+    """Communication board for the two located rear drive zones. It converts a
+    desired (forward, turn) command into pull-only activations of the drive
+    modulators, and computes the net body-frame force and z-torque from the
+    zones' positions -- so locomotion and steering both emerge from the body
+    geometry rather than from a central thrust."""
+
+    def __init__(self, schema, amax: float = 1.2, turn_gain: float = 1.0):
+        self.zones = schema.drive_zones
+        self.amax = amax
+        self.turn_gain = turn_gain
+
+    def activations(self, forward: float, turn: float) -> dict:
+        # Each drive zone is an opponent pair (a forward AND a backward puller),
+        # so its net activation is signed. This is what lets the agent rotate in
+        # place: drive_L backward + drive_R forward gives pure torque, no net
+        # force -- impossible with forward-only thrusters.
+        d = self.turn_gain * turn
+        return {"drive_L": float(np.clip(forward - d, -self.amax, self.amax)),
+                "drive_R": float(np.clip(forward + d, -self.amax, self.amax))}
+
+    def wrench(self, acts: dict):
+        """Net body-frame forward force Fx and z-torque tau from the located,
+        pull-only forward drives (force F at (x, y) gives z-torque -y*F)."""
+        Fx = float(sum(acts.values()))
+        tau = float(sum(-y * acts[name] for name, (x, y) in self.zones.items()))
+        return Fx, tau
+
+
+class DeadReckoner:
+    """Self-localization from proprioception. The agent never reads its absolute
+    position; it integrates the body-frame linear velocity (velocimeter) and yaw
+    rate (gyro) that it senses, building its world model in this self-estimated
+    frame, anchored at its known starting pose. Estimation error accumulates --
+    which is exactly the kind of thing the coupling-topology experiment probes."""
+
+    def __init__(self, x0: float = 0.0, y0: float = 0.0, yaw0: float = 0.0):
+        self.x, self.y, self.yaw = x0, y0, yaw0
+
+    def update(self, vx_body: float, vy_body: float, wz: float, dt: float):
+        self.yaw += wz * dt
+        c, s = np.cos(self.yaw), np.sin(self.yaw)
+        self.x += (vx_body * c - vy_body * s) * dt
+        self.y += (vx_body * s + vy_body * c) * dt
+        return self.x, self.y, self.yaw
