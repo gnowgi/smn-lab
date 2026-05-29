@@ -53,17 +53,34 @@ a self-motion phase, then:
 The self/world distinction emerges structurally, from the wiring and real
 physics. Output: `figures/p0_reafference.png`.
 
+## Also available — a multi-CAZ agent that builds a world model
+A planar "mouse" with a steering Coordinated Action Zone (pull-only antagonist
+pair) and a five-whisker rangefinder fan explores a walled arena with two
+objects. A Basal Action Pattern (CPG) provides the locomotor drive; a Haltable
+Action Pattern, recruited by the whisker affordances, steers toward open space
+and rotates in place when blocked. From its own pose plus each whisker's known
+angle and measured distance, the agent accumulates hits into an occupancy map —
+**the picture it constructs of its world from action and modulated sensation**.
+It reconstructs the walls and both objects at **~97% surface coverage, ~99%
+precision**. Output: `figures/p1_world_model.png`.
+
+```bash
+cd experiments && ../.venv/bin/python p1_world_model.py
+```
+
 ## Roadmap
 - **Done** — single-CAZ reafference (the self/world register) in the body.
-- Multi-CAZ agent that explores an arena and builds a state-space (the constructed world model).
-- Swappable balance-beam topology; sweeps over {layered/non-layered, hierarchical/distributed, ±BAP, ±HAP}; log state-spaces and register emergence.
+- **Done** — multi-CAZ agent explores an arena and builds a faithful world model.
+- **Next** — swappable balance-beam topology; sweeps over {layered/non-layered, hierarchical/distributed, ±BAP, ±HAP}; measure how the constructed state-space changes.
 - Multi-agent (shared intentionality / self-world-other).
 - Configuration-driven scenarios and rendering for reuse and presentation.
 
 ## Layout
 - `smn_lab/model.py` — MJCF body/world builders.
-- `smn_lab/control.py` — `OpponentBoard` (a zone's communication board) and `ReafferencePredictor` (a self-state forward model); the balance beam lives here.
-- `experiments/p0_reafference.py` — the single-CAZ reafference experiment (run, log, plot, stats).
+- `smn_lab/control.py` — `OpponentBoard` (a zone's communication board), `ReafferencePredictor` (a self-state forward model), `CPG` (the BAP drive), `HAPExplorer` (affordance-recruited haltable action); the balance beam lives here.
+- `smn_lab/worldmodel.py` — `OccupancyMap` and the point-based map score (the constructed "picture").
+- `experiments/p0_reafference.py` — the single-CAZ reafference experiment.
+- `experiments/p1_world_model.py` — the multi-CAZ agent that builds and scores a world model.
 
 ## Citation
 If you use this bench in published work, please cite the SMN paper:

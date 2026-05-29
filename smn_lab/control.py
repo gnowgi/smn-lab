@@ -94,3 +94,67 @@ class ReafferencePredictor:
 
     def residual(self, theta: float, reading: float) -> float:
         return reading - self.predict(theta)
+
+
+class CPG:
+    """A Basal Action Pattern: an endogenous locomotor drive (baseline
+    self-propulsion), optionally with a gentle gait-like oscillation. It returns
+    a forward thrust magnitude; the affordance layer (HAP) gates it."""
+
+    def __init__(self, thrust: float = 0.8, osc_amp: float = 0.0, freq: float = 1.0):
+        self.thrust = thrust
+        self.osc_amp = osc_amp
+        self.w = 2 * np.pi * freq
+
+    def drive(self, t: float) -> float:
+        return self.thrust * (1.0 + self.osc_amp * np.sin(self.w * t))
+
+
+class HAPExplorer:
+    """A Haltable Action Pattern recruited by whisker affordances: cruise toward
+    open space, and -- when the forward arc is blocked -- halt the drive and
+    rotate in place toward the more open side until the way is clear. It thus
+    interrupts and recomposes the BAP-driven locomotion on the basis of what the
+    transducers sense.
+
+    `command(dists)` returns `(heading_offset, drive_gate)`:
+      heading_offset -- per-step turn command (rad; + = toward the agent's left);
+      drive_gate     -- in [0, 1], multiplies the BAP thrust (0 = halt).
+    """
+
+    def __init__(self, angles_rad, d_halt: float = 0.4, d_go: float = 0.7,
+                 turn: float = 0.9, steer_gain: float = 0.5, d_cap: float = 1.6,
+                 wander: float = 0.05, flip_prob: float = 0.15, seed: int = 0):
+        self.angles = np.asarray(angles_rad, dtype=float)
+        self.d_halt = d_halt
+        self.d_go = d_go
+        self.turn = turn
+        self.steer_gain = steer_gain
+        self.d_cap = d_cap
+        self.wander = wander
+        self.flip_prob = flip_prob
+        self.rng = np.random.default_rng(seed)
+        self.front_mask = np.abs(self.angles) <= np.radians(45) + 1e-6
+        self.turning = False
+        self.sign = 1.0
+
+    def command(self, dists):
+        d = np.clip(np.asarray(dists, dtype=float), 0.0, self.d_cap)
+        front = float(d[self.front_mask].min())
+        # enter a committed turn when the forward arc is blocked
+        if not self.turning and front < self.d_halt:
+            self.turning = True
+            left, right = d[self.angles > 0].sum(), d[self.angles < 0].sum()
+            self.sign = 1.0 if left >= right else -1.0
+            if self.rng.random() < self.flip_prob:   # occasional flip breaks limit cycles
+                self.sign = -self.sign
+        if self.turning:
+            if front > self.d_go:                     # cleared: resume cruising
+                self.turning = False
+            else:
+                return self.sign * self.turn, 0.0     # halt and rotate in place
+        # cruise: steer gently toward the clearance-weighted open direction
+        offset = self.steer_gain * float((self.angles * d).sum() / max(d.sum(), 1e-6))
+        offset += self.rng.normal(0.0, self.wander)
+        gate = float(np.clip((front - self.d_halt) / (self.d_go - self.d_halt), 0.0, 1.0))
+        return offset, gate
