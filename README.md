@@ -86,8 +86,8 @@ placed in the scene** → `figures/agent_geometry.png`, plus a top-down MuJoCo
 render `figures/scene_render.png` when a GL backend is available.
 
 ## Documentation
-Full, per-experiment documentation lives in [`docs/`](docs/index.md) — Markdown,
-**MkDocs / Read-the-Docs-ready** (`pip install -r docs/requirements.txt && mkdocs serve`).
+Live docs: **<https://smn-lab.readthedocs.io>**. The Markdown source lives in
+[`docs/`](docs/index.md); build it locally with `pip install -r docs/requirements.txt && mkdocs serve`.
 
 ## What the simulation assumes
 [`docs/assumptions.md`](docs/assumptions.md) is a living record separating what
@@ -123,6 +123,4 @@ If you use this bench in published work, please cite the SMN paper:
 > Nagarjuna, G. & D. Karnam. *The Sensation Modulating Network.* arXiv:2605.26856. https://arxiv.org/abs/2605.26856
 
 ## License
-**GNU GPL v3 (or later).** See [`LICENSE`](LICENSE). Copyleft is deliberate: it
-keeps derivatives free, so the bench and anything built on it stay open while
-remaining usable commercially.
+**GNU GPL v3 (or later).** See [`LICENSE`](LICENSE).
