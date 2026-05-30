@@ -15,11 +15,14 @@ import numpy as np
 class OccupancyMap:
     """A 2D occupancy grid accumulated from whisker hit points."""
 
-    def __init__(self, half: float, res: float = 0.04):
+    def __init__(self, half: float, res: float = 0.04,
+                 decay: float = 0.0, cap: float = 5.0):
         self.half = half
         self.res = res
+        self.decay = decay          # per-second evidence decay (0 = accumulator)
+        self.cap = cap              # reinforcement saturates at this evidence
         self.n = int(2 * half / res)
-        self.grid = np.zeros((self.n, self.n), dtype=np.int32)
+        self.grid = np.zeros((self.n, self.n), dtype=float)
         self.pts: list[tuple[float, float]] = []
 
     def _idx(self, x: float, y: float):
@@ -29,10 +32,26 @@ class OccupancyMap:
         if abs(x) < self.half and abs(y) < self.half:
             i, j = self._idx(x, y)
             if 0 <= i < self.n and 0 <= j < self.n:
-                self.grid[i, j] += 1
+                self.grid[i, j] = min(self.grid[i, j] + 1.0, self.cap)
                 self.pts.append((x, y))
 
-    def discovered_mask(self, thresh: int = 1) -> np.ndarray:
+    def decay_step(self, dt: float) -> None:
+        """Fade the map (the 'living snapshot'): unrevisited cells lose evidence,
+        so the world model becomes a dynamic equilibrium between mapping and
+        forgetting rather than a monotonic accumulator. No-op when decay == 0."""
+        if self.decay > 0.0:
+            self.grid *= np.exp(-self.decay * dt)
+
+    def live_points(self, thresh: float = 0.5) -> np.ndarray:
+        """The currently-held map: centres of cells whose evidence is above
+        `thresh` -- what the agent 'knows' right now."""
+        ii, jj = np.where(self.grid >= thresh)
+        if not len(ii):
+            return np.empty((0, 2))
+        return np.column_stack([(ii + 0.5) * self.res - self.half,
+                                (jj + 0.5) * self.res - self.half])
+
+    def discovered_mask(self, thresh: float = 1.0) -> np.ndarray:
         return self.grid >= thresh
 
     def score(self, truth_mask: np.ndarray):

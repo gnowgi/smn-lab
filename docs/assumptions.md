@@ -42,7 +42,9 @@ fractions, ε = 6 cm, against ground-truth surface samples).
 - Whiskers are distal **rays**, not tactile bristles (no flex, no contact).
 - Proprioception is idealized (true velocity, optionally + noise); **the SMN
   "balance/co-activation generates data at rest" (Register 1) is not modelled**.
-- The occupancy map is a **monotonic accumulator — no decay/forgetting**.
+- The occupancy map is a **monotonic accumulator by default**; an optional decay
+  rate turns it into a *living snapshot* — see
+  [Living snapshot](experiments/p2_living_snapshot.md).
 
 ## Per-experiment assumptions (these vary)
 | aspect | P0 reafference | P1 world model | P2 self-localized | sweep |
@@ -68,7 +70,9 @@ fractions, ε = 6 cm, against ground-truth surface samples).
 
 ## E. Known divergences / refinement backlog
 1. Tonic / co-activation data at rest (Register 1).
-2. World-model **decay** rate (a living snapshot in dynamic equilibrium).
+2. ~~World-model **decay** rate (a living snapshot in dynamic equilibrium).~~ — ✅
+   available now via `OccupancyMap(decay=…)`; see
+   [Living snapshot](experiments/p2_living_snapshot.md).
 3. Physical, **flexible whiskers** that bend and sense contact along their length.
 4. **Actuated locomotion** (real muscle/tendon + ground contact).
 5. Out-of-plane DOFs (z, roll, pitch); friction; uneven terrain.
