@@ -10,6 +10,13 @@ topology (the "balance beam") can be varied as an experimental variable**.
 Architecture reference: Nagarjuna, G. & D. Karnam. *The Sensation Modulating
 Network.* [arXiv:2605.26856](https://arxiv.org/abs/2605.26856).
 
+![Basal coupling — no food (dies at ~120 s) vs with food + regrowth (alive at 180 s)](figures/p2_basal_coupling.png)
+
+*From the [Basal coupling](experiments/p2_basal_coupling.md) experiment — same
+agent in both columns; only the world differs. The closed loop of movement ↔
+energy ↔ food ↔ living map sustains the agent when the world feeds back, and
+opens when it does not.*
+
 ## What's in the lab
 
 ### Library (`smn_lab/`)

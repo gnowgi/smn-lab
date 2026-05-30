@@ -30,6 +30,13 @@ cd experiments && ../.venv/bin/python p1_world_model.py
   point cloud, and coverage/precision.
 
 ## Result & interpretation
+
+![P1 world model — exploration path, constructed hit cloud, and the coverage/precision summary](../figures/p1_world_model.png)
+
+*Arena outline, exploration trajectory, the constructed hit cloud against the
+true surfaces, and the coverage/precision numbers. The walls and both objects
+are recovered at ~97% coverage and ~99% precision.*
+
 The agent reconstructs the walls and both objects at ~97% coverage, ~99%
 precision. Because the map uses the true pose, the reconstruction is essentially
 the upper bound — which is exactly why P2 rebuilds it from the agent's own

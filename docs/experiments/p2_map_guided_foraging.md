@@ -72,10 +72,13 @@ Three-way ordering, with the slow-memory agent the only survivor.
   near recently-emptied spots, wastes energy, and dies sooner than the
   unguided baseline.
 
-- `figures/p2_map_guided_foraging.png` — top row per condition: trajectory +
-  wall live map + **food memory live points (orange squares)** + food
-  (green = available, gray × = currently eaten); bottom row: energy time-series
-  with consumption markers and death marker.
+![Map-guided foraging — three-way contrast: random dies at 272 s, slow-decay alive at 300 s, fast-decay dies earlier than random at 175 s](../figures/p2_map_guided_foraging.png)
+
+*Top row per condition: trajectory + wall live map (red) + **food memory live
+points (orange squares)** + food (green = available, gray × = eaten). Bottom
+row: energy time-series with consumption (green) and death (red) markers. Only
+the slow-decay agent reaches the horizon alive; fast decay dies earlier than
+the no-map baseline.*
 
 ## What this experiment shows
 

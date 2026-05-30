@@ -39,6 +39,13 @@ cd experiments && ../.venv/bin/python p2_world_model.py
   [Assumptions §data](../assumptions.md)).
 
 ## Result & interpretation
+
+![P2 self-localized world model — true vs self-estimated path, the constructed map, and the coverage / precision / drift summary](../figures/p2_world_model.png)
+
+*True vs self-estimated trajectory, the world model built from the agent's
+proprioceptive self-localization (no god's-eye pose), and the coverage /
+precision / dead-reckoning drift summary.*
+
 ~97% coverage, ~100% precision, ~0.2 cm drift — the self-estimated path overlies
 the true path and the map is faithful, built entirely from the agent's body
 geometry + self-motion sense. With clean proprioception the result approaches P1;

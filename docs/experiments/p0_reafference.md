@@ -36,6 +36,14 @@ cd experiments && ../.venv/bin/python p0_reafference.py
 - printed stats: self-test vs exafference mean residual, ratio, verdict.
 
 ## Result & interpretation
+
+![P0 reafference — whisker reading vs forward-model prediction; residual over time with phase shading](../figures/p0_reafference.png)
+
+*Top: whisker reading vs forward-model prediction along the agent's heading.
+Bottom: residual over time, with the self-motion and exafference phases shaded.
+The residual sits at the sensor noise floor under self-motion and jumps roughly
+nine-fold when the object the agent did not move slides in.*
+
 Under self-motion (static world) the residual sits at the noise floor
 (~9.6 mm); when the object the agent did not move slides in, the residual jumps
 (~90 mm mean, ×9.4, peak ~723 mm). Self-caused change is predicted away;

@@ -36,6 +36,14 @@ cd experiments && ../.venv/bin/python p2_living_snapshot.py
 - printed summary.
 
 ## Result & interpretation
+
+![Living snapshot — time-lapse of the live map at decay 0.4/s and the decay-vs-coverage curve](../figures/p2_living_snapshot.png)
+
+*Top: a time-lapse of the live map at decay 0.4 / s — a moving local snapshot
+that trails the agent and fades behind it. Bottom: live coverage of the full
+arena as a function of decay rate, falling from 99 % (accumulator) to 37 % at
+0.8 / s.*
+
 At `decay = 0` the map holds the full arena (~99 %). At `0.05/s` it still does
 (half-life ≫ revisit period). From `0.1/s` onwards coverage falls; by `0.8/s`
 only ~37 % is held at a time — the map becomes a **moving local snapshot** that

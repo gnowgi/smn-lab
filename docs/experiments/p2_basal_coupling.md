@@ -69,9 +69,11 @@ The contrast is the experiment's whole point:
   with 19 consumption events. The same body, kept alive long enough, produces a
   visibly richer live map of the arena.
 
-- `figures/p2_basal_coupling.png` — top row: trajectory + arena + food
-  (green = alive, gray × = recently eaten) + live map per condition. Bottom row:
-  energy time-series with food-consumption markers (green) and death marker (red).
+![Basal coupling — no food (dies at ~120 s) vs with food + regrowth (alive at 180 s); trajectory + live map on top, energy time-series with consumption and death markers on the bottom](../figures/p2_basal_coupling.png)
+
+*Top row per condition: trajectory + arena + food (green = available, gray × =
+eaten) + live map. Bottom row: energy time-series with consumption (green) and
+death (red) markers. Same agent in both columns — only the world differs.*
 
 The map quality in the **with-food** panel is not a separate finding — it is
 the *same* finding seen from the cognitive side. The agent has a more developed

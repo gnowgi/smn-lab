@@ -17,6 +17,8 @@ nav:
       - Living snapshot (map decay): experiments/p2_living_snapshot.md
       - Basal coupling (why move): experiments/p2_basal_coupling.md
       - Map-guided foraging (decay as survival): experiments/p2_map_guided_foraging.md
+hooks:
+  - docs/hooks.py
 markdown_extensions:
   - tables
   - admonition

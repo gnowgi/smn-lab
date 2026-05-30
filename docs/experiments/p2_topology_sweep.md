@@ -34,6 +34,13 @@ cd experiments && ../.venv/bin/python p2_topology_sweep.py
   full data is gitignored; a curated copy is in [`samples/`](../assumptions.md).
 
 ## Findings
+
+![Balance-beam sweep — a 3×3 grid of constructed maps across routing × morphology × ±BAP/±HAP × proprioceptive noise](../figures/p2_topology_sweep.png)
+
+*A 3×3 grid of constructed maps across the swept conditions. The columns and
+rows that build a faithful map are immediately visible; the ones that collapse
+it (no BAP, no HAP, heavy proprioceptive noise) are equally visible.*
+
 - **±BAP / ±HAP are decisive.** Removing the basal drive (−BAP) collapses
   coverage to ~20% (no locomotion → it maps only a sliver); removing the haltable
   affordance-action (−HAP) drops it to ~44% (drives into a wall and stalls).
