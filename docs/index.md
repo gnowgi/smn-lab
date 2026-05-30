@@ -29,6 +29,7 @@ Network.* [arXiv:2605.26856](https://arxiv.org/abs/2605.26856).
 | `p2_topology_sweep.py` | the balance-beam sweep: routing × morphology × ±BAP/±HAP × noise | [Sweep](experiments/p2_topology_sweep.md) |
 | `p2_living_snapshot.py` | the world model decays where unrevisited (a living snapshot) | [Living snapshot](experiments/p2_living_snapshot.md) |
 | `p2_basal_coupling.py` | why the agent moves — energy · food · map · motion as one closed loop | [Basal coupling](experiments/p2_basal_coupling.md) |
+| `p2_map_guided_foraging.py` | the map's decay rate as a direct survival pressure | [Map-guided foraging](experiments/p2_map_guided_foraging.md) |
 | `scene_geometry.py` | the body schema + agent-in-scene figures (and a MuJoCo render) | — |
 
 ## Quickstart

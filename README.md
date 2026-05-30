@@ -75,6 +75,7 @@ cd experiments && ../.venv/bin/python p1_world_model.py
 - **Done** — the balance-beam sweep: the constructed world model measured across information-routing topology (flat vs hierarchical), body morphology (whisker count, drive track width), the ±BAP/±HAP toggles, and proprioceptive noise. **Findings:** removing the basal drive (−BAP) or the haltable affordance-action (−HAP) collapses coverage (20% / 44% vs 97%) — both are necessary to build a world model; proprioceptive noise smears the map (precision 100% → 74%, drift 6.7 cm); routing and morphology are robust at this task difficulty. See `figures/p2_topology_sweep.png`.
 - **Done** — map decay / **living snapshot**: the world model fades where it is not revisited; live coverage of the full arena falls from 99% (accumulator) to 37% at decay 0.8/s — a moving local snapshot that trails the agent. See `figures/p2_living_snapshot.png`.
 - **Done** — **basal coupling** (the first telling simulation): the agent carries an energy reserve, the BAP is energy-gated, and food in the world replenishes. Without food: dies at t ≈ 120 s. With food + regrowth: alive at t = 180 s with 19 consumption events. Same agent — the closed loop (movement ↔ energy ↔ food ↔ map) is what keeps it alive. See `figures/p2_basal_coupling.png`.
+- **Done** — **map-guided foraging**: the HAP now reads a food-memory living-snapshot layer and steers toward remembered food when the path is clear of walls. The map's *decay rate* becomes a direct survival pressure — in a harsher world (4 foods, 90 s regrowth, 300 s horizon), slow decay (0.02 / s) keeps the agent **alive** at the end (8 consumption events); the no-map baseline **dies at 272 s** (5 events); fast decay (1.0 / s) dies *earlier* (175 s, 3 events) — the brief, misleading memory drags the agent back to just-eaten spots before food regrows. See `figures/p2_map_guided_foraging.png`.
 - **Next** — multi-agent (shared intentionality / self-world-other).
 - Configuration-driven scenarios and rendering for reuse and presentation.
 
@@ -113,6 +114,7 @@ All randomness is seeded, so runs are byte-reproducible.
 - `experiments/p2_topology_sweep.py` — the balance-beam sweep (routing × morphology × ±BAP/±HAP × proprioceptive noise).
 - `experiments/p2_living_snapshot.py` — the world model decays where unrevisited (the living snapshot).
 - `experiments/p2_basal_coupling.py` — why the agent moves: energy + food + map + motion as one closed loop.
+- `experiments/p2_map_guided_foraging.py` — the HAP reads a food-memory layer; the map's decay rate is a direct survival pressure.
 - `experiments/scene_geometry.py` — draws the body schema + the agent in the scene (and a MuJoCo render).
 
 ## Citation

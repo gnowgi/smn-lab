@@ -49,6 +49,11 @@ fractions, ε = 6 cm, against ground-truth surface samples).
   [Basal coupling](experiments/p2_basal_coupling.md) experiment adds an energy
   reserve, BAP gating by energy, and food in the world — the constructive
   assumptions for *why* the agent moves at all.
+- The HAP does not by default **read the world model**. The
+  [Map-guided foraging](experiments/p2_map_guided_foraging.md) experiment adds
+  a food-memory living-snapshot layer (populated by consumption events) and a
+  steering term that biases the turn toward live remembered locations — turning
+  the map's decay rate into a direct survival pressure.
 
 ## Per-experiment assumptions (these vary)
 | aspect | P0 reafference | P1 world model | P2 self-localized | sweep |
