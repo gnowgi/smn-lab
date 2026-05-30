@@ -70,6 +70,7 @@ cd experiments && ../.venv/bin/python p1_world_model.py
 
 ## Roadmap
 - **Done** — single-CAZ reafference (the self/world register) in the body.
+- **Done** — **the same reafference register at the visual level**: one forward-facing camera at the head's pivot, an analytical frame-warp predictor from the agent's own yaw rate, and a flat 8 × 8 = 64-token modulator gating the per-patch residual against a calibrated floor. Self-caused change cancels (~6 % patches fire); world-caused change does not (~24 % patches fire — a ×3.9 fire-fraction contrast — over the silhouette of the oscillating object). The architecture is modality-independent. See `figures/p0_visual.png`.
 - **Done** — multi-CAZ agent explores an arena and builds a faithful world model.
 - **Done** — body-geometry-relative, self-localized world model: an explicit body schema (located drive zones + whiskers), locomotion from located opponent drive zones, and a map built from proprioceptive dead-reckoning rather than any absolute pose (~97% coverage, ~0.2 cm drift).
 - **Done** — the balance-beam sweep: the constructed world model measured across information-routing topology (flat vs hierarchical), body morphology (whisker count, drive track width), the ±BAP/±HAP toggles, and proprioceptive noise. **Findings:** removing the basal drive (−BAP) or the haltable affordance-action (−HAP) collapses coverage (20% / 44% vs 97%) — both are necessary to build a world model; proprioceptive noise smears the map (precision 100% → 74%, drift 6.7 cm); routing and morphology are robust at this task difficulty. See `figures/p2_topology_sweep.png`.
@@ -108,7 +109,9 @@ All randomness is seeded, so runs are byte-reproducible.
 - `smn_lab/model.py` — MJCF body/world builders (`build_p0/p1/p2_xml`).
 - `smn_lab/control.py` — `OpponentBoard`, `ReafferencePredictor`, `CPG` (BAP drive), `HAPExplorer`, `DifferentialDrive` (located drive zones), `DeadReckoner` (proprioceptive self-localization); the balance beam lives here.
 - `smn_lab/worldmodel.py` — `OccupancyMap` and the point-based map score (the constructed "picture").
-- `experiments/p0_reafference.py` — single-CAZ reafference.
+- `smn_lab/vision.py` — `EyeCamera`, `AnalyticalFramePredictor`, `PatchResidualModulator`: the minimal visual transducer + analytical reafference (one undifferentiated camera, flat 8×8 patch modulator; the eye's eventual CAZ structure stands for later).
+- `experiments/p0_reafference.py` — single-CAZ reafference (whisker transducer).
+- `experiments/p0_visual.py` — the same reafference register at the visual level (camera + 8×8 patch modulator).
 - `experiments/p1_world_model.py` — multi-CAZ agent builds a world model (uses true pose).
 - `experiments/p2_world_model.py` — body-geometry-relative, self-localized world model (proprioception only).
 - `experiments/p2_topology_sweep.py` — the balance-beam sweep (routing × morphology × ±BAP/±HAP × proprioceptive noise).

@@ -31,6 +31,7 @@ opens when it does not.*
 | experiment | shows | page |
 |---|---|---|
 | `p0_reafference.py` | reafference (self vs world) in a single CAZ | [P0](experiments/p0_reafference.md) |
+| `p0_visual.py` | same reafference register at the visual level (camera + 8×8 patch modulator) | [P0-visual](experiments/p0_visual.md) |
 | `p1_world_model.py` | a multi-CAZ agent builds a world model (true pose) | [P1](experiments/p1_world_model.md) |
 | `p2_world_model.py` | the same, body-relative + self-localized (no god's-eye pose) | [P2](experiments/p2_world_model.md) |
 | `p2_topology_sweep.py` | the balance-beam sweep: routing × morphology × ±BAP/±HAP × noise | [Sweep](experiments/p2_topology_sweep.md) |

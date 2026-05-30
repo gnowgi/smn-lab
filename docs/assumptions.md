@@ -54,16 +54,24 @@ fractions, ε = 6 cm, against ground-truth surface samples).
   a food-memory living-snapshot layer (populated by consumption events) and a
   steering term that biases the turn toward live remembered locations — turning
   the map's decay rate into a direct survival pressure.
+- The visual experiments use **one undifferentiated camera + one flat 8 × 8
+  modulator** as a deliberate floor. In SMN, perceptual resolution is a
+  function of CAZ density and internal capacities, *not* of the raw transducer
+  — and since unmodulated input is dropped, raising the camera's pixel count
+  alone would change nothing. The next visual experiments raise CAZ density on
+  the eye itself and add known asymmetries between eyes; see
+  [P0-visual](experiments/p0_visual.md).
 
 ## Per-experiment assumptions (these vary)
-| aspect | P0 reafference | P1 world model | P2 self-localized | sweep |
-|---|---|---|---|---|
-| body | single CAZ "head" | mobile, 5 whiskers | mobile, body schema | varies (3/5/9 whiskers; track width) |
-| locomotion | none (head only) | central `xfrc` thrust | **located** opponent drive zones | + `±BAP` toggle |
-| steering | opponent yaw (motors) | opponent yaw (motors) | differential located drive | + routing: flat / hierarchical |
-| pose for mapping | n/a (heading-keyed) | **true pose (god's-eye)** | **dead-reckoned (proprioception)** | + proprioceptive noise |
-| world dynamics | static + scheduled exafference object | static arena | static arena | static arena |
-| internal model | binned forward model (range vs heading) | occupancy accumulator | occupancy accumulator | + `±HAP` toggle |
+| aspect | P0 reafference | P0-visual | P1 world model | P2 self-localized | sweep |
+|---|---|---|---|---|---|
+| body | single CAZ "head" | **same** single CAZ "head" | mobile, 5 whiskers | mobile, body schema | varies (3/5/9 whiskers; track width) |
+| locomotion | none (head only) | none (head only) | central `xfrc` thrust | **located** opponent drive zones | + `±BAP` toggle |
+| steering | opponent yaw (motors) | opponent yaw (motors) | opponent yaw (motors) | differential located drive | + routing: flat / hierarchical |
+| transducer | one rangefinder whisker | **camera** at the head's pivot (128 × 128, fov 90°); flat 8 × 8 patch grid | 5 whisker rangefinders | 5-whisker fan | varies (whisker count) |
+| forward model | binned (heading → range) | **analytical frame-warp** from `ω_z · Δt · focal_px` | n/a | n/a | n/a |
+| world dynamics | static + scheduled exafference object | static + **oscillating** exafference object | static arena | static arena | static arena |
+| internal model | learned forward model + residual | floor-gated 8 × 8 patch residual | occupancy accumulator | occupancy accumulator | + `±HAP` toggle |
 
 > The P1 → P2 shift is the clearest example that assumptions track the setup: P1
 > builds the map from the simulator's true pose; P2 uses only the agent's own

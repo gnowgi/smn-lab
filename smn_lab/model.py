@@ -66,6 +66,73 @@ def build_p0_xml(arena_half: float = 1.2, wall_h: float = 0.15,
 """
 
 
+def build_p0v_xml(arena_half: float = 1.6, wall_h: float = 0.30,
+                  head_z: float = 0.15, cmax: float = 1.5,
+                  fov_deg: float = 90.0) -> str:
+    """P0-visual: the P0 single-CAZ head with a forward-facing camera.
+
+    The transducer changes (whisker → camera); the architecture does not. The
+    camera sits at the head's pivot so rotation is about the optical center —
+    keeping the analytical flow predictor (uniform horizontal flow from yaw
+    rate) exact under a static-world assumption. The arena has a checker-
+    textured floor and coloured walls so the SAD block-matcher has signal; the
+    cylindrical exafference object is the same one P0 uses, slid in front of
+    the agent during the exafference window.
+    """
+    return f"""
+<mujoco model="smn_p0_visual">
+  <compiler angle="degree" autolimits="true"/>
+  <option timestep="0.005" gravity="0 0 -9.81" integrator="RK4"/>
+  <visual>
+    <global offwidth="1280" offheight="720"/>
+    <headlight diffuse="0.8 0.8 0.8" ambient="0.4 0.4 0.4"/>
+  </visual>
+
+  <asset>
+    <texture name="floor_tex" type="2d" builtin="checker"
+             rgb1="0.85 0.85 0.85" rgb2="0.55 0.55 0.55" width="200" height="200"/>
+    <material name="floor_mat" texture="floor_tex" texrepeat="6 6" reflectance="0.0"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 3" dir="0 0 -1" diffuse="0.9 0.9 0.9"/>
+    <geom name="floor" type="plane" size="3 3 0.1" material="floor_mat"/>
+
+    <!-- arena walls in distinct colours, taller than P0 so they fill more of the camera view -->
+    <geom name="wall_n" type="box" pos="0 {arena_half} {wall_h}" size="{arena_half+0.05} 0.05 {wall_h}" rgba="0.85 0.40 0.30 1"/>
+    <geom name="wall_s" type="box" pos="0 {-arena_half} {wall_h}" size="{arena_half+0.05} 0.05 {wall_h}" rgba="0.30 0.55 0.85 1"/>
+    <geom name="wall_e" type="box" pos="{arena_half} 0 {wall_h}" size="0.05 {arena_half+0.05} {wall_h}" rgba="0.35 0.75 0.40 1"/>
+    <geom name="wall_w" type="box" pos="{-arena_half} 0 {wall_h}" size="0.05 {arena_half+0.05} {wall_h}" rgba="0.85 0.75 0.30 1"/>
+
+    <!-- agent: the same single-CAZ head as P0, with the camera at its pivot -->
+    <body name="head" pos="0 0 {head_z}">
+      <joint name="yaw" type="hinge" axis="0 0 1" limited="false" damping="0.05"/>
+      <geom name="head_geom" type="box" size="0.08 0.05 0.05" rgba="0.2 0.4 0.9 1" mass="0.2"/>
+      <!-- camera at the pivot (rotation about its own optical center); looks along head +X.
+           xyaxes = (camera +x in body frame, camera +y in body frame) → camera -z = head +x. -->
+      <camera name="eye" pos="0 0 0.04" xyaxes="0 -1 0 0 0 1" fovy="{fov_deg}"/>
+    </body>
+
+    <!-- exafference object: slides along x; parked far during calibration, brought in for exafference. -->
+    <body name="obj" pos="0 0 {head_z}">
+      <joint name="obj_slide" type="slide" axis="1 0 0" limited="false"/>
+      <geom name="obj_geom" type="cylinder" size="0.16 {wall_h}" rgba="0.95 0.25 0.20 1" contype="0" conaffinity="0" mass="1"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor name="m_right" joint="yaw" gear="1"  ctrlrange="0 {cmax}"/>
+    <motor name="m_left"  joint="yaw" gear="-1" ctrlrange="0 {cmax}"/>
+  </actuator>
+
+  <sensor>
+    <jointpos name="yaw_pos" joint="yaw"/>
+    <jointvel name="yaw_vel" joint="yaw"/>
+  </sensor>
+</mujoco>
+"""
+
+
 def build_p1_xml(arena_half: float = 1.4, wall_h: float = 0.15,
                  body_z: float = 0.12, cmax: float = 2.5,
                  whisker_angles_deg=(-60, -30, 0, 30, 60)) -> str:
