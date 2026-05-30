@@ -7,7 +7,7 @@ authors:
   - given-names: Durgaprasad
     family-names: Karnam
 license: GPL-3.0-or-later
-repository-code: "https://github.com/REPLACE-ME/smn-lab"  # set once published
+repository-code: "https://github.com/gnowgi/smn-lab"
 keywords:
   - embodied cognition
   - cognitive science

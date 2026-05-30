@@ -1,6 +1,6 @@
 site_name: smn-lab
 site_description: An experimental bench for cognitive science based on the SMN architecture
-repo_url: https://github.com/REPLACE-ME/smn-lab
+repo_url: https://github.com/gnowgi/smn-lab
 theme:
   name: material
 nav:
