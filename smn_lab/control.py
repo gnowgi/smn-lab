@@ -209,6 +209,37 @@ class DifferentialDrive:
         return Fx, tau
 
 
+class SaccadeController:
+    """A minimal saccade generator for one rotational eye DOF.
+
+    The eye fixates at a target angle for ``fixation_s`` seconds and then
+    jumps to a new uniformly-random target within ``[-range, +range]``. Paired
+    with an ``OpponentBoard`` driving the eye joint, this produces basic
+    saccade-and-fixation behaviour: brief, fast traverses between stable
+    fixations.
+
+    This is intentionally the simplest possible eye motor; the architecturally
+    interesting fact is that whichever CAZ pair produces a motion -- body or
+    eye -- the modulator must predict its sensory consequences away. The
+    bench's first multi-CAZ-eye experiment uses this controller with the
+    forward model summing head_yaw + eye_yaw before predicting the frame.
+    """
+
+    def __init__(self, range_rad: float, fixation_s: float = 0.30,
+                 seed: int = 0):
+        self.range = float(range_rad)
+        self.fixation_s = float(fixation_s)
+        self.rng = np.random.default_rng(seed)
+        self.target = 0.0
+        self.t_next = 0.0
+
+    def update(self, t: float) -> float:
+        if t >= self.t_next:
+            self.target = float(self.rng.uniform(-self.range, self.range))
+            self.t_next = t + self.fixation_s
+        return self.target
+
+
 class DeadReckoner:
     """Self-localization from proprioception. The agent never reads its absolute
     position; it integrates the body-frame linear velocity (velocimeter) and yaw

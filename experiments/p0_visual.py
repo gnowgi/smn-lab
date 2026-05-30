@@ -105,7 +105,7 @@ def run():
     sample_frames = {"calibration": None, "self-test": None, "exafference": None}
 
     prev_frame = None
-    prev_yaw_rate = 0.0
+    prev_yaw = 0.0
     w_sweep = 2 * np.pi * SWEEP_F
     fi = 0
 
@@ -136,19 +136,21 @@ def run():
             continue
 
         frame = eye.snap(data)
-        yaw_rate_now = float(data.qvel[yaw_vadr])
+        yaw_now = float(data.qpos[yaw_qadr])
 
         if prev_frame is None:
             prev_frame = frame
-            prev_yaw_rate = yaw_rate_now
+            prev_yaw = yaw_now
             t_frame[fi] = t
             phase[fi] = 0
             fi += 1
             continue
 
-        # mean yaw rate over the render interval drives the analytical predictor
-        omega = 0.5 * (prev_yaw_rate + yaw_rate_now)
-        predicted = predictor.predict(prev_frame, omega, render_dt)
+        # Δθ between the two frames drives the analytical predictor — taken
+        # from the joint position, so it captures whatever rotation actually
+        # happened in the render interval (no need to integrate the rate).
+        delta_theta = yaw_now - prev_yaw
+        predicted = predictor.predict(prev_frame, delta_theta)
         residual = frame - predicted
 
         # phase
@@ -193,7 +195,7 @@ def run():
                 exaf_fire_acc.append(mask.astype(np.float32))
 
         prev_frame = frame
-        prev_yaw_rate = yaw_rate_now
+        prev_yaw = yaw_now
         fi += 1
 
     eye.close()

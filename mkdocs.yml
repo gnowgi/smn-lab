@@ -12,6 +12,7 @@ nav:
   - Experiments:
       - P0 — reafference: experiments/p0_reafference.md
       - P0-visual — reafference at the visual level: experiments/p0_visual.md
+      - P1-visual — multi-CAZ eye, ±body yaw: experiments/p1_visual.md
       - P1 — world model: experiments/p1_world_model.md
       - P2 — self-localized: experiments/p2_world_model.md
       - Balance-beam sweep: experiments/p2_topology_sweep.md

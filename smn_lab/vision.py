@@ -47,43 +47,75 @@ import numpy as np
 import mujoco
 
 
+def _box_blur_3x3(frame: np.ndarray) -> np.ndarray:
+    """3x3 box smoothing in pure numpy (edge-replicating boundary).
+
+    This stands in for the eye's optical point-spread function: an idealized
+    pinhole renders perfectly sharp edges, but real receptors integrate over
+    a finite area. A small spatial smoothing also makes the analytical sub-
+    pixel warp predictor numerically faithful at large per-frame shifts
+    (sharp edges + integer-pixel shifts cause large residuals at every edge
+    crossing). The smoothing is mild enough that the modulator's task -- to
+    surface world-caused intensity changes that are not self-predicted --
+    remains intact.
+    """
+    p = np.pad(frame, 1, mode="edge")
+    return (p[:-2, :-2] + p[:-2, 1:-1] + p[:-2, 2:] +
+            p[1:-1, :-2] + p[1:-1, 1:-1] + p[1:-1, 2:] +
+            p[2:, :-2] + p[2:, 1:-1] + p[2:, 2:]) / 9.0
+
+
 class EyeCamera:
     """One forward-facing MuJoCo camera, rendered offscreen.
 
     The camera is identified by ``camera_name`` in the MJCF; we wrap a
     ``mujoco.Renderer`` of size ``(height, width)``. ``snap`` returns a
-    grayscale ``uint8`` frame (mean over RGB channels) -- the SMN principle is
-    that pixel count is a bandwidth placeholder and the modulator does the
-    architectural work, so dropping colour at the transducer is consistent
-    with treating the camera as a single undifferentiated bandwidth budget.
+    grayscale ``float32`` frame (mean over RGB channels), optionally
+    smoothed by a 3x3 box (a minimal stand-in for the eye's point-spread
+    function -- see ``_box_blur_3x3``). The SMN principle is that pixel
+    count is a bandwidth placeholder and the modulator does the architectural
+    work, so dropping colour at the transducer is consistent with treating
+    the camera as a single undifferentiated bandwidth budget.
     """
 
     def __init__(self, model, camera_name: str = "eye",
-                 width: int = 128, height: int = 128):
+                 width: int = 128, height: int = 128, smooth_passes: int = 1):
         self.width = width
         self.height = height
         self.camera_name = camera_name
+        # number of 3x3 box-blur passes applied to each rendered frame; one pass
+        # ~ sigma 0.7, two passes ~ sigma 1.0, three ~ sigma 1.2. Stronger
+        # smoothing is needed once combined per-frame Δθ exceeds ~1 px, e.g.
+        # under simultaneous head + eye motion.
+        self.smooth_passes = int(smooth_passes)
         self.renderer = mujoco.Renderer(model, height=height, width=width)
 
     def snap(self, data) -> np.ndarray:
         self.renderer.update_scene(data, camera=self.camera_name)
         rgb = self.renderer.render()           # (H, W, 3) uint8
-        return rgb.mean(axis=2).astype(np.float32)
+        gray = rgb.mean(axis=2).astype(np.float32)
+        for _ in range(self.smooth_passes):
+            gray = _box_blur_3x3(gray)
+        return gray
 
     def close(self) -> None:
         self.renderer.close()
 
 
 class AnalyticalFramePredictor:
-    """Predicts the next frame from the agent's yaw rate (efference).
+    """Predicts the next frame from the camera's total angular displacement.
 
     Under the assumption that **the camera rotates about its own optical center
     in a static world**, the entire image translates horizontally by
-    ``shift_px = ω_z · Δt · focal_px``, where
-    ``focal_px = (W/2) / tan(fovx/2)``. We implement the prediction as a
-    sub-pixel horizontal shift of the current frame (linear interpolation
-    between the two integer-pixel neighbours), with the off-side column held
-    constant.
+    ``shift_px = Δθ · focal_px``, where ``focal_px = (W/2) / tan(fovx/2)`` and
+    ``Δθ`` is the camera's *total* yaw displacement between the two frames.
+
+    The predictor does not assume where the rotation comes from. With a rigid
+    head the caller passes ``Δθ = head_yaw_now − head_yaw_prev``; with a
+    multi-CAZ eye nested in the head, the caller passes
+    ``Δθ = (head_yaw + eye_yaw)_now − (head_yaw + eye_yaw)_prev``. The forward
+    model is the same; the SMN principle is that whichever CAZs produced the
+    motion are the ones the modulator must predict away.
 
     Departures from this prediction therefore mean either: (a) the world is
     not static -- the *exafference* we are trying to surface -- or (b) the
@@ -96,37 +128,59 @@ class AnalyticalFramePredictor:
         self.width = int(width)
         self.focal_px = (width / 2.0) / math.tan(math.radians(fov_deg) / 2.0)
 
-    def shift_px(self, omega_z: float, render_dt: float) -> float:
-        # Yaw counter-clockwise about +z (omega_z > 0) rotates the head's +x
-        # toward the head's +y. World content fixed in the head's +x direction
-        # therefore moves to the head's -y direction; in image coordinates
-        # (image +u = head -y) that is a shift of +omega_z·Δt·focal_px to the
-        # right.
-        return float(omega_z * render_dt * self.focal_px)
+    def shift_px(self, delta_theta_rad: float) -> float:
+        # Yaw counter-clockwise about +z (Δθ > 0) rotates the camera's +x
+        # toward its +y. World content fixed in the camera's +x direction
+        # therefore moves to the camera's -y direction; in image coordinates
+        # (image +u = camera -y) that is a shift of +Δθ·focal_px to the right.
+        # (Linear approximation, exact only at image center.)
+        return float(delta_theta_rad * self.focal_px)
 
-    def predict(self, current: np.ndarray, omega_z: float,
-                render_dt: float) -> np.ndarray:
-        """Return the predicted next frame: ``current`` shifted by ``shift_px``."""
-        s = self.shift_px(omega_z, render_dt)
-        return shift_horizontal(current, s)
+    def shift_per_column(self, delta_theta_rad: float) -> np.ndarray:
+        """Angle-correct per-column shift under rotation about the optical
+        center.
+
+        For a point at image column ``u`` (centered at 0), the actual shift
+        under a camera rotation by ``Δθ`` is ``Δθ · focal_px · sec²(α)``,
+        where ``tan(α) = u / focal_px``. The linear ``shift_px`` is exact only
+        at the image center (``u = 0``); at the FOV edge it underestimates the
+        true shift by a factor of 2. This method returns the per-column shift
+        array so the warp tracks rotation faithfully across the whole image,
+        not just the centre.
+        """
+        u_centered = (np.arange(self.width, dtype=np.float32)
+                      - self.width / 2.0 + 0.5)
+        sec_sq = 1.0 + (u_centered / self.focal_px) ** 2
+        return delta_theta_rad * self.focal_px * sec_sq
+
+    def predict(self, current: np.ndarray, delta_theta_rad: float,
+                angle_correct: bool = False) -> np.ndarray:
+        """Return the predicted next frame: ``current`` shifted by the
+        per-column shift if ``angle_correct``, else by a uniform shift."""
+        if angle_correct:
+            return shift_horizontal(current,
+                                    self.shift_per_column(delta_theta_rad))
+        return shift_horizontal(current, self.shift_px(delta_theta_rad))
 
 
-def shift_horizontal(frame: np.ndarray, shift_px: float) -> np.ndarray:
+def shift_horizontal(frame: np.ndarray, shift_px) -> np.ndarray:
     """Sub-pixel horizontal shift via linear interpolation.
 
-    Positive ``shift_px`` shifts content to the right. The off-side column is
-    extended by edge replication so the boundary contributes no spurious
-    residual.
+    ``shift_px`` may be either a scalar (uniform shift across all columns) or
+    a 1D array of length ``W`` (per-output-column shift, used by the
+    angle-correct predictor). Positive shift moves content to the right; the
+    off-side column is extended by edge replication so the boundary
+    contributes no spurious residual.
     """
     H, W = frame.shape
-    s = float(shift_px)
-    int_s = int(math.floor(s))
-    frac = s - int_s
-    # source column for output column j: j - s
-    cols = np.arange(W, dtype=np.float32) - s
+    if np.isscalar(shift_px):
+        cols = np.arange(W, dtype=np.float32) - float(shift_px)
+    else:
+        s = np.asarray(shift_px, dtype=np.float32)
+        cols = np.arange(W, dtype=np.float32) - s
     lo = np.floor(cols).astype(np.int64)
     hi = lo + 1
-    a = (cols - lo)[None, :]  # shape (1, W)
+    a = (cols - lo)[None, :]
     lo_c = np.clip(lo, 0, W - 1)
     hi_c = np.clip(hi, 0, W - 1)
     f_lo = frame[:, lo_c]
