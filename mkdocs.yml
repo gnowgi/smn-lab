@@ -7,6 +7,8 @@ nav:
   - Home: index.md
   - Concepts: concepts.md
   - Assumptions: assumptions.md
+  - Integrations:
+      - NetLogo (feasibility report): integrations/netlogo.md
   - Experiments:
       - P0 — reafference: experiments/p0_reafference.md
       - P1 — world model: experiments/p1_world_model.md

@@ -52,4 +52,5 @@ measuring the constructed world model (coverage, precision, drift).
 ## See also
 - [Concepts](concepts.md) — the SMN → simulation mapping and vocabulary.
 - [Assumptions](assumptions.md) — what is simulated vs computed vs idealized (common + per-experiment).
+- [NetLogo integration (feasibility report)](integrations/netlogo.md) — the four realistic paths to plant `smn-lab` in the NetLogo house, and the honest version of the visibility argument.
 - Building these docs: `pip install mkdocs && mkdocs serve` (or publish via Read the Docs).
