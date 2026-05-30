@@ -45,6 +45,10 @@ fractions, ε = 6 cm, against ground-truth surface samples).
 - The occupancy map is a **monotonic accumulator by default**; an optional decay
   rate turns it into a *living snapshot* — see
   [Living snapshot](experiments/p2_living_snapshot.md).
+- The agent has **no biological state** by default. The
+  [Basal coupling](experiments/p2_basal_coupling.md) experiment adds an energy
+  reserve, BAP gating by energy, and food in the world — the constructive
+  assumptions for *why* the agent moves at all.
 
 ## Per-experiment assumptions (these vary)
 | aspect | P0 reafference | P1 world model | P2 self-localized | sweep |
@@ -73,6 +77,9 @@ fractions, ε = 6 cm, against ground-truth surface samples).
 2. ~~World-model **decay** rate (a living snapshot in dynamic equilibrium).~~ — ✅
    available now via `OccupancyMap(decay=…)`; see
    [Living snapshot](experiments/p2_living_snapshot.md).
+2b. ~~A **biological state** that ties cognition to viability (why move?).~~ — ✅
+    available now via energy + BAP gating + food in
+    [Basal coupling](experiments/p2_basal_coupling.md).
 3. Physical, **flexible whiskers** that bend and sense contact along their length.
 4. **Actuated locomotion** (real muscle/tendon + ground contact).
 5. Out-of-plane DOFs (z, roll, pitch); friction; uneven terrain.

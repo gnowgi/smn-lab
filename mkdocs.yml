@@ -13,6 +13,7 @@ nav:
       - P2 — self-localized: experiments/p2_world_model.md
       - Balance-beam sweep: experiments/p2_topology_sweep.md
       - Living snapshot (map decay): experiments/p2_living_snapshot.md
+      - Basal coupling (why move): experiments/p2_basal_coupling.md
 markdown_extensions:
   - tables
   - admonition
