@@ -40,14 +40,33 @@ python3 -m venv .venv
 cd experiments && ../.venv/bin/python p0_reafference.py
 ```
 
-### Lab interface (optional)
-A small Streamlit window — pick an experiment, watch the agent in its world, and
-see the graphs, tables, and documentation, all computed live (the math in
-action, not canned). See [the lab interface](docs/lab-interface.md).
+## The lab interface
+A simple, functional bench window (Streamlit) so you — or a reviewer — can see
+the bench as **the math in action**, not synthesized: every panel calls the real
+experiment code on the spot.
+
 ```bash
-.venv/bin/pip install -r requirements-ui.txt
-.venv/bin/streamlit run app.py
+.venv/bin/pip install -r requirements-ui.txt    # one extra dependency: streamlit
+.venv/bin/streamlit run app.py                  # opens in your browser
 ```
+
+**Using it**
+- **Sidebar** — choose any experiment (P0–P3).
+- **World** — every experiment renders its actual MuJoCo scene (arena + agent).
+  For the cross-modal experiment (P3), pick an object and press **Run approach**:
+  the agent drives up under its own CPG + differential drive, reads
+  touch / vision / taste, and halts at the object — the run plays back as a
+  looping animation, then prints the decoded identity and the located position.
+- **Graphs** — the experiment's result figures.
+- **Results** — for P3, press **Compute results** to run the binding,
+  localization, and resolution measurements live and tabulate them.
+- **Documentation** — the experiment's own page, rendered inline.
+
+A GL backend (present on any desktop with a display) renders the world; the
+core bench does not need streamlit — it is an optional extra. For a fully
+interactive, mouse-orbitable 3D view of a single P3 run, use
+`cd experiments && ../.venv/bin/python p3_crossmodal_discrimination.py --watch`.
+More detail: [the lab interface docs](docs/lab-interface.md).
 
 ## Current capability — the reafference register in the body
 A single Coordinated Action Zone (a yaw "head" driven by a pull-only antagonist
@@ -88,6 +107,7 @@ cd experiments && ../.venv/bin/python p1_world_model.py
 - **Done** — map decay / **living snapshot**: the world model fades where it is not revisited; live coverage of the full arena falls from 99% (accumulator) to 37% at decay 0.8/s — a moving local snapshot that trails the agent. See `figures/p2_living_snapshot.png`.
 - **Done** — **basal coupling** (the first telling simulation): the agent carries an energy reserve, the BAP is energy-gated, and food in the world replenishes. Without food: dies at t ≈ 120 s. With food + regrowth: alive at t = 180 s with 19 consumption events. Same agent — the closed loop (movement ↔ energy ↔ food ↔ map) is what keeps it alive. See `figures/p2_basal_coupling.png`.
 - **Done** — **map-guided foraging**: the HAP now reads a food-memory living-snapshot layer and steers toward remembered food when the path is clear of walls. The map's *decay rate* becomes a direct survival pressure — in a harsher world (4 foods, 90 s regrowth, 300 s horizon), slow decay (0.02 / s) keeps the agent **alive** at the end (8 consumption events); the no-map baseline **dies at 272 s** (5 events); fast decay (1.0 / s) dies *earlier* (175 s, 3 events) — the brief, misleading memory drags the agent back to just-eaten spots before food regrows. See `figures/p2_map_guided_foraging.png`.
+- **Done** — **cross-modal discrimination (recognition as a basal SMN result)**: the same located, opponent-modulated zones individuate an object from three modality bits — touch (whisker angular extent), vision (rendered luminance), taste (chemical field) — actively and with **zero labeled corpus**. Binding: individuable categories = 2^(modalities coupled through modulation) = 2 → 4 → 8, while more whiskers stay at 2 (**sensors ≠ modalities**); resolution rises with sensor count *only* with modulation; localization needs reafference (~0.10 m vs ~0.40 m). Foils on the same test set: a subsumption arbiter (suppression, no binding) reaches only 2 categories with all three sensors, and a corpus-trained net needs ~128 labeled examples to match SMN's zero-shot ~0.96. See `figures/p3_crossmodal_discrimination.png`. (Interactive in [the lab interface](#the-lab-interface).)
 - **Next** — multi-agent (shared intentionality / self-world-other).
 - Configuration-driven scenarios and rendering for reuse and presentation.
 
@@ -117,8 +137,8 @@ All randomness is seeded, so runs are byte-reproducible.
 
 ## Layout
 - `smn_lab/body.py` — `MouseSchema`: the explicit body geometry (every zone's body-frame location), shared by the model builder and the agent.
-- `smn_lab/model.py` — MJCF body/world builders (`build_p0/p1/p2_xml`).
-- `smn_lab/control.py` — `OpponentBoard`, `ReafferencePredictor`, `CPG` (BAP drive), `HAPExplorer`, `DifferentialDrive` (located drive zones), `DeadReckoner` (proprioceptive self-localization); the balance beam lives here.
+- `smn_lab/model.py` — MJCF body/world builders (`build_p0/p1/p2/p3_xml`).
+- `smn_lab/control.py` — `OpponentBoard`, `ReafferencePredictor`, `CPG` (BAP drive), `HAPExplorer`, `DifferentialDrive` (located drive zones), `DeadReckoner` (proprioceptive self-localization), `CrossModalBoard` (the cross-modal balance beam) and `SubsumptionArbiter` (the Brooks foil); the balance beam lives here.
 - `smn_lab/worldmodel.py` — `OccupancyMap` and the point-based map score (the constructed "picture").
 - `smn_lab/vision.py` — `EyeCamera`, `AnalyticalFramePredictor`, `PatchResidualModulator`: the minimal visual transducer + analytical reafference (one undifferentiated camera, flat 8×8 patch modulator; the eye's eventual CAZ structure stands for later).
 - `experiments/p0_reafference.py` — single-CAZ reafference (whisker transducer).
@@ -131,7 +151,9 @@ All randomness is seeded, so runs are byte-reproducible.
 - `experiments/p2_living_snapshot.py` — the world model decays where unrevisited (the living snapshot).
 - `experiments/p2_basal_coupling.py` — why the agent moves: energy + food + map + motion as one closed loop.
 - `experiments/p2_map_guided_foraging.py` — the HAP reads a food-memory layer; the map's decay rate is a direct survival pressure.
+- `experiments/p3_crossmodal_discrimination.py` — cross-modal object discrimination: binding, the resolution principle, localization-needs-reafference, and the subsumption / deep-net foils (recognition as a basal SMN result).
 - `experiments/scene_geometry.py` — draws the body schema + the agent in the scene (and a MuJoCo render).
+- `app.py` — the Streamlit [lab interface](#the-lab-interface) (optional; needs `requirements-ui.txt`).
 
 ## Citation
 If you use this bench in published work, please cite the SMN paper:
