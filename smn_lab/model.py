@@ -276,6 +276,101 @@ def build_p1_xml(arena_half: float = 1.4, wall_h: float = 0.15,
 """
 
 
+def build_p3_xml(obj_radius: float, obj_rgba: str, obj_pos,
+                 arena_half: float = 1.4, wall_h: float = 0.15,
+                 body_z: float = 0.12, cmax: float = 2.5,
+                 whisker_angles_deg=(-60, -30, 0, 30, 60),
+                 cosmetic: bool = False) -> str:
+    """MJCF for the P3 cross-modal discrimination scene.
+
+    The same planar 'mouse' as P1/P2 (slide-x, slide-y, yaw, a whisker fan, and
+    an IMU for proprioceptive self-localization), facing a single cylindrical
+    object placed ahead of it. The object carries two of the three modality bits
+    *geometrically* -- its **radius** (the tactile bit: a bigger object subtends
+    more whiskers at a fixed gap) and its **luminance** via ``obj_rgba`` (the
+    visual bit) -- while the third, taste, is an analytic chemical field sampled
+    in the experiment. One object per build keeps each discrimination trial
+    clean; the agent approaches, the whisker fan reads the angular extent, and
+    the cross-modal board fuses the modalities.
+
+    A forward-facing camera is mounted at the body for the rendered visual
+    pathway (``vision.EyeCamera`` + ``PatchResidualModulator``).
+
+    ``cosmetic=True`` switches the scene from the flat gray-on-gray look the
+    camera's luminance read needs to a legible coloured room with normal lighting
+    -- for the ``--watch`` viewer only, where a human (not the camera) is looking.
+    """
+    import math
+    ox, oy = obj_pos
+    sites, sensors = [], []
+    for i, deg in enumerate(whisker_angles_deg):
+        a = math.radians(deg)
+        sites.append(f'      <site name="whisker_{i}" pos="0.10 0 0" '
+                     f'zaxis="{math.cos(a):.5f} {math.sin(a):.5f} 0" size="0.004" rgba="1 0.6 0 1"/>')
+        sensors.append(f'    <rangefinder name="whisker_{i}" site="whisker_{i}"/>')
+    sites, sensors = "\n".join(sites), "\n".join(sensors)
+    if cosmetic:                                   # legible coloured room for the human viewer
+        headlight = '<headlight diffuse="0.45 0.45 0.45" ambient="0.55 0.55 0.55"/>'
+        skybox = ('<texture name="sky" type="skybox" builtin="gradient" '
+                  'rgb1="0.55 0.65 0.80" rgb2="0.20 0.25 0.35" width="64" height="64"/>')
+        sun = '<light pos="0.6 0.6 3" dir="-0.2 -0.2 -1" diffuse="0.6 0.6 0.6"/>'
+        floor_rgba, wall_rgba = "0.30 0.40 0.50 1", "0.40 0.48 0.58 1"
+    else:                                          # flat gray for the camera's luminance read
+        headlight = '<headlight diffuse="0 0 0" ambient="1 1 1" specular="0 0 0"/>'
+        skybox = ('<texture name="sky" type="skybox" builtin="flat" '
+                  'rgb1="0.5 0.5 0.5" rgb2="0.5 0.5 0.5" width="32" height="32"/>')
+        sun = '<light pos="0 0 3" dir="0 0 -1" diffuse="0 0 0" specular="0 0 0"/>'
+        floor_rgba, wall_rgba = "0.5 0.5 0.5 1", "0.5 0.5 0.5 1"
+    return f"""
+<mujoco model="smn_p3_crossmodal">
+  <compiler angle="degree" autolimits="true"/>
+  <option timestep="0.005" gravity="0 0 -9.81" integrator="RK4"/>
+  <visual>
+    <global offwidth="1280" offheight="720"/>
+    {headlight}
+  </visual>
+
+  <asset>
+    {skybox}
+  </asset>
+
+  <worldbody>
+    {sun}
+    <geom name="floor" type="plane" size="3 3 0.1" rgba="{floor_rgba}"/>
+
+    <geom name="wall_n" type="box" pos="0 {arena_half} {body_z}" size="{arena_half+0.05} 0.05 {wall_h}" rgba="{wall_rgba}"/>
+    <geom name="wall_s" type="box" pos="0 {-arena_half} {body_z}" size="{arena_half+0.05} 0.05 {wall_h}" rgba="{wall_rgba}"/>
+    <geom name="wall_e" type="box" pos="{arena_half} 0 {body_z}" size="0.05 {arena_half+0.05} {wall_h}" rgba="{wall_rgba}"/>
+    <geom name="wall_w" type="box" pos="{-arena_half} 0 {body_z}" size="0.05 {arena_half+0.05} {wall_h}" rgba="{wall_rgba}"/>
+
+    <!-- the object to discriminate: radius = tactile bit, rgba luminance = visual bit -->
+    <geom name="obj" type="cylinder" pos="{ox} {oy} {body_z}" size="{obj_radius} {wall_h}" rgba="{obj_rgba}"/>
+
+    <body name="mouse" pos="0 0 {body_z}">
+      <joint name="slide_x" type="slide" axis="1 0 0" damping="2.0"/>
+      <joint name="slide_y" type="slide" axis="0 1 0" damping="2.0"/>
+      <joint name="yaw" type="hinge" axis="0 0 1" damping="0.15"/>
+      <geom name="mouse_body" type="box" size="0.09 0.06 0.05" rgba="0.2 0.4 0.9 1" mass="0.4"/>
+      <site name="imu" pos="0 0 0" size="0.01" rgba="0.9 0.9 0.1 1"/>
+      <camera name="eye" pos="0.05 0 0.02" xyaxes="0 -1 0 0 0 1" fovy="90"/>
+{sites}
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor name="m_yaw_right" joint="yaw" gear="1"  ctrlrange="0 {cmax}"/>
+    <motor name="m_yaw_left"  joint="yaw" gear="-1" ctrlrange="0 {cmax}"/>
+  </actuator>
+
+  <sensor>
+{sensors}
+    <velocimeter name="vel" site="imu"/>
+    <gyro name="gyro" site="imu"/>
+  </sensor>
+</mujoco>
+"""
+
+
 def build_p2_xml(schema, arena_half: float = 1.4, wall_h: float = 0.15,
                  body_z: float = 0.12) -> str:
     """MJCF for the P2 'mouse', built from an explicit body schema.

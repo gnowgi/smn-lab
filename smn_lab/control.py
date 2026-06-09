@@ -240,6 +240,107 @@ class SaccadeController:
         return self.target
 
 
+class CrossModalBoard:
+    """Cross-modal communication board -- the 'balance beam' for the object
+    discrimination experiment, and that experiment's independent variable.
+
+    Each modality delivers one scalar feature reading about the object in front
+    of the agent (touch -> angular extent; vision -> luminance; taste -> chemical
+    signature). The board does two things, and both are the SMN claim under test:
+
+      (a) **Modulation.** Each reading is gated against a per-modality noise
+          floor: only a reading whose margin from the decision boundary exceeds
+          the floor is *resolved* into a bit; an unresolved channel contributes
+          nothing. This is the principle that raw transducer signal which is not
+          modulated does not flow -- so adding ungated channels (or more sensors
+          of the *same* modality) adds no usable bits.
+
+      (b) **Coupling.** The resolved bits of the wired-in modalities are
+          concatenated into a single object code. The object is the cross-modal
+          invariant: the number of individuable categories is 2**(resolved
+          modalities), so it is the *coupling of distinct modalities* -- not
+          transducer richness within one -- that individuates the object.
+
+    Two knobs make it the IV:
+      coupled   -- tuple of modality names wired into the board this run, e.g.
+                   ('touch',) or ('touch', 'vision', 'taste').
+      modulate  -- if False the gate is removed: every reading is forced to a
+                   bit regardless of margin. This is the 'raw transducer, no
+                   modulation' condition; under noise an ungated channel can only
+                   decode at chance, so stacking such channels buys nothing.
+
+    `boundaries[m]` is the feature value separating modality m's two bits;
+    `floors[m]` is its modulation gate (in the same units as the reading).
+    """
+
+    def __init__(self, coupled, boundaries, floors, modulate: bool = True):
+        self.coupled = tuple(coupled)
+        self.boundaries = dict(boundaries)
+        self.floors = dict(floors)
+        self.modulate = bool(modulate)
+
+    def decode(self, readings: dict):
+        """Return (bits, resolved): bits[m] in {0, 1} or None if unresolved;
+        resolved[m] is the boolean gate outcome for modality m."""
+        bits, resolved = {}, {}
+        for m in self.coupled:
+            margin = readings[m] - self.boundaries[m]
+            if self.modulate and abs(margin) < self.floors[m]:
+                bits[m], resolved[m] = None, False        # dropped below the floor
+            else:
+                bits[m], resolved[m] = (1 if margin >= 0 else 0), True
+        return bits, resolved
+
+    def code(self, readings: dict):
+        """A hashable signature of the resolved bits, in the fixed modality
+        order of `coupled`. Unresolved modalities appear as None, so two objects
+        that differ only along an unread axis collapse to the same signature --
+        which is exactly why fewer coupled modalities means fewer individuable
+        categories."""
+        bits, _ = self.decode(readings)
+        return tuple(bits[m] for m in self.coupled)
+
+
+class SubsumptionArbiter:
+    """The Brooks/subsumption foil: fixed-priority *suppression* instead of
+    modulation, and no constructed snapshot.
+
+    Behaviour layers are ordered by priority. The highest-priority layer that
+    fires (its reading clears its floor) suppresses the rest, and its single bit
+    is the output. Crucially the layers are never *combined*: suppression
+    replaces, it does not bind. So however many modalities are wired in, the
+    arbiter yields one surviving bit -- at most two categories. That is the
+    architectural ceiling subsumption hits and [[CrossModalBoard]] (which couples
+    the resolved bits through modulation) breaks through.
+
+    Reactive locomotion -- steering toward the nearest affordance, halting at an
+    obstacle -- is shared with the SMN agent (it, too, is a reactive behaviour);
+    what subsumption lacks is the modulatory coupling that binds modalities into
+    an object, and the self-localized snapshot that places it. So a subsumption
+    agent can *approach* an object it cannot *individuate* or *locate*.
+    """
+
+    def __init__(self, priority, boundaries, floors):
+        self.priority = tuple(priority)
+        self.boundaries = dict(boundaries)
+        self.floors = dict(floors)
+
+    def decode(self, readings: dict):
+        """Return (winning_modality, bit) for the highest-priority layer that
+        fires; (None, None) if none clears its floor."""
+        for m in self.priority:
+            margin = readings[m] - self.boundaries[m]
+            if abs(margin) >= self.floors[m]:        # this layer fires -> suppresses the rest
+                return m, (1 if margin >= 0 else 0)
+        return None, None
+
+    def code(self, readings: dict):
+        """The one surviving channel's bit -- never a tuple of bits, because
+        suppression does not combine layers."""
+        _, bit = self.decode(readings)
+        return (bit,)
+
+
 class DeadReckoner:
     """Self-localization from proprioception. The agent never reads its absolute
     position; it integrates the body-frame linear velocity (velocimeter) and yaw
