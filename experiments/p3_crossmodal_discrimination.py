@@ -220,13 +220,16 @@ def _rgba(lum):
     return f"{lum:.3f} {lum:.3f} {lum:.3f} 1"
 
 
-def run_trial(obj, whisker_angles, reaff_on, watch=False, cosmetic=False):
+def run_trial(obj, whisker_angles, reaff_on, watch=False, cosmetic=False, frame_cb=None):
     """Approach one object, then read all three modalities and localize it.
 
     Returns the raw per-modality feature readings and the localization error
     under the chosen reafference setting. With ``watch=True`` an interactive
     MuJoCo viewer opens and the approach runs in real time (for `--watch`);
-    ``cosmetic=True`` uses the legible coloured-room scene for that viewer."""
+    ``cosmetic=True`` uses the legible coloured-room scene for that viewer.
+    ``frame_cb(rgb, info)`` -- if given, a third-person frame is rendered during
+    the approach and handed to the callback (used by the Streamlit lab UI to show
+    the live world); the very same control code drives it."""
     wdeg = np.asarray(whisker_angles, dtype=float)
     wrad = np.radians(wdeg)
     ci = int(np.argmin(np.abs(wdeg)))                  # the centre (0 deg) whisker
@@ -270,6 +273,13 @@ def run_trial(obj, whisker_angles, reaff_on, watch=False, cosmetic=False):
         viewer.cam.lookat[:] = [0.4, 0.0, 0.10]      # frame the agent + the object ahead
         viewer.cam.distance, viewer.cam.elevation, viewer.cam.azimuth = 3.0, -45.0, 90.0
 
+    scene_renderer = None                            # third-person render for the lab UI
+    if frame_cb is not None:
+        scene_renderer = mujoco.Renderer(model, height=420, width=600)
+        scene_cam = mujoco.MjvCamera()
+        scene_cam.lookat[:] = [0.4, 0.0, 0.10]
+        scene_cam.distance, scene_cam.elevation, scene_cam.azimuth = 3.0, -45.0, 90.0
+
     best_min, best_ranges, best_pose, best_qpos = float("inf"), None, START, START
     acquired = False
     ranges = np.full(len(wdeg), MAX_RAY)
@@ -307,11 +317,16 @@ def run_trial(obj, whisker_angles, reaff_on, watch=False, cosmetic=False):
             viewer.sync(); _time.sleep(DT)
             if not viewer.is_running():
                 break
+        if scene_renderer is not None and k % 3 == 0:   # feed the lab UI a third-person frame
+            scene_renderer.update_scene(data, scene_cam)
+            frame_cb(scene_renderer.render(), {"t": t, "minr": float(ranges.min())})
 
     if viewer is not None:                              # hold at closest approach until closed
         while viewer.is_running():
             viewer.sync(); _time.sleep(0.03)
         viewer.close()
+    if scene_renderer is not None:
+        scene_renderer.close()
     if best_ranges is not None:                         # report the closest-approach frame
         ranges, (ex, ey, eyaw) = best_ranges, best_pose
 

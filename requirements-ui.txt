@@ -1,0 +1,4 @@
+# Optional dependencies for the SMN-Lab interface (app.py).
+# Install with:  pip install -r requirements-ui.txt
+# The core bench (experiments, library) does not need these.
+streamlit>=1.30

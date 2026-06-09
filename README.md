@@ -40,6 +40,15 @@ python3 -m venv .venv
 cd experiments && ../.venv/bin/python p0_reafference.py
 ```
 
+### Lab interface (optional)
+A small Streamlit window — pick an experiment, watch the agent in its world, and
+see the graphs, tables, and documentation, all computed live (the math in
+action, not canned). See [the lab interface](docs/lab-interface.md).
+```bash
+.venv/bin/pip install -r requirements-ui.txt
+.venv/bin/streamlit run app.py
+```
+
 ## Current capability — the reafference register in the body
 A single Coordinated Action Zone (a yaw "head" driven by a pull-only antagonist
 pair) carries one rangefinder "whisker" and sweeps a static walled arena. A
