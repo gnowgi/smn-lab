@@ -22,6 +22,11 @@ nav:
       - Basal coupling (why move): experiments/p2_basal_coupling.md
       - Map-guided foraging (decay as survival): experiments/p2_map_guided_foraging.md
       - P3 — cross-modal discrimination (recognition): experiments/p3_crossmodal_discrimination.md
+      - "E1 — objecthood as resistance (manipulator)": experiments/p4_manipulator_objecthood.md
+      - "E2 — self / field / object factoring": experiments/p5_self_field_object.md
+      - "E3 — haltability generates aboutness": experiments/p6_haltability_aboutness.md
+      - "E4 — objecthood as composition; world model scales with the network": experiments/p7_scaling_network.md
+      - "E4b — objecthood as a coupling-density transition": experiments/p8_objecthood_transition.md
 hooks:
   - docs/hooks.py
 markdown_extensions:
