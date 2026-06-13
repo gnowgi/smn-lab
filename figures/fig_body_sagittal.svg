@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 440" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arb" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#1a1a1a"/>
+    </marker>
+    <marker id="arg" markerWidth="10" markerHeight="10" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L8,3.5 L0,7 Z" fill="#444"/>
+    </marker>
+    <marker id="arc" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#2c6a9c"/>
+    </marker>
+    <pattern id="hatch3" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#888" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="500" height="440" fill="#ffffff"/>
+  <text x="250" y="28" text-anchor="middle" font-size="15.5" font-weight="bold" fill="#1a1a1a">Single sagittal limb — side view (E2)</text>
+  <text x="250" y="46" text-anchor="middle" font-size="11.5" fill="#555">lifts against gravity in place; reads the field through its own effort</text>
+
+  <!-- ground -->
+  <line x1="40" y1="395" x2="460" y2="395" stroke="#1a1a1a" stroke-width="2"/>
+  <rect x="40" y="395" width="420" height="10" fill="url(#hatch3)"/>
+
+  <!-- axes -->
+  <line x1="60" y1="380" x2="60" y2="330" stroke="#1a1a1a" stroke-width="1.2" marker-end="url(#arb)"/>
+  <text x="64" y="330" font-size="11" fill="#1a1a1a">z</text>
+  <line x1="60" y1="380" x2="110" y2="380" stroke="#1a1a1a" stroke-width="1.2" marker-end="url(#arb)"/>
+  <text x="115" y="384" font-size="11" fill="#1a1a1a">x</text>
+
+  <!-- post holding the pivot high (z = 0.40) -->
+  <rect x="112" y="120" width="14" height="275" fill="#cfcfd4" stroke="#666" stroke-width="1.2"/>
+  <text x="119" y="300" text-anchor="middle" font-size="10.5" fill="#666" transform="rotate(-90 119 300)">support post</text>
+
+  <!-- pivot -->
+  <circle cx="119" cy="125" r="7" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+  <text x="100" y="118" text-anchor="end" font-size="11" fill="#1a1a1a">pivot (z=0.40)</text>
+
+  <!-- hanging start position (tip down) -->
+  <line x1="119" y1="125" x2="165" y2="320" stroke="#2c6a9c" stroke-width="4" stroke-dasharray="5 4" stroke-linecap="round" opacity="0.55"/>
+  <text x="172" y="330" font-size="10" fill="#2c6a9c" opacity="0.8">start: hanging</text>
+
+  <!-- lifted position (arm) -->
+  <line x1="119" y1="125" x2="320" y2="205" stroke="#2c6a9c" stroke-width="10" stroke-linecap="round"/>
+  <rect x="314" y="197" width="17" height="17" fill="#cfe0ee" stroke="#1a1a1a" stroke-width="1.3"/>
+  <text x="235" y="150" text-anchor="middle" font-size="10.5" fill="#2c6a9c">arm (0.25 m)</text>
+
+  <!-- lift arc -->
+  <path d="M 160 315 A 200 200 0 0 1 305 215" fill="none" stroke="#2c6a9c" stroke-width="1.6" marker-end="url(#arc)"/>
+  <text x="215" y="290" font-size="10.5" fill="#2c6a9c">lift</text>
+
+  <!-- gravity -->
+  <line x1="410" y1="120" x2="410" y2="190" stroke="#444" stroke-width="2.4" marker-end="url(#arg)"/>
+  <text x="418" y="160" font-size="13" fill="#444" font-style="italic">g</text>
+
+  <!-- object in the lift arc -->
+  <rect x="300" y="250" width="28" height="28" fill="#d8d8dc" stroke="#1a1a1a" stroke-width="1.4"/>
+  <text x="314" y="295" text-anchor="middle" font-size="11" fill="#333">object</text>
+  <text x="314" y="308" text-anchor="middle" font-size="10" fill="#555">(optional)</text>
+
+  <!-- antagonist pair label -->
+  <text x="150" y="100" font-size="9.5" fill="#b03030">lift / press pulls</text>
+  <text x="150" y="112" font-size="9.5" fill="#b03030">(opponent pair)</text>
+
+  <text x="250" y="428" text-anchor="middle" font-size="10.5" fill="#444" font-style="italic">the effort the limb spends lifting itself = the field read; an unexpected residue = self vs. world.</text>
+</svg>

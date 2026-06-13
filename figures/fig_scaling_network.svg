@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 430" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="ad" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#2c6a9c"/>
+    </marker>
+    <marker id="ak" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#1a1a1a"/>
+    </marker>
+  </defs>
+  <rect width="720" height="430" fill="#ffffff"/>
+  <text x="360" y="26" text-anchor="middle" font-size="15.5" font-weight="bold" fill="#1a1a1a">Scaling (E4): each zone reads one difference; the board composes them</text>
+  <text x="360" y="44" text-anchor="middle" font-size="11.5" fill="#555">a row of K pull-only press-pads, each pressing one facet — world-model capacity = 2^(zones the board binds)</text>
+
+  <!-- ===== LEFT: K press-pads over facets ===== -->
+  <!-- coupling network overlay -->
+  <g>
+    <line x1="70" y1="95" x2="150" y2="95" stroke="#5a9a5a" stroke-width="1.6"/>
+    <line x1="150" y1="95" x2="230" y2="95" stroke="#5a9a5a" stroke-width="1.6"/>
+    <line x1="230" y1="95" x2="310" y2="95" stroke="#5a9a5a" stroke-width="1.6"/>
+    <line x1="70" y1="95" x2="230" y2="95" stroke="#5a9a5a" stroke-width="1.2" opacity="0.6"/>
+    <circle cx="70" cy="95" r="6" fill="#5a9a5a"/>
+    <circle cx="150" cy="95" r="6" fill="#5a9a5a"/>
+    <circle cx="230" cy="95" r="6" fill="#5a9a5a"/>
+    <circle cx="310" cy="95" r="6" fill="#5a9a5a"/>
+    <text x="190" y="76" text-anchor="middle" font-size="11" fill="#3c7a3c">the board (coupling network of zones)</text>
+  </g>
+
+  <!-- ground -->
+  <line x1="40" y1="335" x2="350" y2="335" stroke="#1a1a1a" stroke-width="2"/>
+
+  <!-- pads + facets, K=4 -->
+  <!-- i=0 hard -->
+  <g>
+    <line x1="70" y1="120" x2="70" y2="335" stroke="#ddd" stroke-width="1"/>
+    <rect x="55" y="150" width="30" height="22" fill="#2c6a9c" stroke="#1a1a1a" stroke-width="1.2"/>
+    <line x1="70" y1="178" x2="70" y2="240" stroke="#2c6a9c" stroke-width="2.2" marker-end="url(#ad)"/>
+    <rect x="52" y="250" width="36" height="30" fill="#c9c9cf" stroke="#1a1a1a" stroke-width="1.3"/>
+  </g>
+  <!-- i=1 soft -->
+  <g>
+    <line x1="150" y1="120" x2="150" y2="335" stroke="#ddd" stroke-width="1"/>
+    <rect x="135" y="150" width="30" height="22" fill="#2c6a9c" stroke="#1a1a1a" stroke-width="1.2"/>
+    <line x1="150" y1="178" x2="150" y2="238" stroke="#2c6a9c" stroke-width="2.2" marker-end="url(#ad)"/>
+    <rect x="132" y="248" width="36" height="26" fill="#cfe6cf" stroke="#1a1a1a" stroke-width="1.3"/>
+    <path d="M150,274 l-7,6 l14,7 l-14,7 l14,7 l-7,6" fill="none" stroke="#5a9a5a" stroke-width="1.6"/>
+  </g>
+  <!-- i=2 hard -->
+  <g>
+    <line x1="230" y1="120" x2="230" y2="335" stroke="#ddd" stroke-width="1"/>
+    <rect x="215" y="150" width="30" height="22" fill="#2c6a9c" stroke="#1a1a1a" stroke-width="1.2"/>
+    <line x1="230" y1="178" x2="230" y2="240" stroke="#2c6a9c" stroke-width="2.2" marker-end="url(#ad)"/>
+    <rect x="212" y="250" width="36" height="30" fill="#c9c9cf" stroke="#1a1a1a" stroke-width="1.3"/>
+  </g>
+  <!-- i=3 soft -->
+  <g>
+    <line x1="310" y1="120" x2="310" y2="335" stroke="#ddd" stroke-width="1"/>
+    <rect x="295" y="150" width="30" height="22" fill="#2c6a9c" stroke="#1a1a1a" stroke-width="1.2"/>
+    <line x1="310" y1="178" x2="310" y2="238" stroke="#2c6a9c" stroke-width="2.2" marker-end="url(#ad)"/>
+    <rect x="292" y="248" width="36" height="26" fill="#cfe6cf" stroke="#1a1a1a" stroke-width="1.3"/>
+    <path d="M310,274 l-7,6 l14,7 l-14,7 l14,7 l-7,6" fill="none" stroke="#5a9a5a" stroke-width="1.6"/>
+  </g>
+
+  <text x="70" y="143" text-anchor="middle" font-size="10" fill="#2c6a9c">pad = zone</text>
+  <text x="70" y="300" text-anchor="middle" font-size="10" fill="#333">hard</text>
+  <text x="150" y="320" text-anchor="middle" font-size="10" fill="#3c7a3c">soft</text>
+  <text x="230" y="300" text-anchor="middle" font-size="10" fill="#333">hard</text>
+  <text x="310" y="320" text-anchor="middle" font-size="10" fill="#3c7a3c">soft</text>
+  <text x="190" y="360" text-anchor="middle" font-size="10.5" fill="#555">object = a row of facets, one differentia (hard/soft) per zone</text>
+
+  <!-- ===== RIGHT: scaling plot ===== -->
+  <g transform="translate(430,0)">
+    <!-- axes -->
+    <line x1="60" y1="100" x2="60" y2="330" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#ak)"/>
+    <line x1="60" y1="330" x2="270" y2="330" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#ak)"/>
+    <text x="14" y="215" text-anchor="middle" font-size="11.5" fill="#1a1a1a" transform="rotate(-90 14 215)">world-model capacity (log)</text>
+    <text x="165" y="360" text-anchor="middle" font-size="11.5" fill="#1a1a1a">zones bound by the network (K)</text>
+
+    <!-- exponential points 2,4,8,16,32 (log -> linear rise) -->
+    <polyline points="90,305 130,275 170,245 210,215 250,185" fill="none" stroke="#2c7a2c" stroke-width="2.2"/>
+    <circle cx="90" cy="305" r="4" fill="#2c7a2c"/>
+    <circle cx="130" cy="275" r="4" fill="#2c7a2c"/>
+    <circle cx="170" cy="245" r="4" fill="#2c7a2c"/>
+    <circle cx="210" cy="215" r="4" fill="#2c7a2c"/>
+    <circle cx="250" cy="185" r="4" fill="#2c7a2c"/>
+    <text x="96" y="300" font-size="9" fill="#2c7a2c">2</text>
+    <text x="136" y="270" font-size="9" fill="#2c7a2c">4</text>
+    <text x="176" y="240" font-size="9" fill="#2c7a2c">8</text>
+    <text x="216" y="210" font-size="9" fill="#2c7a2c">16</text>
+    <text x="256" y="182" font-size="9" fill="#2c7a2c">32</text>
+    <text x="180" y="170" text-anchor="middle" font-size="11" fill="#2c7a2c" font-weight="bold">2^K  (coupled)</text>
+
+    <!-- flat unbound baseline -->
+    <line x1="90" y1="312" x2="250" y2="312" stroke="#b03030" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="170" y="326" text-anchor="middle" font-size="10" fill="#b03030">unbound zones &#8594; capacity 2 (flat)</text>
+
+  </g>
+
+  <text x="360" y="420" text-anchor="middle" font-size="10.5" fill="#444" font-style="italic">The world model is built by the network of coupled zones — not by the sensor count.</text>
+</svg>
