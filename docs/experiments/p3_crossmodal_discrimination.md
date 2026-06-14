@@ -1,5 +1,13 @@
 # P3 — Cross-modal discrimination (recognition as a basal SMN result)
 
+!!! note "Exploratory trial — P/E series"
+    Part of the bench's first exploratory series, built while learning the bench:
+    a **proof-of-concept**, not a clean ablation (several runs are single-seed and
+    some metrics saturate). The disciplined model organism and the going-forward
+    line is the **C-series** — [C0](c0_crawler.md), [C1](c1_touch.md) — grounded in
+    [Lesson 1](../lesson1.md).
+
+
 `experiments/p3_crossmodal_discrimination.py`
 
 The P2 experiments showed the agent *building a world* — mapping, foraging,

@@ -1,5 +1,13 @@
 # P1-visual — the multi-CAZ eye: reafference under eye saccades, ±body yaw
 
+!!! note "Exploratory trial — P/E series"
+    Part of the bench's first exploratory series, built while learning the bench:
+    a **proof-of-concept**, not a clean ablation (several runs are single-seed and
+    some metrics saturate). The disciplined model organism and the going-forward
+    line is the **C-series** — [C0](c0_crawler.md), [C1](c1_touch.md) — grounded in
+    [Lesson 1](../lesson1.md).
+
+
 `experiments/p1_visual.py`
 
 Builds on [P0-visual](p0_visual.md) by giving the eye its **own CAZ pair**. The

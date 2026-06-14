@@ -17,6 +17,19 @@ agent in both columns; only the world differs. The closed loop of movement ↔
 energy ↔ food ↔ living map sustains the agent when the world feeds back, and
 opens when it does not.*
 
+## The two experiment series
+
+The bench has two lines of experiments.
+
+- **C-series — the disciplined model organism.** The going-forward line, built on
+  the minimal axial crawler of [Lesson 1](lesson1.md): one well-characterized body
+  on which experiments vary a single parameter at a time. Start here —
+  [C0](experiments/c0_crawler.md), [C1](experiments/c1_touch.md).
+- **P/E-series — exploratory trials.** The bench's first experiments, built while
+  learning what it could do. They are **proofs-of-concept** — several are
+  single-seed and some metrics saturate — kept as the bench's provenance. Read
+  them as demonstrations, not as clean ablations.
+
 ## What's in the lab
 
 ### Library (`smn_lab/`)
