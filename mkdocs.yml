@@ -8,6 +8,7 @@ nav:
   - Concepts: concepts.md
   - "Lesson 1 — the construction of experience": lesson1.md
   - Assumptions: assumptions.md
+  - Reproducibility note: reproducibility.md
   - Lab interface: lab-interface.md
   - Integrations:
       - NetLogo (feasibility report): integrations/netlogo.md
