@@ -350,6 +350,55 @@ class SubsumptionArbiter:
         return (bit,)
 
 
+class MessagingBeam:
+    """The SMN messaging beam over the crawler's inter-segment joints.
+
+    Each inter-segment joint hosts one CAZ-oscillator. Neighbors exchange phase
+    'messages' (a Kuramoto-style nearest-neighbor coupling) that pull each pair of
+    adjacent oscillators toward a fixed phase difference, so a **traveling wave**
+    of bends emerges from local coupling alone -- no center. The wave is the basal
+    action pattern (BAP); the anisotropic medium turns it into net thrust.
+
+    A bilateral field gradient sensed at the head biases the wave -- a constant
+    offset added to every joint command curves the body, turning locomotion toward
+    higher field (chemotaxis). That is the minimal aboutness-precursor: directed
+    movement toward a 'where' in the body's differentiation field.
+
+    State exposed for visualization:
+      phase  -- (n,) oscillator phase per joint (node/edge dynamic state);
+      msg    -- (n,) last coupling message magnitude per joint (edge 'flow');
+      theta_cmd of `command()` -- the per-joint angle command (the shared
+      actuation state whose trajectory is the gait loop).
+    """
+
+    def __init__(self, n_joints: int, amp: float = 0.6, freq: float = 0.8,
+                 phase_lag: float = 1.2, coupling: float = 4.0,
+                 turn_gain: float = 0.8):
+        self.n = int(n_joints)
+        self.amp = amp
+        self.w = 2 * np.pi * freq
+        self.phase_lag = phase_lag          # desired head->tail phase difference
+        self.coupling = coupling
+        self.turn_gain = turn_gain
+        self.phase = -phase_lag * np.arange(self.n, dtype=float)
+        self.msg = np.zeros(self.n)
+
+    def command(self, dt: float, bias: float = 0.0) -> np.ndarray:
+        """Advance the coupled oscillators by dt and return per-joint angle
+        commands (traveling wave + chemotactic turn bias)."""
+        dphi = np.full(self.n, self.w)
+        for i in range(self.n):
+            m = 0.0
+            if i > 0:
+                m += np.sin((self.phase[i - 1] - self.phase[i]) - self.phase_lag)
+            if i < self.n - 1:
+                m += np.sin((self.phase[i + 1] - self.phase[i]) + self.phase_lag)
+            self.msg[i] = m
+            dphi[i] += self.coupling * m
+        self.phase = self.phase + dphi * dt
+        return self.amp * np.sin(self.phase) + self.turn_gain * bias
+
+
 class DeadReckoner:
     """Self-localization from proprioception. The agent never reads its absolute
     position; it integrates the body-frame linear velocity (velocimeter) and yaw
