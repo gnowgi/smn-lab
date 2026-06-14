@@ -34,10 +34,15 @@ sys.path.insert(0, os.path.join(HERE, "experiments"))
 from smn_lab.body import MouseSchema
 from smn_lab.model import (build_p0_xml, build_p0v_xml, build_p1v_xml,
                            build_p1_xml, build_p2_xml, build_p3_xml)
+from smn_lab.crawler import build_crawler_xml
 
 # Every experiment maps to a renderable MuJoCo scene, so the World panel always
 # shows the actual world (a static scene render); P3 additionally animates a run.
 SCENE_BUILDERS = {
+    "c0_crawler": lambda: build_crawler_xml(n_seg=3),
+    "c1_touch": lambda: build_crawler_xml(
+        n_seg=3, gravity_on=True, with_floor=True, with_walls=True,
+        touch=True, objects=[(0.78, 0.0, 0.12)]),
     "p0_reafference": lambda: build_p0_xml(),
     "p0_visual": lambda: build_p0v_xml(),
     "p1_visual": lambda: build_p1v_xml(),

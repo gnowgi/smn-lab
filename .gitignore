@@ -11,3 +11,7 @@ data/
 
 # built documentation site (mkdocs)
 site/
+
+# MuJoCo crash log
+MUJOCO_LOG.TXT
+**/MUJOCO_LOG.TXT
