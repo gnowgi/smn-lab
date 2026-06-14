@@ -27,7 +27,11 @@ import mujoco
 def build_crawler_xml(n_seg: int = 3, h: float = 0.07, w: float = 0.025,
                       seg_mass: float = 0.05, cmax: float = 2.5,
                       z0: float = 0.1, sense_off: float = 0.06,
-                      bend_limit_deg: float = 60.0) -> str:
+                      bend_limit_deg: float = 60.0,
+                      gravity_on: bool = False, with_floor: bool = False,
+                      with_walls: bool = False, arena_half: float = 2.2,
+                      wall_h: float = 0.10, objects=None, touch: bool = False,
+                      floor_friction: float = 0.0, free_root: bool = False) -> str:
     """MJCF for an n_seg axial crawler.
 
     Segments lie head (seg0, +x front) to tail along -x; each segment carries
@@ -35,12 +39,28 @@ def build_crawler_xml(n_seg: int = 3, h: float = 0.07, w: float = 0.025,
     forward bilateral sites (sense_L / sense_R) used for chemotactic steering.
     Each inter-segment hinge j{k} is actuated by a pull-only opponent pair
     (m_j{k}_p, m_j{k}_n).
+
+    v0 (defaults): planar swimmer -- the head has slide_x/slide_y/yaw joints,
+    gravity off, the anisotropic drag is the medium.
+
+    v1 (``gravity_on=with_floor=touch=True``): gravity is present; the body
+    glides in its support plane (a frictionless support idealization) and each
+    segment carries a ventral **touch skin** that registers physical object/wall
+    contact. ``objects`` is a list of (x, y, radius) static cylinders to
+    encounter and ``with_walls`` seals the arena. The resting ventral load (the
+    segment's weight) is added by the experiment, so the skin reads
+    weight + contact. ``free_root=True`` swaps the planar joints for a free joint
+    so the body genuinely rests on the floor under gravity -- a future refinement
+    that needs contact-dynamics tuning; the planar default is the stable one.
     """
     seglen = 2 * h
+    objects = objects or []
 
     def seg_body(k: int) -> str:
         is_head = (k == 0)
-        if is_head:
+        if is_head and free_root:
+            joints = '      <freejoint name="root"/>'
+        elif is_head:
             joints = (
                 '      <joint name="slide_x" type="slide" axis="1 0 0" damping="0.5"/>\n'
                 '      <joint name="slide_y" type="slide" axis="0 1 0" damping="0.5"/>\n'
@@ -50,10 +70,16 @@ def build_crawler_xml(n_seg: int = 3, h: float = 0.07, w: float = 0.025,
                       f'range="{-bend_limit_deg} {bend_limit_deg}" damping="0.02"/>')
         shade = max(0.30, 0.62 - 0.08 * k)
         color = f"0.20 0.45 0.90" if is_head else f"0.30 {shade:.2f} 0.78"
+        # segment is frictionless vs the floor (locomotion is the drag medium's
+        # job, not ground friction); object/wall contact keeps friction so it is
+        # 'felt' as a force on the skin
         geom = (f'      <geom name="seg{k}_geom" type="box" size="{h} {w} {w}" '
-                f'mass="{seg_mass}" rgba="{color} 1"/>')
+                f'mass="{seg_mass}" friction="0 0 0" rgba="{color} 1"/>')
         sites = (f'      <site name="seg{k}_L" pos="0 {w + sense_off} 0" size="0.006" rgba="0.85 0.25 0.25 1"/>\n'
                  f'      <site name="seg{k}_R" pos="0 {-(w + sense_off)} 0" size="0.006" rgba="0.25 0.25 0.85 1"/>')
+        if touch:                           # full-segment touch zone (the skin)
+            sites += (f'\n      <site name="touch{k}" type="box" pos="0 0 0" '
+                      f'size="{h} {w} {w}" rgba="0.95 0.55 0.10 0.18"/>')
         if is_head:
             sites += (f'\n      <site name="sense_L" pos="{h} {w + sense_off} 0" size="0.009" rgba="1 0.35 0.35 1"/>\n'
                       f'      <site name="sense_R" pos="{h} {-(w + sense_off)} 0" size="0.009" rgba="0.35 0.35 1 1"/>')
@@ -69,19 +95,43 @@ def build_crawler_xml(n_seg: int = 3, h: float = 0.07, w: float = 0.025,
         acts.append(f'    <motor name="m_j{k}_n" joint="j{k}" gear="-0.05" ctrlrange="0 {cmax}"/>')
         sens.append(f'    <jointpos name="ang_j{k}" joint="j{k}"/>')
         sens.append(f'    <jointvel name="vel_j{k}" joint="j{k}"/>')
+    if touch:
+        for k in range(n_seg):
+            sens.append(f'    <touch name="touch{k}" site="touch{k}"/>')
     acts, sens = "\n".join(acts), "\n".join(sens)
+
+    gravity = "0 0 -9.81" if gravity_on else "0 0 0"
+    world = []
+    if with_floor:
+        world.append('    <light pos="0 0 3" dir="0 0 -1"/>')
+        world.append(f'    <geom name="floor" type="plane" size="4 4 0.1" '
+                     f'friction="{floor_friction} 0 0" rgba="0.93 0.93 0.93 1"/>')
+    else:
+        world.append('    <light pos="0 0 3" dir="0 0 -1"/>')
+    if with_walls:
+        for nm, (px, py, sx, sy) in {
+            "wall_n": (0, arena_half, arena_half + 0.05, 0.05),
+            "wall_s": (0, -arena_half, arena_half + 0.05, 0.05),
+            "wall_e": (arena_half, 0, 0.05, arena_half + 0.05),
+            "wall_w": (-arena_half, 0, 0.05, arena_half + 0.05)}.items():
+            world.append(f'    <geom name="{nm}" type="box" pos="{px} {py} {wall_h}" '
+                         f'size="{sx} {sy} {wall_h}" rgba="0.6 0.6 0.6 1"/>')
+    for i, (ox, oy, orr) in enumerate(objects):
+        world.append(f'    <geom name="obj{i}" type="cylinder" pos="{ox} {oy} {wall_h}" '
+                     f'size="{orr} {wall_h}" rgba="0.85 0.30 0.20 1"/>')
+    world = "\n".join(world)
 
     return f"""
 <mujoco model="smn_crawler_a{n_seg}">
   <compiler angle="degree" autolimits="true"/>
-  <option timestep="0.002" gravity="0 0 0" integrator="implicitfast"/>
+  <option timestep="0.002" gravity="{gravity}" integrator="implicitfast"/>
   <visual>
     <global offwidth="1280" offheight="720"/>
     <headlight diffuse="0.7 0.7 0.7" ambient="0.4 0.4 0.4"/>
   </visual>
 
   <worldbody>
-    <light pos="0 0 3" dir="0 0 -1"/>
+{world}
     <body name="seg0" pos="0 0 {z0}">
 {seg_body(0)}
     </body>
