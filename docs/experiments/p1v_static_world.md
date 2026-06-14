@@ -1,5 +1,13 @@
 # P1-visual / static-world variant — only agent-side modulation
 
+!!! note "Exploratory trial — P/E series"
+    Part of the bench's first exploratory series, built while learning the bench:
+    a **proof-of-concept**, not a clean ablation (several runs are single-seed and
+    some metrics saturate). The disciplined model organism and the going-forward
+    line is the **C-series** — [C0](c0_crawler.md), [C1](c1_touch.md) — grounded in
+    [Lesson 1](../lesson1.md).
+
+
 `experiments/p1v_static_world.py`
 
 This experiment isolates the multi-CAZ eye's reafference register by holding
