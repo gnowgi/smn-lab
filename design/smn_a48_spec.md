@@ -1,5 +1,11 @@
 # SMN-A48 Specification
 
+> **Note — read [Lesson 1](lesson1_construction_of_experience.md) first.**
+> `SMN-A48` is a *scaling target*. The constructive baseline is the minimal
+> three-block **axial** crawler of Lesson 1; A48 is reached by scaling segments and
+> adding branches (appendages) to that axial chain — the spider is a worm that grew
+> legs — not by taking the spider as the primitive.
+
 ## Purpose
 
 `SMN-A48` is the proposed canonical organism for the next phase of the SMN bench. It is intended to be:

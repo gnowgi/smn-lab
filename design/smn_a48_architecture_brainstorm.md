@@ -1,5 +1,13 @@
 # SMN-A48 Architecture Brainstorm
 
+> **Note — read [Lesson 1](lesson1_construction_of_experience.md) first.** The
+> spider-like canonical body described below is a *scaling target*, not a starting
+> point. The minimal organism is a three-block **axial** segmented crawler (the
+> worm precedes the spider); the canonical body is reached by *scaling and
+> branching* that axial chain — appendages are branches of a segmental graph — never
+> by starting from the spider. Lesson 1 gives the constructive baseline this note
+> builds on.
+
 ## Purpose
 
 This note consolidates the current design brainstorming for a more serious SMN bench organism than the present low-CAZ prototypes. The goal is to define a stable artificial model system on which many experiments can be run while varying selected architectural parameters cleanly.
