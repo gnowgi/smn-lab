@@ -74,9 +74,36 @@ def fig_ladder(out):
     print(f"[saved] {out}")
 
 
+def fig_agent(schema, out, caption):
+    """A per-experiment 'the agent' figure: morphology view over network view, in
+    the standard grammar, drawn from the experiment's own schema."""
+    fig = plt.figure(figsize=(8.4, 5.0))
+    gs = fig.add_gridspec(2, 1, height_ratios=[1, 1], hspace=0.12)
+    ax0 = fig.add_subplot(gs[0])
+    render_morphology(ax0, schema)
+    ax0.set_title("Morphology — sensors mounted inside · CAZ at each joint",
+                  fontsize=9)
+    ax1 = fig.add_subplot(gs[1])
+    render_network(ax1, schema)
+    ax1.set_title("Network — sensor → CAZ, CAZ ↔ CAZ (the messaging beam)",
+                  fontsize=9)
+    fig.suptitle(caption, fontsize=10.5)
+    fig.savefig(out, dpi=130, bbox_inches="tight")
+    print(f"[saved] {out}")
+
+
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
     figdir = os.path.join(here, "..", "figures")
     os.makedirs(figdir, exist_ok=True)
     fig_grammar(os.path.join(figdir, "diagram_grammar.png"))
     fig_ladder(os.path.join(figdir, "morphology_ladder.png"))
+    # per-experiment agents, from each experiment's own sensor suite
+    fig_agent(crawler_schema(n_seg=3, touch=False, field_modalities=("chem",),
+                             localizers=()),
+              os.path.join(figdir, "c0_agent.png"),
+              "C0 agent — A3 crawler: bilateral chemical sensing, no contact")
+    fig_agent(crawler_schema(n_seg=3, touch=True, field_modalities=("chem",),
+                             localizers=()),
+              os.path.join(figdir, "c1_agent.png"),
+              "C1 agent — A3 crawler: bilateral chemical sensing + ventral touch skin")
