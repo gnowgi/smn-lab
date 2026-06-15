@@ -1,0 +1,33 @@
+{
+  "name": "q1_modulation",
+  "created_utc": "2026-06-15T23:24:09+00:00",
+  "git_sha": "2996e9d",
+  "n_configs": 8,
+  "n_seeds": 6,
+  "n_runs": 48,
+  "grid": "explicit-list",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "summary_columns": [
+    "run_id",
+    "config_id",
+    "n_seg",
+    "mode",
+    "seed",
+    "self_res",
+    "exaf_res",
+    "ratio"
+  ],
+  "timeseries_columns": [
+    "run_id",
+    "config_id",
+    "seed"
+  ],
+  "decimate": 1
+}
