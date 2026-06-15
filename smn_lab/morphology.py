@@ -53,7 +53,10 @@ MODALITY_COLORS = {
 _DISTAL = {"vision": "eye", "audio": "ear"}      # which modalities are localizers
 CAZ_FILL = "#f4c542"             # the CAZ's flexor (filled) half
 NETWORK_COLOR = "#7fb3d5"        # the coupling network (light blue)
-DOFS = ("lateral", "dorsoventral")
+# The degrees of freedom a single CAZ (one opponent pair) can actuate. The two
+# bending DOFs read as a split circle (split orientation = bend axis); the twist
+# and telescoping DOFs read as a double-headed arrow (the two opposing pulls).
+DOFS = ("lateral", "dorsoventral", "roll", "telescoping")
 
 
 # ------------------------------------------------------------------ schema -----
@@ -68,7 +71,9 @@ class Transducer:
 @dataclass
 class CAZ:
     """One Coordinated Action Zone = one opponent (flexor/extensor) pair = one
-    degree of freedom. ``dof`` is 'lateral' or 'dorsoventral'."""
+    degree of freedom. ``dof`` is one of ``DOFS``: 'lateral' (yaw bend),
+    'dorsoventral' (pitch bend), 'roll' (axial twist), or 'telescoping' (axial
+    extend/contract -- peristalsis)."""
     dof: str = "lateral"
 
 
@@ -119,15 +124,29 @@ def crawler_schema(n_seg: int = 3, touch: bool = True,
 
 # ------------------------------------------------------------------ glyphs -----
 def caz_glyph(ax, x, y, r, dof="lateral", face_a=CAZ_FILL, face_b="white", z=6):
-    """A CAZ: a circle split in half along the DOF axis. ``face_a`` is the flexor
-    half (filled by default), ``face_b`` the extensor half (unfilled by default).
-    In the dynamics view both faces may carry state colors."""
-    if dof == "lateral":                  # vertical split: left | right
-        a, b = (90, 270), (-90, 90)
-    else:                                  # dorsoventral: top | bottom
-        a, b = (0, 180), (180, 360)
-    ax.add_patch(Wedge((x, y), r, *a, facecolor=face_a, edgecolor="#222", lw=1.2, zorder=z))
-    ax.add_patch(Wedge((x, y), r, *b, facecolor=face_b, edgecolor="#222", lw=1.2, zorder=z))
+    """A CAZ: one opponent pair = one degree of freedom.
+
+    Bending DOFs ('lateral', 'dorsoventral') are a circle split in half along the
+    bend axis (``face_a`` the flexor half, ``face_b`` the extensor half; in the
+    dynamics view both may carry state colors). The twist ('roll') and axial
+    ('telescoping') DOFs are a circle with a double-headed arrow showing the two
+    opposing pulls -- curved for twist, straight along the body axis for length."""
+    if dof in ("lateral", "dorsoventral"):
+        a, b = ((90, 270), (-90, 90)) if dof == "lateral" else ((0, 180), (180, 360))
+        ax.add_patch(Wedge((x, y), r, *a, facecolor=face_a, edgecolor="#222", lw=1.2, zorder=z))
+        ax.add_patch(Wedge((x, y), r, *b, facecolor=face_b, edgecolor="#222", lw=1.2, zorder=z))
+    else:
+        ax.add_patch(Circle((x, y), r, facecolor=face_a, edgecolor="#222", lw=1.2,
+                            zorder=z, alpha=0.5))
+        if dof == "telescoping":          # straight double arrow along the axis
+            ax.annotate("", xy=(x + 0.72 * r, y), xytext=(x - 0.72 * r, y),
+                        arrowprops=dict(arrowstyle="<->", color="#222", lw=1.6),
+                        zorder=z + 2)
+        else:                              # roll: curved double arrow (twist)
+            ax.annotate("", xy=(x + 0.5 * r, y - 0.25 * r),
+                        xytext=(x - 0.5 * r, y - 0.25 * r),
+                        arrowprops=dict(arrowstyle="<->", color="#222", lw=1.6,
+                                        connectionstyle="arc3,rad=0.8"), zorder=z + 2)
     ax.add_patch(Circle((x, y), r, facecolor="none", edgecolor="#222", lw=1.3, zorder=z + 1))
 
 
@@ -316,22 +335,21 @@ def modality_legend(ax, modalities=None, with_network=True):
 def caz_key(ax):
     """A small key showing how the CAZ glyph encodes degrees of freedom."""
     items = [
-        (0.0, "lateral",      [CAZ("lateral")],
-         "1 CAZ · lateral DOF\n(turn L/R)"),
-        (3.0, "dorsoventral", [CAZ("dorsoventral")],
-         "1 CAZ · dorsoventral DOF\n(pitch up/down)"),
-        (6.0, "two_dof",      [CAZ("lateral"), CAZ("dorsoventral")],
-         "2 CAZ · two DOF\n(L/R + up/down)"),
-        (9.0, "redundant",    [CAZ("lateral"), CAZ("lateral")],
-         "2 CAZ · same DOF\n(redundant, additive)"),
+        (0.0,  [CAZ("lateral")],      "1 CAZ · yaw\n(bend L/R)"),
+        (2.4,  [CAZ("dorsoventral")], "1 CAZ · pitch\n(bend up/down)"),
+        (4.8,  [CAZ("roll")],         "1 CAZ · roll\n(axial twist)"),
+        (7.2,  [CAZ("telescoping")],  "1 CAZ · telescoping\n(extend/contract)"),
+        (9.8,  [CAZ("lateral"), CAZ("dorsoventral")], "2 CAZ · two DOF\n(yaw + pitch)"),
+        (12.2, [CAZ("lateral"), CAZ("lateral")],      "2 CAZ · same DOF\n(redundant, additive)"),
     ]
-    for x0, _, cazs, label in items:
+    for x0, cazs, label in items:
         for (xx, yy, dof) in _caz_sites(cazs, x0, 0.26):
             caz_glyph(ax, xx, yy + 0.25, 0.26, dof=dof)
         ax.text(x0, -0.85, label, ha="center", va="top", fontsize=7.5, color="#333")
-    ax.set_xlim(-1.5, 10.5)
+    ax.set_xlim(-1.4, 13.6)
     ax.set_ylim(-1.7, 1.1)
     ax.set_aspect("equal")
-    ax.set_title("CAZ = a flexor/extensor pair (filled | unfilled); "
-                 "split orientation = the DOF", fontsize=9)
+    ax.set_title("CAZ = one opponent pair = one DOF · split = bend axis · "
+                 "double-arrow = twist / telescoping · stack = more DOF or redundancy",
+                 fontsize=9)
     ax.axis("off")

@@ -39,23 +39,59 @@ The grammar gives the same body **two views**, sharing one vocabulary:
 ## CAZ and degrees of freedom
 
 The CAZ is the one glyph of our own. A **Coordinated Action Zone is one
-flexor/extensor opponent pair = one degree of freedom**, drawn as a single circle
-split into a filled half (flexor pull) and an unfilled half (extensor pull). The
-**orientation of the split encodes the DOF axis**:
+flexor/extensor opponent pair = one degree of freedom**. A joint between two
+bodies admits at most six DOF (three rotational, three translational); the four
+that matter for creatures, and their glyphs:
 
-- **vertical split** (left ∣ right) → **lateral bend** (turn left/right);
-- **horizontal split** (top ∣ bottom) → **dorsoventral bend** (pitch up/down).
+| DOF | motion | axis | glyph |
+|---|---|---|---|
+| **yaw** | lateral bend (turn L/R) | dorsoventral | circle, **vertical split** |
+| **pitch** | dorsoventral bend (up/down) | lateral | circle, **horizontal split** |
+| **roll** | axial twist | anteroposterior | circle, **curved double-arrow** |
+| **telescoping** | axial extend/contract (peristalsis) | anteroposterior | circle, **straight double-arrow** |
 
-So a joint's degrees of freedom are read directly off its CAZ glyphs:
+The two **bending** DOFs read as a split circle (split orientation = the bend
+axis; filled half = flexor, unfilled = extensor). The **twist** and **axial**
+DOFs read as a double-headed arrow showing the two opposing pulls (curved for
+twist, straight along the body for length).
 
-- a **single split circle** → a single-DOF joint;
-- **two circles of different orientation** → a two-DOF joint (e.g. L/R + up/down);
-- **two circles of the same orientation** → a redundant pair adding force on the
-  one DOF.
+A joint's degrees of freedom are read directly off its CAZ glyphs:
+
+- a **single CAZ** → a single-DOF joint;
+- **two CAZs of different kind** → a multi-DOF joint (e.g. yaw + pitch);
+- **two CAZs of the same kind** → a redundant pair adding force on one DOF.
 
 This is why segments that share a single DOF show only one CAZ: the CAZ is always
-a pair (the two halves), and adding another CAZ adds either a new DOF or
+a pair (the two opposing pulls), and adding another CAZ adds either a new DOF or
 additive force — never a lone actuator.
+
+## Building complex agents — and extending the grammar
+
+The grammar is meant to compose *complex* creatures from these few components.
+What the current components already support:
+
+| locomotion | recipe | status |
+|---|---|---|
+| **swimming** (undulatory) | yaw wave + anisotropic medium | ✓ (see [C0](experiments/c0_crawler.md)) |
+| **crawling** (undulatory) | yaw wave + ground contact | ✓ (see [C1](experiments/c1_touch.md)) |
+| **crawling** (peristaltic) | telescoping DOF + anchoring | DOF ✓ · anchor → roadmap |
+| **walking** | branching legs (multi-DOF) + load contact | branching → roadmap |
+| **flying** | branching wings + roll + a lift medium | branching/medium → roadmap |
+
+The remaining needs are **extensions within the same abstractions**, not changes
+to them — which is why the grammar can be treated as final and grown as
+experiments demand:
+
+- **Branching topology** — appendages (legs, wings, fins) are sub-chains that
+  branch off the axial chain. *A body is a graph of segments; a branch is a
+  segment attached to a segment.* The schema becomes a tree rather than a list;
+  the node types are unchanged.
+- **Anchor / gripper** — an *actuated* contact (a foot that grips and releases, a
+  sucker, setae) for peristalsis, inchworming, and climbing. One more node type,
+  alongside the sensor.
+- **Medium models** — swimming uses anisotropic drag and walking uses ground
+  reaction (both present); flying additionally needs a lift model. This is a
+  physics layer, orthogonal to the diagram grammar.
 
 ## Fixed conventions
 
