@@ -7,6 +7,7 @@ nav:
   - Home: index.md
   - Concepts: concepts.md
   - "Lesson 1 — the construction of experience": lesson1.md
+  - Diagram grammar: diagram-grammar.md
   - Assumptions: assumptions.md
   - Reproducibility note: reproducibility.md
   - Lab interface: lab-interface.md

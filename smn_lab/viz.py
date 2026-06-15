@@ -25,28 +25,39 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
 
+from smn_lab.morphology import NETWORK_COLOR
+
 
 def draw_beam_graph(ax, node_xy, node_val, edges, edge_val=None,
                     node_labels=None, cmap="viridis", node_size=420,
                     title=None, vlim=None, edge_label="message",
                     node_cbar_label="node state"):
-    """Draw the beam as a node-link graph at the given node coordinates.
+    """Draw the messaging beam as a node-link graph on the body geometry: nodes
+    are colored by their state, edges are the light-blue coupling network (width
+    = message magnitude). The graph *is* the body schema -- body geometry as the
+    frame of reference, drawn literally.
 
-    node_xy    : (N, 2) world coordinates of the nodes (segment COMs).
+    (Nodes here are state nodes colored by ``node_val``; the half-filled-circle
+    glyph is reserved for the CAZ -- an opponent pair -- in the static grammar,
+    so it is not reused for generic state nodes.)
+
+    node_xy    : (N, 2) world coordinates of the nodes.
     node_val   : (N,) scalar per node -> node color.
     edges      : list of (i, j) index pairs.
-    edge_val   : (E,) magnitude per edge -> line width + color (optional).
+    edge_val   : (E,) magnitude per edge -> line width (optional).
     """
     node_xy = np.asarray(node_xy, dtype=float)
     node_val = np.asarray(node_val, dtype=float)
+
     segs = [[node_xy[i], node_xy[j]] for (i, j) in edges]
     if edge_val is not None and len(edge_val):
         ev = np.abs(np.asarray(edge_val, dtype=float))
         widths = 1.5 + 6.0 * ev / max(ev.max(), 1e-9)
-        lc = LineCollection(segs, colors="#444", linewidths=widths, zorder=1)
     else:
-        lc = LineCollection(segs, colors="#888", linewidths=2.0, zorder=1)
-    ax.add_collection(lc)
+        widths = 2.4
+    ax.add_collection(LineCollection(segs, colors=NETWORK_COLOR,
+                                     linewidths=widths, zorder=1))
+
     vmin, vmax = (vlim if vlim is not None else (node_val.min(), node_val.max()))
     sc = ax.scatter(node_xy[:, 0], node_xy[:, 1], c=node_val, cmap=cmap,
                     s=node_size, vmin=vmin, vmax=vmax, edgecolors="k",
