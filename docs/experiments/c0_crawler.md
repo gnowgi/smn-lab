@@ -8,6 +8,14 @@ and a traveling wave nets a displacement. A bilateral chemical field biases the
 wave, so the crawler climbs the gradient to the source — the minimal
 aboutness-precursor: directed movement toward a "where".
 
+## The agent
+In the [diagram grammar](../diagram-grammar.md): a three-block axial chain, one
+CAZ (a yaw opponent pair) at each joint, and bilateral chemical sensors mounted
+inside each block. No contact skin and no localizer — chemotaxis from a field
+gradient is all this experiment needs.
+
+![C0 agent — the A3 crawler with bilateral chemical sensing, in the diagram grammar](../figures/c0_agent.png)
+
 ## Setup
 - **Body** — `build_crawler_xml(n_seg=3)`: an axial chain of massed blocks, each
   inter-segment hinge driven by a **pull-only opponent pair**.

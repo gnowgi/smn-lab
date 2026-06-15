@@ -8,6 +8,14 @@ meets an object, the ventral touch skin registers it as a force spike above the
 resting weight load, and that contact **halts** the wave. The body comes to rest
 against the thing that does not yield to its modulation.
 
+## The agent
+In the [diagram grammar](../diagram-grammar.md): the same three-block crawler as
+[C0](c0_crawler.md), now with a **ventral touch skin** added to each block
+(orange hatch) alongside the bilateral chemical sensors. One CAZ per joint; no
+localizer.
+
+![C1 agent — the A3 crawler with chemical sensing and a ventral touch skin, in the diagram grammar](../figures/c1_agent.png)
+
 ## Setup
 - **Body** — `build_crawler_xml(..., gravity_on=True, with_floor=True,
   with_walls=True, touch=True, objects=[(x, y, r)])`: gravity present; each
