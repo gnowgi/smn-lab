@@ -19,7 +19,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from smn_lab.morphology import (crawler_schema, render_morphology,
+from smn_lab.morphology import (crawler_schema, render_morphology, render_network,
                                 modality_legend, BodySchema, Segment)
 
 
@@ -27,16 +27,24 @@ def fig_grammar(out):
     schema = crawler_schema(n_seg=3, touch=True,
                             field_modalities=("chem", "thermal"),
                             localizers=("vision",))
-    fig = plt.figure(figsize=(11, 5.2))
-    gs = fig.add_gridspec(2, 1, height_ratios=[6, 1], hspace=0.05)
-    ax = fig.add_subplot(gs[0])
-    render_morphology(ax, schema)
-    ax.set_title("The SMN diagram grammar — the A3 axial crawler\n"
-                 "segments (blocks) · CAZ = opposed pair of dual-interface zones "
-                 "(half-filled circles) · messaging beam (dashed) · ventral touch "
-                 "skin (hatch) · bilateral field strips (ticks) · anterior eye (icon)",
-                 fontsize=9.0)
-    axl = fig.add_subplot(gs[1])
+    fig = plt.figure(figsize=(11, 8.2))
+    gs = fig.add_gridspec(3, 1, height_ratios=[5, 5, 1], hspace=0.18)
+
+    ax0 = fig.add_subplot(gs[0])
+    render_morphology(ax0, schema)
+    ax0.set_title("Morphology view — where things are mounted\n"
+                  "segments (blocks) · CAZ = opposed zone-pair Z+/Z− (half-filled "
+                  "circles) · ventral touch skin (hatch) · bilateral field strips "
+                  "(ticks) · anterior eye (icon)", fontsize=9.0)
+
+    ax1 = fig.add_subplot(gs[1])
+    render_network(ax1, schema)
+    ax1.set_title("Network view — who couples to whom\n"
+                  "zones (Z+/Z−) and sensors (unfilled circles) as nodes · "
+                  "light-blue coupling lines: messaging beam, opponency, "
+                  "sensor→CAZ", fontsize=9.0)
+
+    axl = fig.add_subplot(gs[2])
     modality_legend(axl, ["touch", "chem", "thermal", "vision"])
     fig.savefig(out, dpi=130, bbox_inches="tight")
     print(f"[saved] {out}")

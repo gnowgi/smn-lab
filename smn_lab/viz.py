@@ -23,44 +23,73 @@ board topologies (no natural coordinates) or interactive use.
 from __future__ import annotations
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+from matplotlib.colors import Normalize
 from matplotlib.collections import LineCollection
+
+from smn_lab.morphology import zone as _zone, NETWORK_COLOR
+
+
+def _auto_radius(node_xy):
+    """A node radius scaled to the nearest-neighbor spacing of the layout."""
+    if len(node_xy) < 2:
+        return 0.06
+    d = np.sqrt(((node_xy[:, None, :] - node_xy[None, :, :]) ** 2).sum(-1))
+    np.fill_diagonal(d, np.inf)
+    return 0.20 * float(np.median(d.min(axis=1)))
 
 
 def draw_beam_graph(ax, node_xy, node_val, edges, edge_val=None,
-                    node_labels=None, cmap="viridis", node_size=420,
+                    node_labels=None, cmap="viridis", node_r=None,
                     title=None, vlim=None, edge_label="message",
                     node_cbar_label="node state"):
-    """Draw the beam as a node-link graph at the given node coordinates.
+    """Draw the messaging beam as a node-link graph on the body geometry, in the
+    shared grammar: **nodes are dual-interface zones** (half-filled circles, the
+    filled half colored by the node's state) and **edges are light-blue coupling
+    lines** (width = message magnitude). The graph *is* the body schema -- body
+    geometry as the frame of reference, drawn literally.
 
-    node_xy    : (N, 2) world coordinates of the nodes (segment COMs).
-    node_val   : (N,) scalar per node -> node color.
+    node_xy    : (N, 2) world coordinates of the nodes (zone/segment positions).
+    node_val   : (N,) scalar per node -> filled-half color (the node's state).
     edges      : list of (i, j) index pairs.
-    edge_val   : (E,) magnitude per edge -> line width + color (optional).
+    edge_val   : (E,) magnitude per edge -> line width (optional).
     """
     node_xy = np.asarray(node_xy, dtype=float)
     node_val = np.asarray(node_val, dtype=float)
+    r = node_r if node_r is not None else _auto_radius(node_xy)
+
+    # edges -- the coupling network (light blue), width by message magnitude
     segs = [[node_xy[i], node_xy[j]] for (i, j) in edges]
     if edge_val is not None and len(edge_val):
         ev = np.abs(np.asarray(edge_val, dtype=float))
         widths = 1.5 + 6.0 * ev / max(ev.max(), 1e-9)
-        lc = LineCollection(segs, colors="#444", linewidths=widths, zorder=1)
     else:
-        lc = LineCollection(segs, colors="#888", linewidths=2.0, zorder=1)
-    ax.add_collection(lc)
+        widths = 2.2
+    ax.add_collection(LineCollection(segs, colors=NETWORK_COLOR,
+                                     linewidths=widths, zorder=1))
+
+    # nodes -- dual-interface zones, filled half colored by state
     vmin, vmax = (vlim if vlim is not None else (node_val.min(), node_val.max()))
-    sc = ax.scatter(node_xy[:, 0], node_xy[:, 1], c=node_val, cmap=cmap,
-                    s=node_size, vmin=vmin, vmax=vmax, edgecolors="k",
-                    linewidths=1.2, zorder=2)
+    norm = Normalize(vmin=vmin, vmax=vmax)
+    cmap_o = cm.get_cmap(cmap)
+    for (x, y), v in zip(node_xy, node_val):
+        _zone(ax, x, y, r, filled="bottom", face=cmap_o(norm(v)), z=4)
     if node_labels is not None:
         for (x, y), lab in zip(node_xy, node_labels):
-            ax.annotate(lab, (x, y), ha="center", va="center", fontsize=8,
-                        color="w", zorder=3)
+            ax.annotate(lab, (x, y + r + 0.4 * r), ha="center", va="bottom",
+                        fontsize=8, color="#222", zorder=7)
     ax.set_aspect("equal")
-    cb = ax.figure.colorbar(sc, ax=ax, fraction=0.046, pad=0.04)
+    sm = cm.ScalarMappable(norm=norm, cmap=cmap_o)
+    sm.set_array([])
+    cb = ax.figure.colorbar(sm, ax=ax, fraction=0.046, pad=0.04)
     cb.set_label(node_cbar_label, fontsize=8)
     if title:
         ax.set_title(title, fontsize=10)
-    return sc
+    # zones are patches, so the view does not autoscale -- set it from the nodes
+    pad = 3 * r
+    ax.set_xlim(node_xy[:, 0].min() - pad, node_xy[:, 0].max() + pad)
+    ax.set_ylim(node_xy[:, 1].min() - pad, node_xy[:, 1].max() + pad)
+    return sm
 
 
 def _pca2(X):
