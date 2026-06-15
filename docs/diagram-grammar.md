@@ -5,12 +5,11 @@ visual grammar, so a reader who learns it once can read all of them. There is no
 single community standard for *morphology + sensors + coupling* as one notation,
 so the grammar borrows the recognizable conventions of the field where they exist
 (kinematic trees, Braitenberg-style front sensors, color-coded channels) and uses
-one glyph of our own — the **dual-interface zone** — where the SMN concept has no
+one glyph of our own — the **split-circle CAZ** — where the SMN concept has no
 standard.
 
 The diagrams are **generated from the body schema** (`smn_lab/morphology.py`),
-which shares its parameters with the MuJoCo body builder (`smn_lab/crawler.py`),
-and `viz.py` reuses the same glyph primitives for the live dynamics view. A
+which shares its parameters with the MuJoCo body builder (`smn_lab/crawler.py`). A
 published figure therefore cannot drift from the code that ran.
 
 ## Two views of one body
@@ -18,33 +17,45 @@ published figure therefore cannot drift from the code that ran.
 The grammar gives the same body **two views**, sharing one vocabulary:
 
 - **Morphology view** — *where things are mounted*: the head-to-tail chain of
-  segment blocks, the CAZ zone-pairs, the dense bilateral sensor strips, and the
-  anterior localizer icons.
-- **Network view** — *who couples to whom*: zones and sensors as nodes, joined by
-  light-blue coupling lines (the messaging beam, the opponency link within each
-  CAZ, and each sensor's link to its CAZ). The body is drawn faintly underneath,
-  because the network is grounded in body geometry — not abstracted away from it.
+  segment blocks, with **sensors mounted inside each block** and a CAZ glyph at
+  each inter-segment joint.
+- **Network view** — *who couples to whom*: the same layout with light-blue
+  coupling lines — each sensor to its CAZ, and CAZ to CAZ along the body (the
+  messaging beam). The body is drawn faintly underneath, because the network is
+  grounded in body geometry, not abstracted away from it.
 
-![The SMN diagram grammar — morphology view and network view of the A3 axial crawler](figures/diagram_grammar.png)
+![The SMN diagram grammar — morphology view, network view, and the CAZ/DOF key](figures/diagram_grammar.png)
 
 ## The glyphs
 
 | Element | Glyph | Notes |
 |---|---|---|
-| **Segment (block)** | rounded rectangle | the head is shaded distinctly; the chain runs head → tail |
-| **Zone** | a circle, **half filled / half unfilled** | *our notation*: the dual-interface unit — the filled half is the **acting** interface, the unfilled half the **sensing** interface |
-| **CAZ** | an **opposed pair of zones, labeled Z+ / Z−** | the two sensation modulators (the opponent pair), facing each other across the inter-segment joint |
-| **Sensor (node)** | an **unfilled circle** with a modality-colored ring | a single-interface transducer, drawn as a node in the network view |
-| **Coupling / network** | **light-blue lines** | the messaging beam (CAZ↔CAZ), opponency (Z+↔Z−), and sensor→CAZ links — one color for "these nodes talk" |
-| **Ventral touch skin** | hatched outline (orange) | contact-force skin on the segment's ventral face (morphology view) |
-| **Field / gradient strip** | a row of color-coded ticks on each lateral edge | distributed, bilateral; color = modality (morphology view) |
-| **Localizer (eye / ear)** | a literal paired icon at the anterior | distal modality; its placement is what marks the front |
+| **Segment (block)** | rounded rectangle | a body block with mass; the head is shaded; the chain runs head → tail |
+| **Sensor** | an **unfilled circle** with a modality-colored ring | a single-interface transducer, drawn **inside** the segment it is mounted on; bilateral sensors give an L node (upper inside) and an R node (lower inside) |
+| **CAZ** | **one circle split in half** — one half filled (flexor), one half unfilled (extensor) | the opponent pair actuating **one degree of freedom**. *Every CAZ is dual-interface (it both senses and acts); that is defined here, not drawn.* |
+| **Localizer (eye / ear)** | a literal paired icon at the anterior face | a distal sensor; its placement is what marks the front |
+| **Coupling / network** | **light-blue lines** | sensor → CAZ and CAZ ↔ CAZ — one color for "these nodes talk" |
 
-In the **live dynamics view** (`viz.draw_beam_graph`, e.g. panel B of
-[C0](experiments/c0_crawler.md)), the beam's nodes are drawn as zones with the
-**filled half colored by the node's state**, and the edges are the same
-light-blue coupling — so the running network reads in the same grammar as the
-static diagram.
+## CAZ and degrees of freedom
+
+The CAZ is the one glyph of our own. A **Coordinated Action Zone is one
+flexor/extensor opponent pair = one degree of freedom**, drawn as a single circle
+split into a filled half (flexor pull) and an unfilled half (extensor pull). The
+**orientation of the split encodes the DOF axis**:
+
+- **vertical split** (left ∣ right) → **lateral bend** (turn left/right);
+- **horizontal split** (top ∣ bottom) → **dorsoventral bend** (pitch up/down).
+
+So a joint's degrees of freedom are read directly off its CAZ glyphs:
+
+- a **single split circle** → a single-DOF joint;
+- **two circles of different orientation** → a two-DOF joint (e.g. L/R + up/down);
+- **two circles of the same orientation** → a redundant pair adding force on the
+  one DOF.
+
+This is why segments that share a single DOF show only one CAZ: the CAZ is always
+a pair (the two halves), and adding another CAZ adds either a new DOF or
+additive force — never a lone actuator.
 
 ## Fixed conventions
 
@@ -63,7 +74,7 @@ static diagram.
 | vision | blue | distal — eye (localizer) |
 | audio | teal | distal — ear (localizer) |
 | proprio | grey | proprioception (internal) |
-| *coupling* | *light blue* | *the network (messaging beam, opponency, sensor→CAZ)* |
+| *coupling* | *light blue* | *the network (sensor→CAZ, CAZ↔CAZ messaging beam)* |
 
 ## The description language
 
@@ -73,11 +84,11 @@ onto the builder parameters:
 ```
 organism A3 {
   axis: anterior=+x
-  seg head { mass; skin:ventral; strip:[chem,thermal]@bilateral; eye:pair@anterior }
-  caz  j1  { zones: Z+, Z- }
-  seg s1   { mass; skin:ventral; strip:[chem,thermal]@bilateral }
-  caz  j2  { zones: Z+, Z- }
-  seg s2   { mass; skin:ventral; strip:[chem,thermal]@bilateral }
+  seg head { mass; skin:ventral; sensors:[chem,thermal]@bilateral; eye:pair@anterior }
+  caz  j1  { dof: lateral }          # one flexor/extensor pair, one DOF
+  seg s1   { mass; skin:ventral; sensors:[chem,thermal]@bilateral }
+  caz  j2  { dof: lateral }
+  seg s2   { mass; skin:ventral; sensors:[chem,thermal]@bilateral }
   beam: nearest_neighbor
 }
 ```
