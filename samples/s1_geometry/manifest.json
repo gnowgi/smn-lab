@@ -1,0 +1,43 @@
+{
+  "name": "s1_geometry",
+  "created_utc": "2026-06-15T15:30:14+00:00",
+  "git_sha": "20898bb",
+  "n_configs": 4,
+  "n_seeds": 8,
+  "n_runs": 32,
+  "grid": {
+    "n_seg": [
+      3,
+      5,
+      7,
+      9
+    ]
+  },
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "summary_columns": [
+    "run_id",
+    "config_id",
+    "n_seg",
+    "seed",
+    "skill",
+    "skill_shuffle",
+    "state_dim",
+    "coverage",
+    "net_disp"
+  ],
+  "timeseries_columns": [
+    "run_id",
+    "config_id",
+    "seed"
+  ],
+  "decimate": 1
+}
