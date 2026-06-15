@@ -8,6 +8,7 @@ nav:
   - Concepts: concepts.md
   - "Lesson 1 — the construction of experience": lesson1.md
   - Diagram grammar: diagram-grammar.md
+  - Datasets (generative model): datasets.md
   - Assumptions: assumptions.md
   - Reproducibility note: reproducibility.md
   - Lab interface: lab-interface.md
@@ -16,6 +17,7 @@ nav:
   - Experiments:
       - "C0 — minimal axial crawler (non-inertial movement)": experiments/c0_crawler.md
       - "C1 — gravity, touch skin, objects (halt-on-contact)": experiments/c1_touch.md
+      - "S0 — coupling sweep (locomotion is a network effect)": experiments/sweep_c0_coupling.md
       - P0 — reafference: experiments/p0_reafference.md
       - P0-visual — reafference at the visual level: experiments/p0_visual.md
       - P1-visual — multi-CAZ eye, ±body yaw: experiments/p1_visual.md
