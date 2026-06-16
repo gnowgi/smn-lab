@@ -115,5 +115,19 @@ The predictions above are left as written; outcomes are recorded here.
   redirects the live question to Q1 (modulation), which is deferred for lack of a
   declared mechanism. First run was confounded (instability + collapsed
   exploration) and discarded; the clean re-run used declared adjustments.
-- **Q1 / Q3 / Q4** — not yet run (mechanism gaps declared above).
-- **Q2** — not yet run (portable; next).
+- **Q1 — [modulation](experiments/sweep_q1_modulation.md): core claim supported,
+  narrow claim left open.** We built the declared mechanism (distributed per-zone
+  dual-port modulators). Modulation cancels self-caused change to the noise floor
+  at every body size; *without* it, self/world resolution collapses as the body
+  grows (foil ratio 13.7 → 1.2) — so raw transducer count without modulation
+  subtracts resolution rather than adding it. The pre-registered "modulated ratio
+  rises with `n_seg`" was wrong (absolute ratio falls, confounded by a localized
+  stimulus diluting the whole-body mean); the *modulation advantage* widens with
+  density (8.5× → 22×). The narrow "absolute resolution scales with density" is
+  left open.
+- **Q2 — [reafference](experiments/q2_reafference.md): partially supported.**
+  Reafference cancels ~37% of self-caused change and lifts the self/world ratio
+  (2.2 vs foil 1.58), but not to P0's clean level — limited by single-point
+  (head) proprioception on a bending body, which is exactly what Q1's per-zone
+  modulation fixes. P0 remains the clean canonical demonstration.
+- **Q3 / Q4** — not yet run (mechanism gaps declared above).

@@ -20,6 +20,8 @@ nav:
       - "C1 — gravity, touch skin, objects (halt-on-contact)": experiments/c1_touch.md
       - "S0 — coupling sweep (locomotion is a network effect)": experiments/sweep_c0_coupling.md
       - "S1 — geometry → world model (flagship)": experiments/sweep_geometry_worldmodel.md
+      - "Q2 — self/world distinction (reafference)": experiments/q2_reafference.md
+      - "Q1 — modulation & the resolution principle": experiments/sweep_q1_modulation.md
       - P0 — reafference: experiments/p0_reafference.md
       - P0-visual — reafference at the visual level: experiments/p0_visual.md
       - P1-visual — multi-CAZ eye, ±body yaw: experiments/p1_visual.md
