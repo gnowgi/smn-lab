@@ -124,7 +124,11 @@ The predictions above are left as written; outcomes are recorded here.
   rises with `n_seg`" was wrong (absolute ratio falls, confounded by a localized
   stimulus diluting the whole-body mean); the *modulation advantage* widens with
   density (8.5× → 22×). The narrow "absolute resolution scales with density" is
-  left open.
+  left open. → **Now closed by [Q1b](experiments/sweep_q1b_resolution.md):** with a
+  *distributed* stimulus (removing the localized-source dilution), the modulated
+  world-detection ratio **rises** with CAZ density (14 → 22.6, ≈ 1/√N) while the
+  foil falls toward 1 — resolution scales with density, but only with modulation.
+  The first C-series prediction confirmed rather than corrected.
 - **Q2 — [reafference](experiments/q2_reafference.md): partially supported.**
   Reafference cancels ~37% of self-caused change and lifts the self/world ratio
   (2.2 vs foil 1.58), but not to P0's clean level — limited by single-point
