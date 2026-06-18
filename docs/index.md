@@ -1,11 +1,16 @@
 # smn-lab
 
 An embodied, configurable experimental bench for the **Sensation Modulating
-Network (SMN)** architecture, built on [MuJoCo](https://mujoco.readthedocs.io).
-The control architecture the SMN specifies drives a physical body in a physics
-world, so the architecture's predicted contrasts (its *registers*) can be
-reproduced from real sensorimotor engagement — and the **modulatory coupling
-topology (the "balance beam") can be varied as an experimental variable**.
+Network (SMN)** architecture, built on [MuJoCo](https://mujoco.readthedocs.io). The
+control architecture the SMN specifies drives a physical body in a physics world,
+so the architecture's predicted contrasts can be reproduced from real sensorimotor
+engagement — and the things the theory says matter (coupling topology, modulation,
+body geometry) can be varied as experimental variables and measured.
+
+Every experiment is **pre-registered** (hypothesis, order parameter, matched foil,
+pass/fail fixed before running; see the [test plan](test-plan.md)) and exports tidy,
+self-describing [datasets](datasets.md). The bench is meant as a *generative model*
+others can verify and mine, not a fixed set of results.
 
 Architecture reference: Nagarjuna, G. & D. Karnam. *The Sensation Modulating
 Network.* [arXiv:2605.26856](https://arxiv.org/abs/2605.26856).
@@ -30,63 +35,65 @@ object on its path to the source.*
 field (left), the messaging beam drawn on its body (middle), and its gait cycle in
 state-space (right).*
 
-## The two experiment series
+## Start here
 
-The bench has two lines of experiments.
+- **New to the bench?** Read [Lesson 1 — the construction of experience](lesson1.md)
+  (why the minimal organism is a three-segment axial crawler), then the
+  [diagram grammar](diagram-grammar.md) (how every figure of an agent is read).
+- **Want the model organism?** [C0](experiments/c0_crawler.md) (it moves) and
+  [C1](experiments/c1_touch.md) (it touches and halts).
+- **Want the science?** The [test plan](test-plan.md) (what each experiment claims
+  and how it could be falsified) and the [datasets](datasets.md) page.
 
-- **C-series — the disciplined model organism.** The going-forward line, built on
-  the minimal axial crawler of [Lesson 1](lesson1.md): one well-characterized body
-  on which experiments vary a single parameter at a time. Start here —
-  [C0](experiments/c0_crawler.md), [C1](experiments/c1_touch.md).
-- **P/E-series — exploratory trials.** The bench's first experiments, built while
-  learning what it could do. They are **proofs-of-concept** — several are
-  single-seed and some metrics saturate — kept as the bench's provenance. Read
-  them as demonstrations, not as clean ablations.
+## The experiments
 
-## What's in the lab
+Two lines, kept separate in the navigation:
 
-### Library (`smn_lab/`)
+- **Experiments** — the disciplined model organism and the going-forward science,
+  all on one well-characterized body that varies a single parameter at a time:
+  the crawler ([C0](experiments/c0_crawler.md), [C1](experiments/c1_touch.md)),
+  the sweeps and core questions (locomotion as a network effect; geometry →
+  world model; self/world; the resolution principle), and the **preprint
+  predictions** (haltability signatures, zonal dissociations, antagonistic
+  benefits) reproduced quantitatively.
+- **Trial experiments** — the bench's first exploratory studies (the P/E series),
+  kept as provenance and read as proofs-of-concept, not clean ablations (see the
+  [reproducibility note](reproducibility.md)).
+
+## What's in the lab (`smn_lab/`)
+
 | module | what it provides |
 |---|---|
-| `body.py` | `MouseSchema` — the explicit body geometry (every zone's body-frame location), shared by the model builder and the agent. |
-| `model.py` | `build_p0/p1/p2_xml` — MJCF body + world builders. |
-| `control.py` | `OpponentBoard`, `ReafferencePredictor`, `CPG` (BAP drive), `HAPExplorer` (affordance-recruited, swappable routing), `DifferentialDrive` (located drive zones), `DeadReckoner` (proprioceptive self-localization). |
-| `worldmodel.py` | `OccupancyMap`, surface sampling, the point-based coverage/precision score, data dump. |
-
-### Experiments (`experiments/`)
-| experiment | shows | page |
-|---|---|---|
-| `p0_reafference.py` | reafference (self vs world) in a single CAZ | [P0](experiments/p0_reafference.md) |
-| `p0_visual.py` | same reafference register at the visual level (camera + 8×8 patch modulator) | [P0-visual](experiments/p0_visual.md) |
-| `p1_visual.py` | the multi-CAZ eye: ±body yaw — eye saccades alone construct the snapshot | [P1-visual](experiments/p1_visual.md) |
-| `p1v_static_world.py` | only agent-side modulation: change vs presence, and floor-as-scene-memory | [P1-visual / static-world](experiments/p1v_static_world.md) |
-| `p1_world_model.py` | a multi-CAZ agent builds a world model (true pose) | [P1](experiments/p1_world_model.md) |
-| `p2_world_model.py` | the same, body-relative + self-localized (no god's-eye pose) | [P2](experiments/p2_world_model.md) |
-| `p2_topology_sweep.py` | the balance-beam sweep: routing × morphology × ±BAP/±HAP × noise | [Sweep](experiments/p2_topology_sweep.md) |
-| `p2_living_snapshot.py` | the world model decays where unrevisited (a living snapshot) | [Living snapshot](experiments/p2_living_snapshot.md) |
-| `p2_basal_coupling.py` | why the agent moves — energy · food · map · motion as one closed loop | [Basal coupling](experiments/p2_basal_coupling.md) |
-| `p2_map_guided_foraging.py` | the map's decay rate as a direct survival pressure | [Map-guided foraging](experiments/p2_map_guided_foraging.md) |
-| `scene_geometry.py` | the body schema + agent-in-scene figures (and a MuJoCo render) | — |
+| `crawler.py` | `build_crawler_xml` — the minimal axial crawler (segments, pull-only opponent pairs); `apply_anisotropic_drag` — the overdamped medium that turns a traveling wave into thrust. |
+| `morphology.py` | `BodySchema` / `CAZ` / `Segment` + `render_morphology`, `render_network` — the [diagram grammar](diagram-grammar.md): one schema is the source of truth for both the body and its figures. |
+| `control.py` | `MessagingBeam` (coupled-oscillator traveling wave + chemotaxis), `OpponentBoard` (pull-only antagonist board), `ReafferencePredictor`, `DeadReckoner`, and the action-pattern layers (`BAPG`, `HAPExplorer`, `DifferentialDrive`). |
+| `fields.py` | `ScalarField` — virtual chemical/thermal fields sampled bench-side (per the [engine boundary](assumptions.md)). |
+| `sweep.py` | `run_sweep` / `export_curated` — the parametric-sweep + dataset-export harness (summary.csv + timeseries.parquet + manifest). |
+| `viz.py` | `draw_beam_graph`, `plot_state_space` — the messaging beam and its dynamic state. |
+| `body.py`, `model.py`, `vision.py`, `worldmodel.py` | the earlier trial line (the planar "mouse" builders, camera, occupancy map). |
 
 ## Quickstart
 ```bash
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-cd experiments && ../.venv/bin/python p2_world_model.py
+cd experiments && ../.venv/bin/python c0_crawler.py   # the minimal crawler
 ```
 
 ## How the pieces fit
-`MouseSchema` (body geometry) builds the MuJoCo body and is also what the agent
-knows about itself. Each step: the whisker **transducers** sense; the **HAP**
-layer turns affordances into a steering command (its *routing* is the balance
-beam); the **BAP** provides the locomotor drive; the **DifferentialDrive** board
-turns (forward, turn) into the located opponent drive-zone activations; the agent
-**self-localizes** from proprioception and places hits into its **world model**.
-The experiment holds the body/world/task fixed and varies the balance beam,
-measuring the constructed world model (coverage, precision, drift).
+The body is an **axial chain of segments**; each inter-segment joint is a **CAZ** —
+a pull-only **opponent pair**. The **messaging beam** couples the joints
+(nearest-neighbor phase coupling) into a **traveling wave** (locomotion), which the
+**anisotropic medium** turns into net thrust; a bilateral field gradient biases the
+wave (**chemotaxis**). Sensors — a ventral touch skin, bilateral field strips,
+distal localizers — are read against the body geometry; the agent **dead-reckons**
+its own motion (reafference), separating self-caused from world-caused change. Each
+experiment holds the world fixed and varies one architectural quantity — coupling
+strength, segment count, modulation, co-contraction — measuring the result and
+exporting the data.
 
 ## See also
 - [Concepts](concepts.md) — the SMN → simulation mapping and vocabulary.
-- [Assumptions](assumptions.md) — what is simulated vs computed vs idealized (common + per-experiment).
-- [NetLogo integration (feasibility report)](integrations/netlogo.md) — the four realistic paths to plant `smn-lab` in the NetLogo house, and the honest version of the visibility argument.
+- [Assumptions](assumptions.md) — what is simulated vs computed vs idealized.
+- [Datasets](datasets.md) — the bench as a generative model; the export format.
+- [NetLogo integration (feasibility report)](integrations/netlogo.md).
 - Building these docs: `pip install mkdocs && mkdocs serve` (or publish via Read the Docs).
