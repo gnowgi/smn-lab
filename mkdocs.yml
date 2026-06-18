@@ -24,6 +24,7 @@ nav:
       - "Q1 — modulation & the resolution principle": experiments/sweep_q1_modulation.md
       - "Q1b — resolution scales with CAZ density": experiments/sweep_q1b_resolution.md
       - "Prediction 3 — antagonistic benefits": experiments/sweep_pred3_antagonistic.md
+      - "Prediction 2 — zonal dissociations": experiments/sweep_pred2_zonal.md
       - P0 — reafference: experiments/p0_reafference.md
       - P0-visual — reafference at the visual level: experiments/p0_visual.md
       - P1-visual — multi-CAZ eye, ±body yaw: experiments/p1_visual.md
