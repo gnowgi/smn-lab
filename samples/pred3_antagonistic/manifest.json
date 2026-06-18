@@ -1,0 +1,34 @@
+{
+  "name": "pred3_antagonistic",
+  "created_utc": "2026-06-18T02:34:23+00:00",
+  "git_sha": "756c4f5",
+  "n_configs": 10,
+  "n_seeds": 6,
+  "n_runs": 60,
+  "grid": "explicit-list",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "summary_columns": [
+    "run_id",
+    "config_id",
+    "coc",
+    "pert",
+    "seed",
+    "peak_dev",
+    "iae",
+    "settle_time",
+    "energy"
+  ],
+  "timeseries_columns": [
+    "run_id",
+    "config_id",
+    "seed"
+  ],
+  "decimate": 1
+}
