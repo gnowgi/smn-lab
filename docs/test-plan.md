@@ -131,3 +131,19 @@ The predictions above are left as written; outcomes are recorded here.
   (head) proprioception on a bending body, which is exactly what Q1's per-zone
   modulation fixes. P0 remains the clean canonical demonstration.
 - **Q3 / Q4** — not yet run (mechanism gaps declared above).
+
+### Preprint predictions (beyond the five core questions)
+
+The bench is also being used to reproduce the preprint's own §"Predictions and
+Testable Claims" — which the conclusion explicitly says need "quantitative
+predictions through computational modelling." smn-lab is that modelling.
+
+- **Prediction 3 — [antagonistic benefits](experiments/sweep_pred3_antagonistic.md):
+  confirmed.** Co-contraction reduces peak deviation 4.4× and integrated error ~28×
+  after a perturbation (faster error correction), larger for larger perturbations,
+  at a steep ~quadratic energy cost (a tradeoff with a knee near coc ≈ 0.3–0.6).
+  Declared adjustment: the existing force-motor co-contraction was inert for
+  stiffness, so we added a muscle-impedance model (zero-delay stiffness ∝ coc) and
+  a neural feedback delay — faithful to the preprint's impedance-adjusting
+  modulator and to biomechanics. The *direction* is textbook; the informative,
+  falsifiable content is the quantified, perturbation-scaled tradeoff.
