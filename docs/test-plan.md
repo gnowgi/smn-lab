@@ -151,3 +151,15 @@ predictions through computational modelling." smn-lab is that modelling.
   a neural feedback delay — faithful to the preprint's impedance-adjusting
   modulator and to biomechanics. The *direction* is textbook; the informative,
   falsifiable content is the quantified, perturbation-scaled tradeoff.
+- **Prediction 2 — [zonal dissociations](experiments/sweep_pred2_zonal.md):
+  partially confirmed.** Same reach-and-hold task through a rigid vs viscoelastic
+  tool: the optimal control gain *moves* with substrate, and the compliant
+  substrate is far less forgiving (60× best→worst spread vs 11×) — the high-gain
+  prior optimal on rigid is catastrophic on compliant (0.111 vs 0.028, 4×). So
+  "same task, very different performance by material" holds. But the strong reading
+  — that substrate-*specific* priors are *needed* — is **not** supported: a
+  conservative generic prior ≈ matched on both substrates, because the dissociation
+  lives in one catastrophic corner, not a true two-way crossover. Substrate
+  constrains which control is *viable* more than it *requires* distinct priors here.
+  (First run was a setup bug — actuator saturated for all gains — discarded; the
+  re-run used declared physical-regime fixes.)
