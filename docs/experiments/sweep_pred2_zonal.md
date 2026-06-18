@@ -69,6 +69,18 @@ is viable*, more than it *requires distinct priors* for this task. A task with a
 true two-sided crossover (where each substrate punishes the other's optimum) would
 test the stronger claim.
 
+
+## What's measured, computed, and plotted
+**Raw data (per run = kp x kd x substrate {rigid, viscoelastic} x seed):** time and
+the tool-**tip** angle (`= limb-joint angle + tool-joint angle`) during a
+reach-and-hold.
+
+**Computed (the math):**
+- `IAE = integral of |target - tip| dt` — integrated absolute tracking error (the task error); also overshoot and final error.
+- per substrate: the mean IAE over seeds on each `(kp, kd)` gain → a 2-D landscape; its optimum = `argmin IAE`; the optima are compared across substrates (matched vs mismatched vs a generic compromise gain).
+
+**Plotted:** **A, B** the IAE landscape over `(kp x kd)` for each substrate, optimum ★; **C** bars of matched / mismatched / generic IAE on each substrate.
+
 ## Run
 ```bash
 cd experiments && ../.venv/bin/python sweep_pred2_zonal.py

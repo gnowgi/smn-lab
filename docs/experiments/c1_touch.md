@@ -39,6 +39,21 @@ localizer.
 - **Full negotiation** around the object (back up, reorient, resume) needs a
   richer HAP/NAP and is a later experiment. Here contact **halts**.
 
+
+## What's measured, computed, and plotted
+**Raw data (logged):** head `(x, y)`; per-segment **ventral touch** = resting weight
+load (`segment_mass x g`) + simulated object/wall contact force (MuJoCo touch
+sensor); a contact flag; a halted flag; segment positions; distance to source.
+
+**Computed (the math):**
+- `weight_baseline = segment_mass x g` — the resting load each segment carries.
+- `contact` = (any segment's contact force `> TOUCH_MARGIN`).
+- `touch_peak = max over time of the touch reading` — the spike on meeting the object.
+- `halt_frac` = fraction of the run the HAP held the wave halted; `dist_at_halt` = distance to source when first halted.
+- `net_disp`, `closed_gap` as in C0.
+
+**Plotted:** **A** field + object + the path arrested at the object; **B** ventral touch per segment over time, with the resting-load line, the contact threshold, and the halt episode shaded; **C** the beam graph at the peak-contact frame, nodes coloured by touch force.
+
 ## Run
 ```bash
 cd experiments && ../.venv/bin/python c1_touch.py

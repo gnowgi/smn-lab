@@ -34,6 +34,18 @@ not in the parts.**
 - **Order parameter** — net displacement; we also report across-seed spread and
   phase-lag coherence.
 
+
+## What's measured, computed, and plotted
+**Raw data (per run = one coupling value x one seed; 70 runs):** head `(x, y)` over
+time; `dphi` = the phase difference between the two joint oscillators.
+
+**Computed (the math):**
+- `net_disp` per run (as C0).
+- `phase_coherence = |mean over time of exp(i*dphi)|` — 1 if the joints hold a fixed phase relation, → 0 if they drift apart.
+- across seeds, per coupling value: mean net_disp, its **95% CI** (= `1.96 x sem`), and its standard deviation.
+
+**Plotted:** **A** mean net_disp vs coupling with the 95% CI band, the foil (coupling = 0) circled; **B** the across-seed standard deviation of net_disp vs coupling (the variance collapse).
+
 ## Run
 ```bash
 cd experiments && ../.venv/bin/python sweep_c0_coupling.py

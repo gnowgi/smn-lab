@@ -69,6 +69,16 @@ and [Q2](q2_reafference.md) each corrected one) — a small reassurance that the
 framework is being tested, not bent: predictions sometimes hold and sometimes do
 not.
 
+
+## What's measured, computed, and plotted
+**Raw data & math:** identical to [Q1](sweep_q1_modulation.md) — per-zone
+reafference with each zone cancelling its **own** sensed displacement; aggregate
+residual = mean over zones; `ratio = mean|aggregate| in exafference / in self-test`.
+The only change is the world-caused signal: a spatially **uniform "tide"** (a
+distributed change every zone sees equally) instead of a localized source.
+
+**Plotted:** **A** the world-detection ratio vs segment count, modulated vs foil (modulated rises, foil falls); **B** the self-test residual (noise floor) vs segment count.
+
 ## Run
 ```bash
 cd experiments && ../.venv/bin/python sweep_q1b_resolution.py

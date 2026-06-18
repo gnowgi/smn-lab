@@ -66,6 +66,20 @@ construction; the informative content is that the signature is **categorically
 distinct and cleanly quantifiable** (the dwell), exactly the diagnostic the preprint
 proposes — while carrying no functional speed benefit.
 
+
+## What's measured, computed, and plotted
+**Raw data (per run = controller {halt, smooth} x jump {reversal, small-adjust} x seed):**
+time, joint angle `theta`, angular velocity, the opponent-pair activations
+`(a_plus, a_minus)`, and the target (which jumps mid-reach).
+
+**Computed (in the 0.35 s transition window after the jump):**
+- `vel_min = min |angular velocity|` — how close to a full stop;
+- `dwell = time with |velocity| < VEL_TOL` — the duration of the stop;
+- `repair_step = max |delta(a_plus - a_minus)|` — abruptness of the opponent-pair flip (re-pairing);
+- (exploratory) overshoot past the new target, reacquisition time.
+
+**Plotted:** **A** velocity vs time (halt vs smooth, reversal); **B** opponent-pair activations vs time (re-pairing); **C** `vel_min` bars (halt vs smooth × jump); **D** `dwell` bars.
+
 ## Run
 ```bash
 cd experiments && ../.venv/bin/python sweep_pred1_haltability.py
