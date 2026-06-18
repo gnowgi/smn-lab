@@ -1,5 +1,10 @@
 # C1 — crawler under gravity: touch skin, objects, halt-on-contact
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_c1_touch.png)
+
 ## What it shows
 The v1 organism of [Lesson 1](../lesson1.md): the crawler under gravity, with a
 ventral touch skin and objects. It demonstrates the **halt→aboutness** precursor

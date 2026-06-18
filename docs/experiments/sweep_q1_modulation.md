@@ -1,5 +1,10 @@
 # Q1 — modulation and the resolution principle
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_sweep_q1_modulation.png)
+
 Pre-registered in the [test plan](../test-plan.md). [Q2](q2_reafference.md) showed
 reafference works on the crawler but only partially, because a single head-velocity
 signal cannot predict how *distributed* sensors move on a *bending* body. The SMN

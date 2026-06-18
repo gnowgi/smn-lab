@@ -1,5 +1,10 @@
 # Q2 — self/world distinction (reafference) on the crawler
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_q2_reafference.png)
+
 Pre-registered in the [test plan](../test-plan.md). The reafference principle:
 sensed change decomposes as `dm/dt = ∇m·v` (self-caused) `+ ∂m/∂t|world`
 (world-caused); a reafferent agent predicts the self term and is left with the

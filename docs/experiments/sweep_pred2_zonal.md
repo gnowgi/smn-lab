@@ -1,5 +1,10 @@
 # Prediction 2 — zonal dissociations
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_sweep_pred2_zonal.png)
+
 Pre-registered in the experiment file. SMN preprint, Predictions & Testable Claims
 #2: *"The same abstract task should produce different performance across
 materials/couplings (viscoelastic vs rigid tools) due to zone priors —

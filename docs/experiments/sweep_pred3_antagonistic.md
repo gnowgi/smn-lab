@@ -1,5 +1,10 @@
 # Prediction 3 — antagonistic benefits
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_sweep_pred3_antagonistic.png)
+
 Pre-registered in the experiment file. This is the first of the SMN preprint's
 six *Predictions and Testable Claims* (§Predictions) reproduced in the bench —
 part of turning the preprint's qualitative claims into the quantitative ones it

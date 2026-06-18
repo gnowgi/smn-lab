@@ -1,5 +1,10 @@
 # Prediction 1 — haltability signatures (deceptive reach)
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_sweep_pred1_haltability.png)
+
 Pre-registered in the experiment file. SMN preprint, Predictions & Testable Claims
 #1: *"Tasks requiring mid-course reversals (e.g., deceptive reach) should show
 distinct stoppage–resume patterns and re-pairing among effectors."* This is the HAP

@@ -1,5 +1,10 @@
 # C0 — minimal axial crawler (non-inertial movement + the messaging beam)
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_c0_crawler.png)
+
 ## What it shows
 The disciplined model organism of [Lesson 1](../lesson1.md): a three-block axial
 crawler that *initiates* non-inertial movement. With two inter-segment joints the

@@ -1,5 +1,10 @@
 # Q1b — does resolution scale with CAZ density? (closing the Q1 thread)
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_sweep_q1b_resolution.png)
+
 Pre-registered in the experiment file. [Q1](sweep_q1_modulation.md) left one
 question open: it showed the modulation *advantage* widens with density, but the
 *absolute* modulated ratio **fell** with segment count — because the exafference

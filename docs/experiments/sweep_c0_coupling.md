@@ -1,5 +1,10 @@
 # S0 — coupling sweep (locomotion is a network effect)
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_sweep_c0_coupling.png)
+
 ## What it shows
 The first [harness](../datasets.md) demonstration, and a clean network-effect
 result with the methodology the [formal review](../reproducibility.md) asked for:

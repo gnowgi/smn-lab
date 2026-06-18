@@ -1,5 +1,10 @@
 # S1 — geometry → world model (flagship)
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_sweep_geometry_worldmodel.png)
+
 Pre-registered in the [test plan](../test-plan.md). The question: with the world
 held fixed, does the world an agent can *differentiate* scale with its body's
 sensory geometry?
