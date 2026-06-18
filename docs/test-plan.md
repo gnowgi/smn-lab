@@ -163,3 +163,13 @@ predictions through computational modelling." smn-lab is that modelling.
   constrains which control is *viable* more than it *requires* distinct priors here.
   (First run was a setup bug — actuator saturated for all gains — discarded; the
   re-run used declared physical-regime fixes.)
+- **Prediction 1 — [haltability signatures](experiments/sweep_pred1_haltability.md):
+  confirmed.** Deceptive reach (target jumps mid-movement): the haltable controller
+  imposes a distinct stop (velocity → 0, dwell ~0.17 s) and discrete opponent-pair
+  re-pairing, absent in a smooth continuous controller — cleanest on same-direction
+  adjustments, where smooth never slows (vel 0.98, dwell 0). Honest nuance: a
+  *reversal* forces any controller through zero velocity, so the *dwell* (not the
+  zero-crossing) is the diagnostic; and the halt carries no speed benefit (it
+  reacquires later by the dwell). The signature is the predicted diagnostic, as in
+  the preprint. (First runs confounded by an over-fast limb — always arrived before
+  the jump — discarded; re-run used a slow heavy limb, declared.)
