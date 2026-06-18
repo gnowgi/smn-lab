@@ -1,5 +1,10 @@
 # Q2 — self/world distinction (reafference) on the crawler
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_q2_reafference.png)
+
 Pre-registered in the [test plan](../test-plan.md). The reafference principle:
 sensed change decomposes as `dm/dt = ∇m·v` (self-caused) `+ ∂m/∂t|world`
 (world-caused); a reafferent agent predicts the self term and is left with the
@@ -71,6 +76,22 @@ consequence. So Q2's limitation directly motivates the
 [Q1](sweep_q1_modulation.md) modulation mechanism: **distributed, per-zone
 reafference**. P0 remains the clean canonical demonstration of the principle;
 the crawler shows it is real but needs distributed modulation to be clean.
+
+
+## What's measured, computed, and plotted
+**Raw data (per run = one seed):** each step, the agent's own (proprioceptive,
+noisy) head displacement `(dx, dy)` is accumulated. Every 0.25 s window: the mean
+field reading `m` over the body's sensor sites; a phase tag (learn / self-test /
+exafference).
+
+**Computed (the reafference decomposition `dm/dt = grad(m)·v + dm/dt|world`):**
+- gradient `(gx, gy)` = least-squares plane fit of the readings over the sensor sites' positions;
+- predicted self-caused change `pred_self = scale * (gx*dx + gy*dy)` (gradient · own displacement); `scale` is fit by least squares during the learn phase;
+- actual change `dm = m - m_prev`;
+- **reafferent residual** `= dm - pred_self` (the world term survives); **foil residual** `= dm` (no cancellation);
+- `ratio = mean|residual| in exafference / mean|residual| in self-test`, for reafferent and foil.
+
+**Plotted:** **A** `|residual|` over time (one seed), reafferent vs foil, with the self-test and exafference windows shaded; **B** the ratio across seeds, reafferent vs foil.
 
 ## Run
 ```bash

@@ -1,5 +1,10 @@
 # S1 — geometry → world model (flagship)
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_sweep_geometry_worldmodel.png)
+
 Pre-registered in the [test plan](../test-plan.md). The question: with the world
 held fixed, does the world an agent can *differentiate* scale with its body's
 sensory geometry?
@@ -79,6 +84,22 @@ scale it. Whether modulation does is still untested.
 
 **Caveat.** Eight seeds with wide spread: "flat" means no trend detectable at this
 power, not a proven exact-zero. A larger ensemble could reveal a weak effect.
+
+
+## What's measured, computed, and plotted
+**Raw data (per run = one segment count x one seed; ~1800 logged times):** the
+internal sensory state `S` (the `2*n_seg` vector of per-segment bilateral field
+readings) and the true head position `P = (x, y)`.
+
+**Computed (the order parameter — held-out decoding skill):**
+- split the run by time into train (first 60%) and test (last 40%); standardize each state channel;
+- for each test state, find its `k = 8` nearest train states (Euclidean distance) and predict the mean of their positions;
+- `MAE = mean Euclidean error` of those predictions; `MAE_naive = error of always predicting the train-mean position`;
+- `skill = 1 - MAE / MAE_naive` (0 = no better than guessing the mean; 1 = perfect);
+- **shuffle control** = the same with train state↔position pairs shuffled (must give skill ≈ 0);
+- `coverage` = explored bounding-box area.
+
+**Plotted:** **A** skill vs segment count (mean ± 95% CI) with the shuffle control; **B** coverage vs segment count.
 
 ## Run
 ```bash

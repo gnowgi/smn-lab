@@ -1,5 +1,10 @@
 # Prediction 2 — zonal dissociations
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_sweep_pred2_zonal.png)
+
 Pre-registered in the experiment file. SMN preprint, Predictions & Testable Claims
 #2: *"The same abstract task should produce different performance across
 materials/couplings (viscoelastic vs rigid tools) due to zone priors —
@@ -63,6 +68,18 @@ this as a qualification of the strong reading: substrate constrains *which contr
 is viable*, more than it *requires distinct priors* for this task. A task with a
 true two-sided crossover (where each substrate punishes the other's optimum) would
 test the stronger claim.
+
+
+## What's measured, computed, and plotted
+**Raw data (per run = kp x kd x substrate {rigid, viscoelastic} x seed):** time and
+the tool-**tip** angle (`= limb-joint angle + tool-joint angle`) during a
+reach-and-hold.
+
+**Computed (the math):**
+- `IAE = integral of |target - tip| dt` — integrated absolute tracking error (the task error); also overshoot and final error.
+- per substrate: the mean IAE over seeds on each `(kp, kd)` gain → a 2-D landscape; its optimum = `argmin IAE`; the optima are compared across substrates (matched vs mismatched vs a generic compromise gain).
+
+**Plotted:** **A, B** the IAE landscape over `(kp x kd)` for each substrate, optimum ★; **C** bars of matched / mismatched / generic IAE on each substrate.
 
 ## Run
 ```bash

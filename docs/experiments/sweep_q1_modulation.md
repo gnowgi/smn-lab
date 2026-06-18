@@ -1,5 +1,10 @@
 # Q1 — modulation and the resolution principle
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_sweep_q1_modulation.png)
+
 Pre-registered in the [test plan](../test-plan.md). [Q2](q2_reafference.md) showed
 reafference works on the crawler but only partially, because a single head-velocity
 signal cannot predict how *distributed* sensors move on a *bending* body. The SMN
@@ -62,6 +67,19 @@ resolution* — is **supported, decisively**: an unmodulated distributed body lo
 self/world resolution as it grows; the per-zone dual-port modulator restores it to
 the noise floor. The narrower "absolute resolution scales up with density" claim is
 **not** established (confounded) and is left open.
+
+
+## What's measured, computed, and plotted
+**Raw data (per run = segment count x mode {modulated, foil} x seed):** each zone
+accumulates its **own** sensed displacement (the dual-port modulator). Every 0.25 s
+window: each zone's mean reading `r_k`, the aggregate residual, and a phase tag.
+
+**Computed (per-zone reafference):**
+- per zone: predicted change `basis_k = grad · disp_k` (gradient · that zone's own displacement); actual `dr_k = r_k - r_prev_k`;
+- **modulated** residual_k `= dr_k - scale_k * basis_k` (each zone cancels its own self-motion); **foil** residual_k `= dr_k`;
+- aggregate residual = mean over zones; `ratio = mean|aggregate| in exafference / in self-test`; `self_res = mean|aggregate| in self-test`.
+
+**Plotted:** **A** ratio vs segment count, modulated vs foil; **B** the self-test residual (the noise floor) vs segment count, modulated vs foil.
 
 ## Run
 ```bash

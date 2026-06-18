@@ -10,12 +10,25 @@ topology (the "balance beam") can be varied as an experimental variable**.
 Architecture reference: Nagarjuna, G. & D. Karnam. *The Sensation Modulating
 Network.* [arXiv:2605.26856](https://arxiv.org/abs/2605.26856).
 
-![Basal coupling — no food (dies at ~120 s) vs with food + regrowth (alive at 180 s)](figures/p2_basal_coupling.png)
+## What the lab looks like
 
-*From the [Basal coupling](experiments/p2_basal_coupling.md) experiment — same
-agent in both columns; only the world differs. The closed loop of movement ↔
-energy ↔ food ↔ living map sustains the agent when the world feeds back, and
-opens when it does not.*
+The agent's body (its morphology and sensors), the physics world it moves in, and
+the kind of data the bench produces:
+
+![The 3D world — a segmented crawler and an object in a walled MuJoCo arena](figures/hero_world_3d.png)
+*The 3D physics world (MuJoCo): the segmented crawler — coloured dots are its
+bilateral sensors — and an object in a walled arena.*
+
+![An agent and its world — morphology in the diagram grammar (left) and the experimental conditions (right)](figures/setup_c1_touch.png)
+*Every experiment is specified by an **agent** (built in the
+[diagram grammar](diagram-grammar.md)) and a **world**. Here: a three-block crawler
+with a ventral touch skin and bilateral chemical sensing, a chemical field, and an
+object on its path to the source.*
+
+![A sample result — the crawler climbs a chemical gradient; the messaging beam on its body; the gait loop in state-space](figures/c0_crawler.png)
+*A sample result ([C0](experiments/c0_crawler.md)): the crawler climbs a chemical
+field (left), the messaging beam drawn on its body (middle), and its gait cycle in
+state-space (right).*
 
 ## The two experiment series
 

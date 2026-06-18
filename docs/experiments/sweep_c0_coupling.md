@@ -1,5 +1,10 @@
 # S0 — coupling sweep (locomotion is a network effect)
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_sweep_c0_coupling.png)
+
 ## What it shows
 The first [harness](../datasets.md) demonstration, and a clean network-effect
 result with the methodology the [formal review](../reproducibility.md) asked for:
@@ -28,6 +33,18 @@ not in the parts.**
   locomotion).
 - **Order parameter** — net displacement; we also report across-seed spread and
   phase-lag coherence.
+
+
+## What's measured, computed, and plotted
+**Raw data (per run = one coupling value x one seed; 70 runs):** head `(x, y)` over
+time; `dphi` = the phase difference between the two joint oscillators.
+
+**Computed (the math):**
+- `net_disp` per run (as C0).
+- `phase_coherence = |mean over time of exp(i*dphi)|` — 1 if the joints hold a fixed phase relation, → 0 if they drift apart.
+- across seeds, per coupling value: mean net_disp, its **95% CI** (= `1.96 x sem`), and its standard deviation.
+
+**Plotted:** **A** mean net_disp vs coupling with the 95% CI band, the foil (coupling = 0) circled; **B** the across-seed standard deviation of net_disp vs coupling (the variance collapse).
 
 ## Run
 ```bash

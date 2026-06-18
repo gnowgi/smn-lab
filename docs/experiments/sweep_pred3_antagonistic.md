@@ -1,5 +1,10 @@
 # Prediction 3 — antagonistic benefits
 
+## Setup at a glance
+*Agent morphology (left) and the world / experimental conditions (right).*
+
+![Setup — agent morphology and the world](../figures/setup_sweep_pred3_antagonistic.png)
+
 Pre-registered in the experiment file. This is the first of the SMN preprint's
 six *Predictions and Testable Claims* (§Predictions) reproduced in the bench —
 part of turning the preprint's qualitative claims into the quantitative ones it
@@ -69,6 +74,18 @@ always. A flat error-vs-`coc` curve would have falsified it.
 
 This is the second pre-registered claim **confirmed** rather than corrected
 (after the Q1b resolution-vs-density result).
+
+
+## What's measured, computed, and plotted
+**Raw data (per run = co-contraction x perturbation {small, large} x seed):** time,
+joint deviation `theta` from the set-point, and the instantaneous activation
+energy rate `(a_plus^2 + a_minus^2)`. An external torque pulse is applied at `T_PERT`.
+
+**Computed (in the response window after the pulse):**
+- `peak_dev = max |theta|`; `IAE = integral of |theta| dt`; `settle_time` = last time `|theta|` exceeds tolerance;
+- `energy = integral of (a_plus^2 + a_minus^2) dt` — the cost of holding the co-contraction.
+
+**Plotted:** **A** peak deviation vs co-contraction (small / large perturbation); **B** IAE vs co-contraction; **C** the tradeoff — IAE vs energy, with points labelled by co-contraction level.
 
 ## Run
 ```bash
