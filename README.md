@@ -1,159 +1,120 @@
 # smn-lab — an experimental bench for cognitive science based on the SMN architecture
 
-An embodied, configurable simulation bench for studying the **Sensation
-Modulating Network (SMN)** architecture, built on **MuJoCo**. The control
-architecture the SMN specifies drives a physical body in a physics world, so the
-architecture's predicted empirical contrasts (its *registers*) can be reproduced
-from real sensorimotor engagement — and so the **modulatory coupling topology
-(the "balance beam") can be varied as an experimental independent variable**.
+An embodied, configurable simulation bench for the **Sensation Modulating Network
+(SMN)** architecture, built on **MuJoCo**. The control architecture the SMN
+specifies drives a physical body in a physics world, so the architecture's
+predicted contrasts can be reproduced from real sensorimotor engagement — and the
+things the theory says matter (coupling topology, modulation, body geometry) can be
+varied as experimental variables and measured.
+
+Every experiment is **pre-registered** — hypothesis, order parameter, matched
+foil, and pass/fail fixed *before* running — and exports tidy, self-describing
+data. The bench is meant as a *generative model* others can verify and mine, not a
+fixed set of results.
 
 Based on the architecture described in:
 
 > Nagarjuna, G. & D. Karnam. *The Sensation Modulating Network.* arXiv:2605.26856.
 > https://arxiv.org/abs/2605.26856
 
-## Why a bench (the experiment)
-- **Control (fixed):** the body (zones, transducers, modulators), the world, the task ("explore and build a model").
-- **Independent variable:** the balance-beam topology — {layered, non-layered} × {hierarchical, distributed} × {±BAP} × {±HAP}.
-- **Dependent variable:** the state-space (world model) the agent constructs — forward-model accuracy, reafference self/world separation, dimensionality, stability, and *which registers emerge under which topology*.
+**Live docs (start here): <https://smn-lab.readthedocs.io>**
 
-It is intended as a reusable testbed for SMN hypotheses, including multi-agent
-ones (shared intentionality; self/world/other).
+## The model organism
+
+The bench is built on one disciplined model organism — a **minimal axial crawler**
+(an annelid-like chain of segments), derived in [Lesson 1](docs/lesson1.md) as the
+smallest body that can *initiate non-inertial movement* and so the first body that
+can have a world. Each inter-segment joint is a **CAZ** — a pull-only **opponent
+pair** — and the joints are coupled by a **messaging beam** into a traveling wave.
+Every agent is drawn in a consistent [diagram grammar](docs/diagram-grammar.md), so
+its morphology, sensors, and coupling can be read at a glance, and the same body
+schema generates both the simulation and the figures.
 
 ## Architecture → simulation mapping
 | SMN component | In the bench |
 |---|---|
-| Zone / CAZ | a body segment + actuated joint that senses and acts (dual-port) |
-| S — transducer | rangefinder "whiskers", contact, gradient sensors |
+| Zone / CAZ | an inter-segment joint driven by a pull-only opponent pair — sensing and acting in one (dual-interface) |
+| S — transducer | ventral touch skin, bilateral field strips (chemical/thermal), rangefinder whiskers, camera |
 | M — modulator | MuJoCo pull-only antagonist actuators (a zone's two Sensation Modulators) |
-| N — communication board = **balance beam** | the coupling topology routing modulation among zones — **the IV** |
-| BAP | coupled CPG oscillators (baseline rhythm; ±BAP toggle) |
-| HAP | haltable controller recruited by sensed affordances (±HAP toggle) |
-| snapshot / world model | the state-space built from (action, modulated-sensation) — **the DV** |
-| world / habitat | arena with objects/affordances |
-| multi-agent | 2+ agents → shared intentionality / self-world-other |
+| N — communication board = **messaging beam** | the coupling among zones (`MessagingBeam`: nearest-neighbor phase coupling) — a key independent variable |
+| FAP/BAP | the coupled-oscillator traveling wave (baseline locomotion) |
+| HAP | a haltable action recruited by contact / goal change (halt-on-contact, halt-on-reversal) |
+| world model | the shared state-space *insofar as it differentiates the world* — the dependent variable |
+| world / habitat | a walled arena + virtual scalar fields + objects |
 
 ## Install & run
 ```bash
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-cd experiments && ../.venv/bin/python p0_reafference.py
+cd experiments && ../.venv/bin/python c0_crawler.py   # the minimal crawler
 ```
+
+## The experiments
+
+Two lines, kept separate (full list + per-experiment pages in the
+[docs](https://smn-lab.readthedocs.io)):
+
+**Experiments — the model organism and the going-forward science.** One
+well-characterized body; one parameter varied at a time; a matched non-modulatory
+foil; replicated seeds. Results so far (the framework is confirmed and corrected
+about equally — that is the falsifiability working):
+
+| experiment | what it tests | result |
+|---|---|---|
+| **C0 / C1** | the crawler moves (non-inertial); touches and halts | locomotion + chemotaxis; halt-on-contact = objecthood as resistance |
+| **S0** coupling sweep | is locomotion a network effect? | **yes** — coupling locks the wave: foil 0.56 ± 0.28 m → coupled 0.75 ± 0.002 m |
+| **S1** geometry → world model | does the world model scale with body geometry? | a real body-relative world model exists (decoding skill ≈ 0.4 ≫ shuffle 0); it does **not** scale with segment count — *prediction corrected* |
+| **Q2** self / world (reafference) | does a self-motion forward model separate self from world? | partial — cancels ~37% of self-caused change (ratio 2.2 vs foil 1.58); cleanest in [P0](docs/experiments/p0_reafference.md) |
+| **Q1 / Q1b** modulation & resolution | does modulation, not raw transduction, give resolution? | **yes** — without modulation, self/world resolution collapses as the body grows; with it, resolution rises with CAZ density (the resolution principle) |
+| **Preprint pred. 1** haltability signatures | deceptive reach → distinct stop-resume + re-pairing | **confirmed** — a halt dwell (~0.17 s) + discrete effector re-pairing, absent in a smooth controller |
+| **Preprint pred. 2** zonal dissociations | same task, different performance by material | partial — the optimal control moves with substrate (aggressive prior is catastrophic on a compliant tool); a conservative generic ≈ matched |
+| **Preprint pred. 3** antagonistic benefits | co-contraction → faster perturbation correction | **confirmed** — peak deviation −4.4×, integrated error −28×, at a steep energy cost (a tradeoff) |
+
+Each experiment's page makes the **raw data → math → plot** chain explicit, and
+opens with a setup figure (agent morphology + world). Methodology and pass/fail are
+pre-registered in the [test plan](docs/test-plan.md).
+
+**Trial experiments — the bench's first exploratory studies** (the P/E series: a
+planar "mouse" with whiskers; single- and multi-CAZ reafference; world-model
+mapping, foraging, cross-modal discrimination). Kept as provenance and read as
+proofs-of-concept, not clean ablations — see the
+[reproducibility note](docs/reproducibility.md).
+
+## Datasets & reproducibility
+All randomness is seeded; runs are reproducible and stamped with the git commit.
+The sweep harness (`smn_lab/sweep.py`) writes, per study, a tidy `summary.csv`
+(one row per run: parameters + seed + metrics), a long-format `timeseries.parquet`,
+and a `manifest.json` (grid, seeds, commit). Full data lands in `data/`
+(gitignored, regenerable); a curated `summary.csv` per study ships in `samples/`.
+The bench is a *generator* — sweep the grid as wide as you like.
+See [Datasets](docs/datasets.md).
 
 ## The lab interface
-A simple, functional bench window (Streamlit) so you — or a reviewer — can see
-the bench as **the math in action**, not synthesized: every panel calls the real
-experiment code on the spot.
-
+A simple Streamlit window so you — or a reviewer — can see the bench as **the math
+in action**: pick an experiment, watch its actual MuJoCo world, and inspect the
+graphs, computed results, and documentation side by side.
 ```bash
 .venv/bin/pip install -r requirements-ui.txt    # one extra dependency: streamlit
-.venv/bin/streamlit run app.py                  # opens in your browser
+.venv/bin/streamlit run app.py
 ```
+A GL backend renders the world; the core bench does not need streamlit. More
+detail: [the lab interface docs](docs/lab-interface.md).
 
-**Using it**
-- **Sidebar** — choose any experiment (P0–P3).
-- **World** — every experiment renders its actual MuJoCo scene (arena + agent).
-  For the cross-modal experiment (P3), pick an object and press **Run approach**:
-  the agent drives up under its own CPG + differential drive, reads
-  touch / vision / taste, and halts at the object — the run plays back as a
-  looping animation, then prints the decoded identity and the located position.
-- **Graphs** — the experiment's result figures.
-- **Results** — for P3, press **Compute results** to run the binding,
-  localization, and resolution measurements live and tabulate them.
-- **Documentation** — the experiment's own page, rendered inline.
-
-A GL backend (present on any desktop with a display) renders the world; the
-core bench does not need streamlit — it is an optional extra. For a fully
-interactive, mouse-orbitable 3D view of a single P3 run, use
-`cd experiments && ../.venv/bin/python p3_crossmodal_discrimination.py --watch`.
-More detail: [the lab interface docs](docs/lab-interface.md).
-
-## Current capability — the reafference register in the body
-A single Coordinated Action Zone (a yaw "head" driven by a pull-only antagonist
-pair) carries one rangefinder "whisker" and sweeps a static walled arena. A
-forward model keyed on the agent's own heading learns the whisker reading during
-a self-motion phase, then:
-
-- **self-motion** (world static): residual ≈ sensor noise floor — **mean |res| ≈ 9.6 mm**
-- **exafference** (an object the agent did *not* move slides in): residual jumps —
-  **mean |res| ≈ 90 mm (×9.4), peak ≈ 723 mm**
-
-The self/world distinction emerges structurally, from the wiring and real
-physics. Output: `figures/p0_reafference.png`.
-
-## Also available — a multi-CAZ agent that builds a world model
-A planar "mouse" with a steering Coordinated Action Zone (pull-only antagonist
-pair) and a five-whisker rangefinder fan explores a walled arena with two
-objects. A Basal Action Pattern (CPG) provides the locomotor drive; a Haltable
-Action Pattern, recruited by the whisker affordances, steers toward open space
-and rotates in place when blocked. From its own pose plus each whisker's known
-angle and measured distance, the agent accumulates hits into an occupancy map —
-**the picture it constructs of its world from action and modulated sensation**.
-It reconstructs the walls and both objects at **~97% surface coverage, ~99%
-precision**. Output: `figures/p1_world_model.png`.
-
-```bash
-cd experiments && ../.venv/bin/python p1_world_model.py
-```
-
-## Roadmap
-- **Done** — single-CAZ reafference (the self/world register) in the body.
-- **Done** — **the same reafference register at the visual level**: one forward-facing camera at the head's pivot, an analytical frame-warp predictor from the agent's own yaw rate, and a flat 8 × 8 = 64-token modulator gating the per-patch residual against a calibrated floor. Self-caused change cancels (~6 % patches fire); world-caused change does not (~24 % patches fire — a ×3.9 fire-fraction contrast — over the silhouette of the oscillating object). The architecture is modality-independent. See `figures/p0_visual.png`.
-- **Done** — **the multi-CAZ eye, ±body yaw**: the eye is a small body nested in the head with its own CAZ pair, driven by a basic saccade generator; the camera is mounted on the eye and the forward model predicts the next frame from `Δθ_head + Δθ_eye` with an angle-correct per-column `sec²(α)` shift. With the head held at zero (eye saccades only), the reafference register holds beautifully — ×37.7 fire-fraction contrast — confirming that **gazing-while-still itself constructs the snapshot**. With the head also sweeping, the contrast collapses to ×1.3, exposing the limits of one flat 8 × 8 modulator under combined motion (an honest motivation for raising CAZ density on the eye in the next experiment). See `figures/p1_visual.png`.
-- **Done** — **only agent-side modulation** (static-world variant): three conditions with the multi-CAZ eye and only eye saccades — (A) cylinder visible-static throughout; (B) cylinder visible-static then oscillating during exafference; (C) cylinder hidden then visible-static during exafference. A is **completely silent** in all phases (the user's predicted finding — only agent-side motion produces no snapshot input). B fires (×28.8) under object motion against a known scene. C fires (×25.0) — not just as an appearance transient but as a sustained baseline — revealing that the modulator's per-patch floor calibration **is the architecture's first-order "scene memory."** See `figures/p1v_static_world.png`.
-- **Done** — multi-CAZ agent explores an arena and builds a faithful world model.
-- **Done** — body-geometry-relative, self-localized world model: an explicit body schema (located drive zones + whiskers), locomotion from located opponent drive zones, and a map built from proprioceptive dead-reckoning rather than any absolute pose (~97% coverage, ~0.2 cm drift).
-- **Done** — the balance-beam sweep: the constructed world model measured across information-routing topology (flat vs hierarchical), body morphology (whisker count, drive track width), the ±BAP/±HAP toggles, and proprioceptive noise. **Findings:** removing the basal drive (−BAP) or the haltable affordance-action (−HAP) collapses coverage (20% / 44% vs 97%) — both are necessary to build a world model; proprioceptive noise smears the map (precision 100% → 74%, drift 6.7 cm); routing and morphology are robust at this task difficulty. See `figures/p2_topology_sweep.png`.
-- **Done** — map decay / **living snapshot**: the world model fades where it is not revisited; live coverage of the full arena falls from 99% (accumulator) to 37% at decay 0.8/s — a moving local snapshot that trails the agent. See `figures/p2_living_snapshot.png`.
-- **Done** — **basal coupling** (the first telling simulation): the agent carries an energy reserve, the BAP is energy-gated, and food in the world replenishes. Without food: dies at t ≈ 120 s. With food + regrowth: alive at t = 180 s with 19 consumption events. Same agent — the closed loop (movement ↔ energy ↔ food ↔ map) is what keeps it alive. See `figures/p2_basal_coupling.png`.
-- **Done** — **map-guided foraging**: the HAP now reads a food-memory living-snapshot layer and steers toward remembered food when the path is clear of walls. The map's *decay rate* becomes a direct survival pressure — in a harsher world (4 foods, 90 s regrowth, 300 s horizon), slow decay (0.02 / s) keeps the agent **alive** at the end (8 consumption events); the no-map baseline **dies at 272 s** (5 events); fast decay (1.0 / s) dies *earlier* (175 s, 3 events) — the brief, misleading memory drags the agent back to just-eaten spots before food regrows. See `figures/p2_map_guided_foraging.png`.
-- **Done** — **cross-modal discrimination (recognition as a basal SMN result)**: the same located, opponent-modulated zones individuate an object from three modality bits — touch (whisker angular extent), vision (rendered luminance), taste (chemical field) — actively and with **zero labeled corpus**. Binding: individuable categories = 2^(modalities coupled through modulation) = 2 → 4 → 8, while more whiskers stay at 2 (**sensors ≠ modalities**); resolution rises with sensor count *only* with modulation; localization needs reafference (~0.10 m vs ~0.40 m). Foils on the same test set: a subsumption arbiter (suppression, no binding) reaches only 2 categories with all three sensors, and a corpus-trained net needs ~128 labeled examples to match SMN's zero-shot ~0.96. See `figures/p3_crossmodal_discrimination.png`. (Interactive in [the lab interface](#the-lab-interface).)
-- **Next** — multi-agent (shared intentionality / self-world-other).
-- Configuration-driven scenarios and rendering for reuse and presentation.
-
-## See the setup
-`experiments/scene_geometry.py` draws the **body schema** (every zone's
-body-frame location, the opponent drive pair, the whisker fan) and the **agent
-placed in the scene** → `figures/agent_geometry.png`, plus a top-down MuJoCo
-render `figures/scene_render.png` when a GL backend is available.
+## Layout (`smn_lab/`)
+- `crawler.py` — `build_crawler_xml` (the minimal axial crawler) + `apply_anisotropic_drag` (the overdamped medium).
+- `morphology.py` — `BodySchema`/`CAZ`/`Segment` + `render_morphology`/`render_network`: the diagram grammar (one source of truth for body and figures).
+- `control.py` — `MessagingBeam` (traveling wave + chemotaxis), `OpponentBoard`, `ReafferencePredictor`, `DeadReckoner`, and the action-pattern layers (`BAPG`, `HAPExplorer`, `DifferentialDrive`); plus the trial-line `CrossModalBoard` / `SubsumptionArbiter`.
+- `fields.py` — `ScalarField`: virtual chemical/thermal fields sampled bench-side.
+- `sweep.py` — `run_sweep` / `export_curated`: the parametric-sweep + dataset-export harness.
+- `viz.py` — `draw_beam_graph`, `plot_state_space`: the messaging beam and its dynamic state.
+- `body.py`, `model.py`, `vision.py`, `worldmodel.py` — the earlier trial line (planar "mouse" builders, camera, occupancy map).
+- `experiments/` — one script per experiment (C/S/Q/predictions + the P/E trials); `doc_figs.py` generates the docs' setup figures and 3D render.
 
 ## Documentation
-Live docs: **<https://smn-lab.readthedocs.io>**. The Markdown source lives in
-[`docs/`](docs/index.md); build it locally with `pip install -r docs/requirements.txt && mkdocs serve`.
-
-## What the simulation assumes
-[`docs/assumptions.md`](docs/assumptions.md) is a living record separating what
-the physics engine **simulates**, what the control code **computes**, and what is
-an **idealization**. Assumptions are *layered* — a common core plus per-experiment
-specifics that can add or override — and stated plainly (e.g. the whiskers are
-distal rays, not tactile bristles; the map does not yet decay; co-activation data
-at rest is not modelled).
-
-## Data & reproducibility
-All randomness is seeded, so runs are byte-reproducible.
-- **Generated data → `data/`** (gitignored by directory name): each experiment writes its **point clouds + true/estimated trajectories** (`.npz`) and a `sweep_results.csv`. The data coverage/precision are computed from these. Regenerable, so kept out of git.
-- **Curated demo data → `samples/`** (tracked): small example files with a [README](samples/README.md) explaining the format, so you can inspect the data without running anything.
-- For a paper, a versioned snapshot (and a Zenodo DOI) will provide a frozen, citable dataset.
-
-## Layout
-- `smn_lab/body.py` — `MouseSchema`: the explicit body geometry (every zone's body-frame location), shared by the model builder and the agent.
-- `smn_lab/model.py` — MJCF body/world builders (`build_p0/p1/p2/p3_xml`).
-- `smn_lab/control.py` — `OpponentBoard`, `ReafferencePredictor`, `CPG` (BAP drive), `HAPExplorer`, `DifferentialDrive` (located drive zones), `DeadReckoner` (proprioceptive self-localization), `CrossModalBoard` (the cross-modal balance beam) and `SubsumptionArbiter` (the Brooks foil); the balance beam lives here.
-- `smn_lab/worldmodel.py` — `OccupancyMap` and the point-based map score (the constructed "picture").
-- `smn_lab/vision.py` — `EyeCamera`, `AnalyticalFramePredictor`, `PatchResidualModulator`: the minimal visual transducer + analytical reafference (one undifferentiated camera, flat 8×8 patch modulator; the eye's eventual CAZ structure stands for later).
-- `experiments/p0_reafference.py` — single-CAZ reafference (whisker transducer).
-- `experiments/p0_visual.py` — the same reafference register at the visual level (camera + 8×8 patch modulator).
-- `experiments/p1_visual.py` — the multi-CAZ eye: ±body yaw; eye saccades alone construct the snapshot.
-- `experiments/p1v_static_world.py` — only agent-side modulation: change vs presence, and the per-patch floor as scene memory.
-- `experiments/p1_world_model.py` — multi-CAZ agent builds a world model (uses true pose).
-- `experiments/p2_world_model.py` — body-geometry-relative, self-localized world model (proprioception only).
-- `experiments/p2_topology_sweep.py` — the balance-beam sweep (routing × morphology × ±BAP/±HAP × proprioceptive noise).
-- `experiments/p2_living_snapshot.py` — the world model decays where unrevisited (the living snapshot).
-- `experiments/p2_basal_coupling.py` — why the agent moves: energy + food + map + motion as one closed loop.
-- `experiments/p2_map_guided_foraging.py` — the HAP reads a food-memory layer; the map's decay rate is a direct survival pressure.
-- `experiments/p3_crossmodal_discrimination.py` — cross-modal object discrimination: binding, the resolution principle, localization-needs-reafference, and the subsumption / deep-net foils (recognition as a basal SMN result).
-- `experiments/scene_geometry.py` — draws the body schema + the agent in the scene (and a MuJoCo render).
-- `app.py` — the Streamlit [lab interface](#the-lab-interface) (optional; needs `requirements-ui.txt`).
+Live docs: **<https://smn-lab.readthedocs.io>**. Source in [`docs/`](docs/index.md);
+build locally with `pip install -r docs/requirements.txt && mkdocs serve`.
+[`docs/assumptions.md`](docs/assumptions.md) separates what the engine **simulates**,
+what the code **computes**, and what is an **idealization**.
 
 ## Citation
 If you use this bench in published work, please cite the SMN paper:
