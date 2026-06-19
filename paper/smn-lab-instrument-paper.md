@@ -214,6 +214,23 @@ commit. Every run is reproducible and the data are openly available — so the
 "small-data" objection dissolves: a collaborator can sweep the grid as wide as they
 like and re-analyze with their own tools.
 
+### 2.8 From the model organism to a menagerie  *(drafted)*
+
+The commitments above are not a straitjacket of one body. The same primitives —
+rigid segments, CAZ opponent-pair joints (whose split orientation sets the degree of
+freedom), and shape-coded sensors — compose into very different bodies by four moves:
+**scale** (add segments to the axial chain), **branch** (attach a chain of segments
+to a segment — a leg, a wing, an antenna; *a body is a graph of segments*), **nest**
+(a chain of small sub-segments makes a *flexible* part — a tail, a finger; rigidity
+in series is how a real finger bends), and **configure DOF** (choose each joint's
+CAZ — yaw, pitch, roll, or telescoping). Figure&nbsp;X shows a worm, a fish, a
+quadruped, a bird, and a biped built from this one kit. The point is methodological:
+complexity is *composed*, not redesigned, so the bench scales from the minimal
+organism to richly appendaged agents while the unit of analysis — segment, CAZ,
+sensor, coupling — stays fixed, and so comparable across the whole family.
+
+![A menagerie from one grammar — worm, fish, quadruped, bird, and biped built by scaling, branching, nesting, and configuring degrees of freedom](../figures/menagerie.png)
+
 ---
 
 ## 3. Instrument description  *(outline)*
