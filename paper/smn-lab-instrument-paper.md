@@ -44,7 +44,7 @@ object-directed phenomenology.
 | **Name** | SMN-Lab |
 | **Subject area** | Artificial life; embodied & enactive cognitive science; minimal cognition; morphological computation |
 | **Instrument type** | Open-source embodied simulation bench (MuJoCo); a model-organism testbed |
-| **Closest analog** | Bespoke agent-based embodied-cognition simulations (e.g. evolved CTRNN agents); no shared, pre-registered, reproducible bench of this kind. Hardware sibling: the Enactive Torch (Estelle et al.) |
+| **Closest analog** | No direct analog. Physics/robotics simulators (MuJoCo, Webots, PyBullet) are substrates; embodied-AI benchmarks (Habitat, AI2-THOR, ManiSkill) measure task performance; active-inference toolkits (pymdp, SPM) simulate the inference without a physical body; ALife platforms (Avida, Framsticks) evolve agents. SMN-Lab is a falsifiable, theory-testing bench on a derived minimal model organism. |
 | **License** | GNU GPL-3.0-or-later |
 | **Cost** | Free (open source) |
 | **Languages / dependencies** | Python · MuJoCo · NumPy · matplotlib (Streamlit optional) |
@@ -61,9 +61,51 @@ object-directed phenomenology.
 - One-paragraph statement of the SMN architecture (cite arXiv:2605.26856).
 - What SMN-Lab provides: a shared, falsifiable, reproducible instrument — itself the
   contribution, independent of any single theoretical result.
-- Kinship: the **Enactive Torch** (a hardware sensory-substitution device for
-  enactive research) — SMN-Lab is its computational counterpart: a *synthetic* body
-  rather than an *augmented* one.
+
+### 1.1 Related benches, and why we built another  *(drafted)*
+
+The landscape of embodied simulation is crowded, yet none of it occupies SMN-Lab's
+niche. We group it in five families.
+
+*Physics and robotics simulators* — MuJoCo, PyBullet, Webots, Gazebo, Isaac Gym —
+are **substrates**: they provide bodies and forces but take no position on cognition.
+SMN-Lab is built *on* one (MuJoCo) and adds the architecture, the model organism,
+the grammar, and the experimental discipline.
+
+*Embodied-AI benchmarks* — Habitat, AI2-THOR, iGibson, ManiSkill, and the newer
+LLM-driven suites (EmbodiedBench, ECBench) — measure **task performance**
+(navigation, manipulation, instruction following), increasingly of large models
+sitting atop a simulator. They ask *what an agent can do*, not whether a *theory of
+how cognition is constituted* holds; the body is a vehicle for a task, not the locus
+of the explanation.
+
+*Active-inference toolkits* — pymdp, ActiveInference.jl, SPM, ForneyLab — implement
+a **formalism** (Bayesian inference over discrete-state POMDPs), typically without a
+physical body. They simulate the *inference*; SMN-Lab puts a body in real physics and
+asks whether an architecture's *structural* claims (reafference, halt at resistance,
+a body-relative world model, morphological computation) survive mechanically — the
+same divergence we draw with the free-energy principle: a description of behaviour
+versus the body that produces it.
+
+*Artificial-life platforms* — Avida, Tierra, Framsticks, Polyworld — **evolve**
+agents and study open-ended dynamics. They generate diversity; they do not
+pre-register and falsify a *specified* architecture.
+
+*Minimal-cognition methodology* — Beer's evolved CTRNN agents (categorical
+perception, relational categorization) and the enactive perceptual-crossing paradigm
+(Auvray, Lenay & Stewart; Froese) — is the closest in spirit, and the tradition we
+place ourselves in. But it is a **method**, realized as bespoke code per study, not a
+shared, reusable instrument with a fixed model organism, a common notation, matched
+foils, and reproducible datasets.
+
+What none of these offers is what SMN-Lab is: a **shared, falsifiable instrument**
+that takes a *stated architectural theory* of embodied cognition, instantiates it on
+a *derived minimal model organism* in real physics, and puts its claims at risk with
+matched non-modulatory foils and pre-registration — reporting when the theory is
+wrong. The matched foil is the crux: it isolates *which part of the body's
+organization did the work*. That is why we built one. We are explicit that SMN-Lab is
+young (one organism family, planar idealizations); the claim is about the *niche and
+the discipline*, not maturity.
 
 ---
 
@@ -244,21 +286,36 @@ to sharpen, not to settle.
 - Limitations: planar idealizations in the current studies; a single organism
   family; phenomenology not addressed (Section 5.x).
 
-### 6.x Perceptual crossing and the Enactive Torch in simulation  *(drafted)*
+### 6.x Reproducing established paradigms (and a social one)  *(drafted)*
 
-The **Enactive Torch** (Estelle et al.; Froese et al.) is a hardware
-sensory-substitution device that converts distance into vibration so that a user
-perceives by active exploration. SMN-Lab is its computational sibling — a
-*synthetic* body rather than an *augmented* one — and the same sensory-substitution
-"feel" can be staged in an agent whose coupling we fully control. A natural first
-social experiment is **perceptual crossing** (Auvray, Lenay & Stewart, 2009): two
-agents move sensors along a shared line, each receiving a contact signal when it
-crosses the other; the question is whether an agent can distinguish another
-*responsive* agent from a non-responsive lure by the **dynamics of mutual
-interaction** alone. Reproducing perceptual crossing in SMN-Lab would extend the
-instrument from object-directedness to *other*-directedness — and it probes exactly
-the boundary named in Section 5.x, since "detecting another perceiver" is here a
-dynamical signature of interaction, not a phenomenal report.
+To earn use beyond its own architecture, SMN-Lab should reproduce experiments other
+labs already trust — and then show what it adds: an architectural foil, a
+falsification, or a morphological-computation account the original did not give.
+Natural candidates, several already within reach:
+
+- **Categorical perception / object discrimination** (Beer) — an agent catches or
+  avoids falling objects by shape; the canonical minimal-cognition benchmark.
+- **Relational categorization** (Beer & Williams) — judging relative size.
+- **Braitenberg vehicles** — phototaxis and "aggression" as a continuity baseline.
+- **Sensory substitution** (the Enactive Torch paradigm) — distance rendered as
+  another modality and perceived by active exploration. The Enactive Torch (Estelle
+  et al.; Froese et al.) is a *hardware* device; SMN-Lab is **not** its sibling, but
+  it can *host the paradigm* — staging an enactive sensory-substitution experience in
+  a synthetic agent whose coupling we fully control, where the substitution mapping
+  itself becomes an experimental variable.
+- **Perceptual crossing** (Auvray, Lenay & Stewart, 2009; Froese) — two agents move
+  sensors along a shared line, each signalled when it crosses the other; the question
+  is whether an agent can distinguish a *responsive* agent from a non-responsive lure
+  by the **dynamics of mutual interaction** alone. This extends the bench from
+  object-directedness to **other**-directedness, and probes the boundary of
+  Section 5.x, since "detecting another perceiver" is a dynamical signature, not a
+  phenomenal report.
+
+The continuity is not hypothetical: SMN-Lab already ships a Brooks-style
+**subsumption** controller (used as a foil) and performs chemotaxis and obstacle
+response. The program is uniform — reproduce a recognized result, then add the
+SMN-Lab difference: the matched foil that says *which part of the body's organization
+did the work*.
 
 ---
 
