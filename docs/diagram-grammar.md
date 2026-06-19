@@ -31,7 +31,7 @@ The grammar gives the same body **two views**, sharing one vocabulary:
 | Element | Glyph | Notes |
 |---|---|---|
 | **Segment (block)** | rounded rectangle | a body block with mass; the head is shaded; the chain runs head → tail |
-| **Sensor** | an **unfilled circle** with a modality-colored ring | a single-interface transducer, drawn **inside** the segment it is mounted on; bilateral sensors give an L node (upper inside) and an R node (lower inside) |
+| **Sensor** | an **unfilled marker whose shape encodes the modality** (colour is a redundant cue) | a single-interface transducer, drawn **inside** the segment it is mounted on; bilateral sensors give an L node (upper inside) and an R node (lower inside). Shapes keep modalities distinguishable on a black-and-white display or for colour-blind readers |
 | **CAZ** | **one circle split in half** — one half filled (flexor), one half unfilled (extensor) | the opponent pair actuating **one degree of freedom**. *Every CAZ is dual-interface (it both senses and acts); that is defined here, not drawn.* |
 | **Localizer (eye / ear)** | a literal paired icon at the anterior face | a distal sensor; its placement is what marks the front |
 | **Coupling / network** | **light-blue lines** | sensor → CAZ and CAZ ↔ CAZ — one color for "these nodes talk" |
@@ -82,10 +82,14 @@ The remaining needs are **extensions within the same abstractions**, not changes
 to them — which is why the grammar can be treated as final and grown as
 experiments demand:
 
-- **Branching topology** — appendages (legs, wings, fins) are sub-chains that
-  branch off the axial chain. *A body is a graph of segments; a branch is a
-  segment attached to a segment.* The schema becomes a tree rather than a list;
-  the node types are unchanged.
+- **Branching** — appendages (legs, wings, fins, antennae) are sub-chains that
+  branch off the axial chain. *A body is a graph of segments; a branch is a segment
+  attached to a segment.* The schema is a tree rather than a list; the node types
+  are unchanged.
+- **Nesting** — a single *flexible* part is a chain of small rigid sub-segments in
+  series. This is the answer to the natural objection "your segments are rigid, so
+  how can a part bend?": a finger or a tail is flexible **because** it is many rigid
+  links jointed together. Flexibility is nested segmentation, not a new primitive.
 - **Anchor / gripper** — an *actuated* contact (a foot that grips and releases, a
   sucker, setae) for peristalsis, inchworming, and climbing. One more node type,
   alongside the sensor.
@@ -93,24 +97,37 @@ experiments demand:
   reaction (both present); flying additionally needs a lift model. This is a
   physics layer, orthogonal to the diagram grammar.
 
+### A menagerie from one grammar
+
+The same primitives — rigid **segments**, **CAZ** opponent-pair joints (whose split
+orientation sets the degree of freedom), and shape-coded **sensors** — compose into
+very different bodies by four moves: **scale** (add segments), **branch** (a chain
+on a segment), **nest** (small segments in series → a flexible part), and
+**configure DOF** (choose each joint's CAZ). A worm, a fish, a quadruped, a bird,
+and a biped are the *same kit*, assembled differently.
+
+![A menagerie from one grammar — worm, fish, lizard/quadruped, bird, biped, all built by scaling, branching, nesting, and configuring DOF](figures/menagerie.png)
+
 ## Fixed conventions
 
 - **Anterior = +x (right)** — matching the crawler code (head = `seg0` at +x). A
   small compass appears in every figure.
 - **Top view**, with **L = +y (warm)** and **R = −y (cool)**, matching the body's
   left/right sites.
-- One **fixed modality → color table**, shown as a shared legend:
+- One **fixed modality → shape + colour table**, shown as a shared legend. Each
+  modality has a distinct **shape** (so it reads on a B/W screen or for colour-blind
+  viewers) with colour as a redundant cue:
 
-| modality | color | role |
-|---|---|---|
-| touch | orange | contact / force (ventral skin) |
-| chem | green | chemical gradient (field) |
-| thermal | red | thermal gradient (field) |
-| pressure | purple | pressure (field) |
-| vision | blue | distal — eye (localizer) |
-| audio | teal | distal — ear (localizer) |
-| proprio | grey | proprioception (internal) |
-| *coupling* | *light blue* | *the network (sensor→CAZ, CAZ↔CAZ messaging beam)* |
+| modality | shape | color | role |
+|---|---|---|---|
+| touch | triangle | orange | contact / force (ventral skin) |
+| chem | square | green | chemical gradient (field) |
+| thermal | pentagon | red | thermal gradient (field) |
+| pressure | hexagon | purple | pressure (field) |
+| vision | circle | blue | distal — eye (localizer) |
+| audio | octagon | teal | distal — ear (localizer) |
+| proprio | (circle) | grey | proprioception (internal) |
+| *coupling* | *line* | *light blue* | *the network (sensor→CAZ, CAZ↔CAZ messaging beam)* |
 
 ## The description language
 
@@ -141,5 +158,6 @@ new block (and its CAZ) unlocks the next epistemic transition:
 ## Regenerating the figures
 
 ```bash
-cd experiments && ../.venv/bin/python morphology_figs.py
+cd experiments && ../.venv/bin/python morphology_figs.py   # grammar + ladder
+cd experiments && ../.venv/bin/python menagerie_figs.py     # the menagerie
 ```
