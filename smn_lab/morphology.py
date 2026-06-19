@@ -38,7 +38,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyBboxPatch, Circle, Ellipse, Wedge
+from matplotlib.patches import FancyBboxPatch, Circle, Ellipse, Wedge, RegularPolygon
 
 # Fixed modality palette -- the same hue means the same modality in every figure.
 MODALITY_COLORS = {
@@ -51,6 +51,15 @@ MODALITY_COLORS = {
     "proprio":  "#888888",   # grey    -- proprioception (internal)
 }
 _DISTAL = {"vision": "eye", "audio": "ear"}      # which modalities are localizers
+# Sensors are differentiated by SHAPE (not colour alone), so they remain
+# distinguishable on a black-and-white display or for colour-blind readers; colour
+# is a redundant cue. numVertices: 0 = circle. triangle=touch, square=chem,
+# pentagon=thermal, hexagon=pressure, circle=vision, octagon=audio.
+MODALITY_SHAPES = {"touch": 3, "chem": 4, "thermal": 5, "pressure": 6,
+                   "vision": 0, "audio": 8, "proprio": 0}
+_SHAPE_ORIENT = {"chem": np.pi / 4}              # axis-aligned square
+_SHAPE_MARKER = {"touch": "^", "chem": "s", "thermal": "p", "pressure": "h",
+                 "vision": "o", "audio": "8", "proprio": "o"}   # for legends
 CAZ_FILL = "#f4c542"             # the CAZ's flexor (filled) half
 NETWORK_COLOR = "#7fb3d5"        # the coupling network (light blue)
 # The degrees of freedom a single CAZ (one opponent pair) can actuate. The two
@@ -151,9 +160,17 @@ def caz_glyph(ax, x, y, r, dof="lateral", face_a=CAZ_FILL, face_b="white", z=6):
 
 
 def sensor_node(ax, x, y, r, modality, z=6):
-    """A transducer drawn as a node: an unfilled circle with a modality ring."""
+    """A transducer drawn as a node: an unfilled marker whose SHAPE encodes the
+    modality (distinguishable without colour), with the modality colour as a
+    redundant cue."""
     c = MODALITY_COLORS.get(modality, "#555")
-    ax.add_patch(Circle((x, y), r, facecolor="white", edgecolor=c, lw=2.2, zorder=z))
+    n = MODALITY_SHAPES.get(modality, 0)
+    if n and n >= 3:
+        ax.add_patch(RegularPolygon((x, y), n, radius=r * 1.18,
+                     orientation=_SHAPE_ORIENT.get(modality, 0.0),
+                     facecolor="white", edgecolor=c, lw=2.0, zorder=z))
+    else:
+        ax.add_patch(Circle((x, y), r, facecolor="white", edgecolor=c, lw=2.2, zorder=z))
 
 
 def _eye(ax, x, y, s, color):
@@ -321,14 +338,14 @@ def render_network(ax, schema: BodySchema, seg_w: float = 2.4,
 def modality_legend(ax, modalities=None, with_network=True):
     from matplotlib.lines import Line2D
     mods = modalities or list(MODALITY_COLORS)
-    handles = [Line2D([0], [0], marker="o", ls="", markersize=10,
+    handles = [Line2D([0], [0], marker=_SHAPE_MARKER.get(m, "o"), ls="", markersize=11,
                       markerfacecolor="white", markeredgecolor=MODALITY_COLORS[m],
-                      markeredgewidth=2.2, label=m) for m in mods]
+                      markeredgewidth=2.0, label=m) for m in mods]
     if with_network:
         handles.append(Line2D([0], [0], color=NETWORK_COLOR, lw=2.6,
                               label="coupling (network)"))
     ax.legend(handles=handles, loc="center", ncol=min(5, len(handles)),
-              frameon=False, fontsize=8, title="sensors (unfilled circles) · coupling")
+              frameon=False, fontsize=8, title="sensors (shape = modality) · coupling")
     ax.axis("off")
 
 

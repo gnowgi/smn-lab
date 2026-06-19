@@ -33,7 +33,7 @@ def fig_grammar(out):
     ax0 = fig.add_subplot(gs[0])
     render_morphology(ax0, schema)
     ax0.set_title("Morphology view — where things are mounted\n"
-                  "segment blocks · sensors mounted inside (unfilled circles, "
+                  "segment blocks · sensors mounted inside (shape = modality, "
                   "L upper / R lower) · CAZ glyph at each joint · anterior eye",
                   fontsize=9.0)
 
