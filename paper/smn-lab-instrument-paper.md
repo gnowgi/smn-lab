@@ -67,10 +67,18 @@ object-directed phenomenology.
 The landscape of embodied simulation is crowded, yet none of it occupies SMN-Lab's
 niche. We group it in five families.
 
-*Physics and robotics simulators* — MuJoCo, PyBullet, Webots, Gazebo, Isaac Gym —
-are **substrates**: they provide bodies and forces but take no position on cognition.
-SMN-Lab is built *on* one (MuJoCo) and adds the architecture, the model organism,
-the grammar, and the experimental discipline.
+*Physics and robotics simulators* — MuJoCo, PyBullet, Webots, Gazebo, Isaac —
+are **substrates**: they provide forward dynamics and contacts but take no position
+on cognition. In practice their dominant use is **performance optimization**. The
+canonical MuJoCo benches are reward/imitation task-benchmarks organized around
+standardized rewards, handcrafted metrics, and shipped state-of-the-art baselines
+(DeepMind Control Suite, Tassa et al. 2018; LocoMuJoCo, Al-Hafez et al. 2023), and
+the leading evolutionary-robotics work *co-optimizes* body and controller to beat
+hand-designed agents (DERL, Gupta et al. 2021; Evolution Gym, Bhatia et al. 2021).
+Success is *beating a baseline*. SMN-Lab is built on one such engine (MuJoCo) but
+inverts the goal: it adds a cognitive architecture, a model organism, a grammar, and
+an experimental discipline so the engine becomes an instrument for *testing a theory*
+rather than scoring a task.
 
 *Embodied-AI benchmarks* — Habitat, AI2-THOR, iGibson, ManiSkill, and the newer
 LLM-driven suites (EmbodiedBench, ECBench) — measure **task performance**
@@ -91,21 +99,57 @@ versus the body that produces it.
 agents and study open-ended dynamics. They generate diversity; they do not
 pre-register and falsify a *specified* architecture.
 
-*Minimal-cognition methodology* — Beer's evolved CTRNN agents (categorical
-perception, relational categorization) and the enactive perceptual-crossing paradigm
-(Auvray, Lenay & Stewart; Froese) — is the closest in spirit, and the tradition we
-place ourselves in. But it is a **method**, realized as bespoke code per study, not a
-shared, reusable instrument with a fixed model organism, a common notation, matched
-foils, and reproducible datasets.
+*Minimal-cognition methodology* — this is the closest in spirit and the tradition we
+place ourselves in. Evolutionary robotics has long been advocated as *a scientific
+tool* for studying minimal models of cognition (Harvey, Di Paolo et al. 2005);
+Beer's evolved CTRNN agents are analyzed as coupled brain–body–environment dynamical
+systems — "frictionless brains" — for conceptual understanding, not task scores; and
+perceptual-crossing models have genuinely *tested and falsified* cognitive-
+architecture hypotheses — Froese & Di Paolo (2010) refuted a proposed internal-
+circuit explanation by analyzing the evolved agents' actual dynamics, and predicted
+interaction patterns later observed in humans. This is hypothesis-testing done right.
+But it runs on **bespoke, often non-reproducible** code: a recognized reproducibility
+gap in enactive simulation (no released source) prompted the purpose-built, open
+**PCE Simulation Toolkit** (Sangati & Fukushima 2023), whose stated contribution is
+the *reproducibility and extensibility of cognitive-mechanism simulation* — exactly
+the move SMN-Lab makes, but in **continuous MuJoCo physics** rather than discrete
+CTRNN agents.
 
 What none of these offers is what SMN-Lab is: a **shared, falsifiable instrument**
 that takes a *stated architectural theory* of embodied cognition, instantiates it on
 a *derived minimal model organism* in real physics, and puts its claims at risk with
 matched non-modulatory foils and pre-registration — reporting when the theory is
 wrong. The matched foil is the crux: it isolates *which part of the body's
-organization did the work*. That is why we built one. We are explicit that SMN-Lab is
-young (one organism family, planar idealizations); the claim is about the *niche and
-the discipline*, not maturity.
+organization did the work*. We are not aware of a physics-engine bench that brings
+this experimental-control scaffolding to embodied-cognition hypotheses; that is the
+niche SMN-Lab occupies. We are explicit that SMN-Lab is young (one organism family,
+planar idealizations); the claim is about the *niche and the discipline*, not
+maturity.
+
+### 1.2 Why not just use MuJoCo directly?  *(drafted)*
+
+A reviewer will reasonably ask why a physics engine is not enough. MuJoCo is the
+leading engine *for reinforcement learning* (multi-engine review, arXiv:2407.08590)
+and gives, out of the box, forward dynamics, contacts, and a fast action interface.
+It does not give three things an embodied-cognition *experiment* needs.
+
+- **A closed reafferent sensorimotor loop.** Morphological computation — the body
+  offloading control — occurs only when the agent is *actively behaving* so that its
+  motor actions generate correlated sensory input (optic flow, proprioception,
+  contact); the structure is in the *loop*, not the dynamics (Pfeifer, Iida & Gomez
+  2006). A bare engine supplies the dynamics; the experimenter must build the loop.
+  In SMN-Lab the loop *is* the unit of design (the dual-interface CAZ).
+- **A cognitive-architecture abstraction** — segments, opponent-pair CAZs, the
+  messaging beam — in which a *claim* about cognition can be stated and varied. An
+  engine exposes joints and forces, not zones and coupling.
+- **Experimental scaffolding** — matched (non-modulatory) ablation controls, seeded
+  reproducibility, pre-registration, and a shared model-organism methodology. The
+  dominant MuJoCo workflows supply rewards and baselines for *optimization*; the
+  hypothesis-testing exemplars above run on no shared physics bench at all.
+
+Active-inference tooling such as pymdp (Heins et al. 2022) models cognition but in
+discrete, disembodied state spaces — complementary to, not a substitute for, an
+embodied bench.
 
 ---
 
@@ -355,3 +399,13 @@ Dayantri, Meng, Morrissey & Froese, SSRN 5749009); Purcell (1977), *Life at low
 Reynolds number*; Braitenberg (1984); Beer (e.g. 2003); Pfeifer & Bongard (2006);
 Di Paolo, Buhrmann & Barandiaran (2017); Auvray, Lenay & Stewart (2009); Froese &
 Di Paolo on perceptual crossing; Friston (FEP) and Latash (EPH) for positioning.
+
+Related-benches survey (see `paper/related-work-survey.md` for the verified
+evidence): Tassa et al. 2018 (DeepMind Control Suite, arXiv:1801.00690); Al-Hafez
+et al. 2023 (LocoMuJoCo, arXiv:2311.02496); Gupta et al. 2021 (DERL, Nature Comms);
+Bhatia et al. 2021 (Evolution Gym, arXiv:2201.09863); Harvey, Di Paolo, Wood, Quinn
+& Tuci 2005 ("Evolutionary Robotics: A New Scientific Tool", Artificial Life);
+Froese & Di Paolo 2010 (perceptual crossing, Connection Science); Pfeifer, Iida &
+Gomez 2006 (morphological computation); Sangati & Fukushima 2023 (PCE Simulation
+Toolkit, Frontiers in Neurorobotics); Heins et al. 2022 (pymdp, JOSS,
+arXiv:2201.03904); multi-engine RL review (arXiv:2407.08590).
