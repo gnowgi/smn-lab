@@ -18,10 +18,14 @@ pdflatex frontiers-smn-paper
 ```
 or `latexmk -pdf frontiers-smn-paper`.
 
+Figures resolve from `../../figures/` via `\graphicspath`. For final submission,
+copy the referenced PNGs into this directory and upload them individually.
+
 ## Submission checklist (later)
-- [ ] Confirm corresponding-author institutional email (currently a placeholder)
+- [x] Corresponding-author email (preprint address: nagarjuna@iiserpune.ac.in)
+- [x] Figures placed + referenced (ladder, menagerie, S0, Q1b, Pred-1)
 - [ ] Funding statement
-- [ ] Figures uploaded individually (Frontiers embeds them); add `\includegraphics` callouts
+- [ ] Copy figure PNGs into this dir for the submission bundle
 - [ ] Tidy overfull hboxes (wide ledger table, long URLs)
 - [ ] Verify body word count ≤ 12,000 (main body only)
 - [ ] Fill remaining bib fields (e.g. Tomasello publisher; arXiv "and others" → full author lists)
