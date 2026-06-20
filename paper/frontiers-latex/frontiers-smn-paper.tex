@@ -6,10 +6,12 @@
 \documentclass[utf8]{FrontiersinHarvard} % Harvard (author-date); correct for Frontiers in Cognition
 
 \usepackage{url,hyperref,lineno,microtype,subcaption}
+\usepackage{xurl} % allow long URLs to break cleanly (load after hyperref)
 \usepackage[onehalfspacing]{setspace}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \graphicspath{{../../figures/}}
+\setlength{\emergencystretch}{3em} % soak up tiny overfull/underfull boxes
 
 \linenumbers
 
@@ -25,7 +27,7 @@ $^{2}$Indian Institute of Technology (IIT) Bombay, Mumbai, India }
 \onecolumn
 \firstpage{1}
 
-\title[Haltability as the ground for object-directed cognition]{Haltability as the architectural ground for object-directed cognition: a falsifiable account, tested in silico}
+\title[Haltability and object-directed cognition]{Haltability as the architectural ground for object-directed cognition: a falsifiable account, tested in silico}
 
 \author[\firstAuthorLast ]{\Authors}
 \address{}
@@ -50,7 +52,7 @@ Underneath that division lies a deeper disagreement that the two camps rarely st
 
 That is a claim about mechanism, and a mechanism can be wrong. So the rest of the paper does the two things the architecture's first statement \citep{NagarjunaKarnam2026SMN} did not.
 
-\textbf{First, we sharpen the account into differential predictions (Section~\ref{sec:falsify}).} A recurring and fair observation about embodied-cognition frameworks is that they offer a \emph{coherent alternative} without marking clearly where they \emph{differ} from the accounts already in the field: they are consistent with the data, and often equally consistent with one another. A theory is most useful where it predicts \emph{otherwise}. We therefore set the SMN beside the three frameworks it shares the most with --- active inference / the free-energy principle, \emph{sensorimotor enactivism}, and \emph{equilibrium-point control} --- and for each identify (i) what they share, (ii) where the SMN predicts differently, and (iii) the observation that would tell them apart. A shorter note treats Global Workspace Theory.
+\textbf{First, we sharpen the account into differential predictions (Section~\ref{sec:falsify}).} A recurring and fair observation about embodied-cognition frameworks is that they offer a \emph{coherent alternative} without making clear where they \emph{differ} from accounts already in the field: they are consistent with the data, and often equally consistent with one another. A theory is most useful where it predicts \emph{otherwise}. We therefore set the SMN beside the three frameworks it shares the most with --- active inference / the free-energy principle, \emph{sensorimotor enactivism}, and \emph{equilibrium-point control} --- and for each identify (i) what they share, (ii) where the SMN predicts differently, and (iii) the observation that would tell them apart. A shorter note treats Global Workspace Theory.
 
 \textbf{Second, we test it in silico (Section~\ref{sec:ledger}).} Architectural claims about embodied cognition are usually \emph{illustrated} by a bespoke simulation, rarely \emph{risked} by one. We built SMN-Lab --- an open, reproducible bench on the MuJoCo physics engine, organized around a single \emph{derived} model organism --- specifically to risk the SMN: matched non-modulatory controls isolate which part of the body's organization did the work, pre-registered hypotheses fix pass/fail before running, seeded ensembles replace the single illustrative trial. The result is a \emph{confirm-and-correct ledger}, not a highlight reel.
 
@@ -98,7 +100,7 @@ A reconciliation that merely says ``keep the good parts of each camp'' is cheap 
 
 A single rigid body has mass and is subject to the field but generates no reafference: it can be displaced but cannot act --- a pure object. Add one joint (two segments) and the body can cause a sensory change \emph{and} predict it: the reafferent residual appears, and with it the first \emph{self/world} distinction --- though with a single reciprocating degree of freedom the body, by Purcell's scallop theorem \citep{Purcell1977LowRe}, goes nowhere. Add a second joint (three segments) and a non-reciprocal cycle becomes possible: the body can now carry its sensors \emph{through} the world, and the halt-at-resistance can single out a portion of that world, yielding \emph{object-directedness}. Only once an agent has object-directedness \emph{and} a layer of negotiable, recombinable action patterns does the recursive, externalizable generativity the cognitivist prizes --- \emph{symbolic} cognition --- become architecturally possible (Figure~\ref{fig:ladder}).
 
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=0.62\linewidth]{morphology_ladder.png}
 \caption{The morphological ladder. Each added block unlocks a transition. One block is a pure object (only displaceable). Two blocks (one CAZ) generate reafference and the self/world distinction but cannot locomote --- a single reciprocating degree of freedom is scallop-stuck. Three blocks (two CAZs) admit a non-reciprocal cycle, hence locomotion and the possibility of object-directedness. The split-circle glyph is a CAZ (opponent pair); L/R mark the bilateral axis.}
@@ -208,7 +210,7 @@ The pattern across Sections~\ref{sec:fep}--\ref{sec:resolution} is consistent. T
 \subsection{The instrument, briefly}\label{sec:instrument}
 SMN-Lab is an open-source embodied simulation bench (MuJoCo; GPL-3.0; \url{https://github.com/gnowgi/smn-lab}) built to \emph{risk} the SMN rather than illustrate it. Five commitments make its results count as tests. (1) A \emph{derived model organism}: in an overdamped world, Purcell's scallop theorem \citep{Purcell1977LowRe} forbids net displacement to any body with a single reciprocating degree of freedom, so the smallest body that can \emph{initiate non-inertial movement} --- and therefore carry its sensors \emph{through} a world to ask directional questions of it --- is a \emph{three-segment axial chain} (two joints, a non-reciprocal cycle). Scaling is then a parameter, not a redesign, and the same primitives compose a whole body family (Figure~\ref{fig:menagerie}). (2) A \emph{dual-interface CAZ} as the unit: an antagonistic pull-only opponent pair that senses the joint it moves. (3) A strict \emph{engine boundary}: MuJoCo supplies rigid-body dynamics, contact, and actuation; the architecture supplies CAZs, the messaging beam, the action patterns, and the constructed world model; chemical and thermal fields the engine does not simulate are computed bench-side as virtual scalar fields sampled at sensor sites. (4) Pre-registration with matched non-modulatory foils: every experiment fixes hypothesis, order parameter, a control identical \emph{except for the one thing the SMN says matters}, and pass/fail, before running. (5) \emph{Seeded, self-describing datasets}: a sweep harness runs each experiment across a parameter grid and a seed ensemble and stamps the exact code commit, so results are reproducible and the ``small-data'' objection dissolves.
 
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=\linewidth]{menagerie.png}
 \caption{A menagerie from one grammar. Worm, fish, lizard/quadruped, bird, and biped are built from the same primitives by four moves: \emph{scale} (add segments), \emph{branch} (a chain attached to a segment --- a leg, wing, or antenna), \emph{nest} (small segments in series make a flexible part --- a tail or finger), and \emph{configure} each joint's CAZ degree of freedom (yaw, pitch, roll, telescoping). Complexity is composed, not redesigned, so the unit of analysis --- segment, CAZ, sensor, coupling --- stays fixed across the family.}
@@ -222,7 +224,7 @@ A discipline of integrity governs reporting: adjustments forced during an experi
 
 \emph{Result.} The matched non-modulatory foil (coupling $=0$) travels $0.56\pm0.28$ m --- occasionally far by chance, with huge variance --- while the coupled chain travels $0.75\pm0.002$ m, with variance collapsing roughly \emph{100-fold}. The diagnostic is not the mean distance (a flailing body sometimes drifts far) but the \emph{collapse of variance}: coupling converts undirected thrashing into a reproducible gait. This is morphological computation made measurable, and it is the template for the whole C-series --- a matched foil isolating the one structural variable (Figure~\ref{fig:s0}). \emph{Confirmed.}
 
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=\linewidth]{sweep_c0_coupling.png}
 \caption{S0 --- locomotion is a network effect (10 seeds $\times$ 7 couplings). (A) Net displacement rises as messaging-beam coupling locks the traveling wave. (B) The diagnostic is variance: across-seed standard deviation collapses roughly 100-fold as coupling increases, as random starts all lock to the same gait. The matched foil (coupling $=0$, red ring) flails --- occasionally far, but unreproducible.}
@@ -243,7 +245,7 @@ This is the pivotal pair, and it splits into a corrected sub-claim and a confirm
 
 \emph{Q1b (resolution, confirmed).} With a \emph{distributed} stimulus (a uniform global ``tide,'' removing the localized-dilution confound), the modulated world-detection ratio \emph{rises with density} ($14 \to 22.6$, scaling roughly as $1/\sqrt N$) while the foil falls ($2.5 \to 1.4$). Perceptual resolution scales with CAZ density --- \emph{but only with modulation}. This is the first C-series prediction \emph{confirmed without correction}, and the bench's cleanest vindication of the resolution principle: density helps \emph{if and only if} the body actively modulates (Figure~\ref{fig:q1b}).
 
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=\linewidth]{sweep_q1b_resolution.png}
 \caption{Q1b --- resolution scales with CAZ density, but only under modulation (6 seeds $\times$ 4 bodies, distributed stimulus). (A) The per-zone-modulated world-detection ratio rises with segment count ($\sim$14 $\to$ 22.6) while the matched non-modulatory foil falls. (B) The self-noise floor: the modulated residual stays near zero (falling $\sim 1/\sqrt N$) while the foil's grows with body size. Density helps if and only if the body actively modulates.}
@@ -255,14 +257,14 @@ This is the pivotal pair, and it splits into a corrected sub-claim and a confirm
 \subsection{Reafference separates self from world (Q2, partial)}\label{sec:q2}
 \emph{Prediction (Register 3).} The reafference predictor cancels self-caused sensory change, leaving world-caused change intact --- a residual ratio favouring world over self.
 
-\emph{Result.} On the crawler, reafference cancels $\sim$\emph{37\%} of self-caused change, giving a self/world ratio of \emph{2.2} versus a matched foil's \emph{1.58} --- supported, but \emph{not} the clean Register-3 result obtained in the preprint's single-CAZ reference simulation. The honest reason is structural: a single head-velocity proprioceptive signal cannot predict \emph{distributed} sensors on a \emph{bending} body, so cancellation is incomplete. We report this as \emph{partial}, and flag a methodological scar candidly: across modeling choices the measured ratio swung between 1.3 and 5.5, and we settled on the principled regime (a linear field with a moving source, where the predictor's model is \emph{exact}) rather than the choice that flattered the result. This is the integrity discipline doing its job.
+\emph{Result.} On the crawler, reafference cancels $\sim$\emph{37\%} of self-caused change, giving a self/world ratio of \emph{2.2} versus a matched foil's \emph{1.58} --- supported, but \emph{not} the clean Register-3 result obtained in the preprint's single-CAZ reference simulation. The honest reason is structural: a single head-velocity proprioceptive signal cannot predict \emph{distributed} sensors on a \emph{bending} body, so cancellation is incomplete. We report this as \emph{partial}, and are candid about a methodological wrinkle: across modeling choices the measured ratio swung between 1.3 and 5.5, and we settled on the principled regime (a linear field with a moving source, where the predictor's model is \emph{exact}) rather than the choice that flattered the result. This is the integrity discipline doing its job.
 
 \subsection{Three reproduced architectural predictions}\label{sec:preds}
 The preprint itself calls for ``quantitative predictions through computational modelling.'' We reproduced three.
 
 \emph{Pred-1, haltability signatures (confirmed).} In a deceptive-reach task, a \emph{haltable} controller imposes a distinct stop --- velocity to zero with a dwell of $\sim$\emph{0.17 s} plus a discrete opponent-pair \emph{re-pairing} --- where a smooth foil shows none. The dwell, not the zero-crossing, is the diagnostic (a direction reversal forces \emph{any} controller through zero). Importantly, the halt is a signature, not a speed gain: the haltable agent reacquires the target \emph{later}, by exactly the dwell. This matters for Section~\ref{sec:falsify}: haltability is a real, detectable mechanical event, not a re-description of slowing down --- the in-silico realization of Register 6 (Figure~\ref{fig:pred1}).
 
-\begin{figure}[h!]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=0.95\linewidth]{sweep_pred1_haltability.png}
 \caption{Pred-1 --- haltability signatures in a deceptive reach. (A) At the reversal the haltable controller stops (angular velocity to zero) then resumes, where the smooth foil corrects continuously. (B) Re-pairing: the dominant opponent (puller) flips at the reversal. (C) On a same-direction adjustment the smooth foil never crosses zero, so (D) the diagnostic is the \emph{dwell} --- a measurable stop ($\sim$0.17 s) --- not the zero-crossing; the smooth foil shows none.}
@@ -274,7 +276,7 @@ The preprint itself calls for ``quantitative predictions through computational m
 \emph{Pred-3, antagonistic benefits (confirmed).} Co-contraction speeds perturbation correction (peak deviation $-4.4\times$, integrated absolute error $-28\times$), with the benefit \emph{larger for larger perturbations}, at a roughly \emph{quadratic energy cost} --- the load-scaled tradeoff of Section~\ref{sec:eph}. This required a \emph{declared adjustment}: the original force-motor co-contraction was inert for stiffness (opposed force-motors simply cancel), so we added a muscle-impedance plus neural-delay model, and we state that this goes beyond the preprint's actuator. With it, the opponent pair held at a metabolic cost yields exactly the antagonistic benefit the SMN predicts and the bare EPH does not model --- the in-silico half of the Section~\ref{sec:fep} and Section~\ref{sec:eph} discriminators.
 
 \subsection{The ledger}\label{sec:ledger-table}
-\begin{table}[h!]
+\begin{table}[ht]
 \centering
 \begin{tabular}{p{3.2cm} p{5.2cm} p{5.2cm}}
 \hline
