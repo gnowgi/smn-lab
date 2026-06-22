@@ -186,27 +186,60 @@ Three further consequences of the network formalism (basal-pattern entrainment o
 % =====================================================================
 
 \section{Affinities and differences}\label{sec:affinities}
-% SECOND PASS: FEP (shared prediction-error; SMN adds a mechanical, metabolically
-% costly hold), Global Workspace (Pi as a structural broadcast), Gardenfors (two-vector,
-% already introduced 4.3), Levin/basal cognition (ally; bioelectric medium as broadcast
-% realizer), enactivism + Smith registration. Respectful: affinities and differences,
-% no discrediting. (IIT dropped per scope.)
-\emph{[Second pass.]}
+
+The SMN shares commitments with several well-developed programs, and locating it among them is best done by naming what it shares and where it diverges, not by displacing anything.
+
+\paragraph{Active inference and predictive processing.} The relationship is more reconcilable than an oppositional reading suggests \citep{Friston2010FreeEnergyPrinciple,ParrPezzuloFriston2022}. The mathematics is largely shared: the reafference residual $r=s-\hat s$ is structurally a prediction error, equation~\eqref{eq:alertenergy} couples surprise to attention and auto-halt, and registers 3 and 6 are contrasts active inference also predicts. Both accounts are hierarchical, and both make the body act as a unit --- active inference through a global free-energy quantity, the SMN through the broadcast operator $\Pi$ that integrates local zones into a shared state-space. Indeed the activated subset of the network (the zones currently coupled through haltability and broadcast for a task) can be read as a Markov blanket, so that the two are plausibly \emph{dual descriptions of one object}. The differences appear to turn on emphasis rather than opposition: the SMN is \emph{constructive} (the architecture is specified first and prediction-error dynamics fall out) where active inference is in part \emph{normative} (agents minimize free energy and the architecture is whatever does so), and the SMN is decentralized, with no single quantity the network optimizes. The one place where the SMN ventures a commitment its neighbour need not share is alert energy: a \emph{real metabolic cost} of the hold, with the load-coupling and post-release dynamics of registers 1 and 2 --- a positive, measurable claim (Section~\ref{sec:discussion}).
+
+\paragraph{Global Workspace Theory.} The broadcast operator $\Pi$ gives a concrete structural mechanism for the kind of shared access Global Workspace Theory describes \citep{Baars2005GlobalWorkspace,Dehaene2014Consciousness}. The two are pitched at different levels --- the SMN at the architecture of coordination, Global Workspace at access --- so the contribution here is to ground "broadcast" in a network operation with measurable consequences (the dual-signal indices of register~8) rather than in a workspace metaphor.
+
+\paragraph{Opponent and equilibrium-point control.} The closest kin in motor control is the equilibrium-point tradition \citep{Feldman1986_EquilibriumPoint,Latash2008EquilibriumPointHistory}: movement as a shift of the equilibrium of antagonist pairs rather than a computed torque. The SMN inherits this and adds the costly, actively maintained hold --- haltability and alert energy --- that the equilibrium-point account does not price.
+
+\paragraph{Conceptual spaces (G\"ardenfors).} As developed in Section~\ref{sec:reafference}, the SMN agent is an embodied realization of the two-vector model, and the body-relative state-space it constructs is, in G\"ardenfors's terms, a conceptual space \citep{Gardenfors2020Events,Gardenfors2019Robot}. We read conceptual spaces as the bridge from \emph{grounded} to \emph{positional} meaning --- the level at which embodied structure becomes a navigable geometry --- a thread we develop in the companion work.
+
+\paragraph{Basal cognition (Levin), an ally.} The SMN's claim that the broadcast is physically realized but medium-independent (Section~\ref{sec:caz}) has a natural realizer in the endogenous bioelectric networks Levin and colleagues describe, where non-neural tissue stores, reads, and acts on shared electrical state \citep{Levin2014MolecularBioelectricity,LevinPezzulo2017EndogenousBioelectricNetworks}. Basal cognition is an ally: cognition without a brain, organized by opponent and field dynamics, is exactly what the SMN's commitments predict should be possible.
+
+\paragraph{Enactivism and registration.} Finally, the SMN is a friend of sensorimotor enactivism, supplying a mechanism (register~4) for perception as the mastery of sensorimotor contingencies \citep{OReganNoe2001Sensorimotor}, and it cashes out Smith's account of objecthood as \emph{registration} through engaged participation \citep{Smith1996OriginObjects} in the dual-signal property of Section~\ref{sec:network}.
 
 \section{Computational tests: the SMN-Lab ledger}\label{sec:ledger}
-% SECOND PASS: one paragraph on the bench (replaces SMN-Hydrogen) + the confirm/correct
-% ledger table (S0, S1, Q1/Q1b, Q2, Pred-1..3); methods/data to smn-lab.readthedocs.io.
-\emph{[Second pass.]}
+
+The architecture's single-zone dynamics are specified; its multi-zone theory is deferred. To exercise the network claims in the interim --- and to put the registers at risk --- we built \textbf{SMN-Lab}, an open simulation bench on the MuJoCo physics engine, organized around a \emph{derived} minimal model organism (the smallest body that can initiate non-inertial movement). Each study is pre-registered with a matched non-modulatory foil (identical except for the one thing the architecture says matters), replicated across seeds; adjustments beyond the published architecture are declared, and confounded runs are discarded rather than reported. Full methods, parameters, and seeded datasets are at \url{https://smn-lab.readthedocs.io}; here we report only the ledger (Table~\ref{tab:ledger}).
+
+\begin{table}[ht]
+\centering
+\caption{The confirm-and-correct ledger across nine pre-registered SMN-Lab studies; three further confounded runs were caught and discarded before reporting.}
+\label{tab:ledger}
+\begin{tabular}{p{3.1cm} p{5.1cm} p{5.1cm}}
+\toprule
+\textbf{Study} & \textbf{SMN prediction} & \textbf{Outcome} \\
+\midrule
+S0 coupling & locomotion is a network effect & confirmed (across-seed variance collapses $\sim$100$\times$) \\
+S1 geometry$\to$world-model & body-relative model, scales with geometry & model confirmed; scaling \emph{corrected} (flat in segment count) \\
+Q1 modulation & modulation carries self/world resolution & core confirmed; one sub-claim \emph{corrected} \\
+Q1b resolution & resolution scales with zone density, with modulation & confirmed ($\sim$14$\to$22.6, $\propto 1/\sqrt N$) \\
+Q2 reafference & self/world separation by reafference & partial (37\% cancellation; distributed-body limit) \\
+Pred-1 haltability & a distinct active-halt signature & confirmed (dwell $\sim$0.17\,s) \\
+Pred-2 zonal & substrate-specific priors required & partial (strong reading not supported) \\
+Pred-3 antagonism & antagonistic benefit at a load-scaled cost & confirmed ($-28\times$ integrated error; $\sim$quadratic cost) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The arithmetic is the point: across nine pre-registered studies the architecture was confirmed about as often as it was corrected. The two corrections that bite --- the world model does \emph{not} improve with raw geometry (S1), and self/world resolution \emph{collapses} without modulation (Q1) --- converge on a single sharpened claim, the \emph{resolution principle}: the architecture's explanatory work is done by modulation, not by transduction. An instrument that only ever confirmed its theory would be an illustration; this one is a test.
 
 \section{Discussion}\label{sec:discussion}
-% SECOND PASS: what the ledger buys; answer the DNI weaknesses (multi-CAZ exercised;
-% substrate independence; alert energy = the decisive wet-lab measurement still owed);
-% what a simulation can/cannot carry (phenomenology bracketed); limitations; forthcoming
-% transitions (companion NAP preprint; M2 snapshot->stream).
-\emph{[Second pass.]}
+
+\paragraph{What the bench buys, and the gaps it answers.} The multi-zone studies above are working demonstrations of the network the analytic theory leaves open (S0, Q1/Q1b, and the antagonistic-control results all exercise coupling, density, and opponent dynamics across many zones). They also speak to substrate independence: the bench's actuators are simple pull-only opponent motors, not the Hill-type muscle of the reference simulations, so the registers it reproduces already hold in a different physical realization. And the confirm-and-correct ledger is falsification in practice --- the architecture's own predictions were put at risk, and three were corrected.
+
+\paragraph{The decisive measurement still owed.} The architecture's strongest and riskiest claim is that alert energy is a \emph{real metabolic quantity}. The bench can show its functional consequences (Pred-3), but cannot measure biological metabolism. The clean test is in the wet lab: combined EMG and metabolic measurement (NIRS, $^{31}$P-MRS) during sustained isometric tasks, looking for antagonist tonic activation that tracks agonist load linearly (register~1) and decays over seconds to tens of seconds after release rather than vanishing immediately. A positive result would distinguish the SMN from both classical reciprocal inhibition and the bare equilibrium-point hypothesis; a null would falsify its central energetic commitment. We name this as the experiment that matters most and that the bench cannot run.
+
+\paragraph{What a simulation can and cannot carry.} A simulation is not a body and has no phenomenology; nothing here is claimed to feel anything. What a physics engine does carry is the structural and relational conditions the SMN holds to constitute object-directedness --- a body-relative frame, the reafferent separation of self from world, the dual interface, and the halt at resistance. These are what the bench measures. Consistent with this restraint, the world estimate is deflationary: for the living agent there is no stored, contentful world-model, only a current attunement constituted in coupling (Section~\ref{sec:reafference}). Whether the structural signatures are sufficient for experience, or merely necessary, is the question the architecture sharpens, not one it settles.
+
+\paragraph{Forthcoming transitions.} Two threads are deliberately left open. The negotiable-pattern layer (Section~\ref{sec:network}) carries the architecture toward generative structure; its full development --- how negotiable and transactional action patterns ground generative grammar --- is the subject of a companion paper \citep{NagarjunaKarnamNAPprep}. And the passage from the body-grounded snapshot to externalized, serialized meaning --- the grounded-to-positional transition that conceptual spaces mediate --- is the subject of the second monograph in this program. The present paper establishes the basal and haltable layers both build on.
 
 \section{Conclusion}\label{sec:conclusion}
-\emph{[Second pass.]}
+
+We have proposed an architecture in which cognition is the modulation of sensation through action, built from opponent pairs of elements that sense and act through one substrate, coordinated by a decentralized broadcast, and holding themselves in dynamic equilibrium against the fields they live in. Its organizing claim is that \emph{haltability} --- the active, metabolically costly hold an antagonistic body can recruit --- is the architectural ground of object-directedness: an object is registered as \emph{other} in the moment an unpredicted resistance halts an ongoing action. From this the architecture earns the self/world distinction (reafference), attention (surprise-driven halt), and a route, stated here as a hypothesis, from negotiable action patterns to generative structure. The account keeps what cognitivism and 4E each get right --- generativity and embodiment --- while supplying the mechanism each leaves open, and it commits to eight measurable registers and a confirm-and-correct computational ledger that put it at risk. The single measurement it still owes --- the metabolic correlate of alert energy --- is the experiment we most want done. A theory worth proposing says clearly what would refute it; this is ours.
 
 \section*{Conflict of Interest Statement}
 The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest.
