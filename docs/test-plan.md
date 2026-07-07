@@ -138,9 +138,9 @@ The predictions above are left as written; outcomes are recorded here.
 
 ### Preprint predictions (beyond the five core questions)
 
-The bench is also being used to reproduce the preprint's own §"Predictions and
-Testable Claims" — which the conclusion explicitly says need "quantitative
-predictions through computational modelling." smn-lab is that modelling.
+The bench is also being used to reproduce the preprint's testable predictions
+(framed in the published version as its eight registers) — the quantitative,
+computational modelling the paper calls for. smn-lab is that modelling.
 
 - **Prediction 3 — [antagonistic benefits](experiments/sweep_pred3_antagonistic.md):
   confirmed.** Co-contraction reduces peak deviation 4.4× and integrated error ~28×

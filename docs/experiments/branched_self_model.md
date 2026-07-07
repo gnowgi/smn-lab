@@ -74,6 +74,14 @@ in its own movement tells it which is left and which is right.
 Topology-generality also strengthens the [chain result](self_model_topology.md):
 the same local, no-central-reader rule (C3) reads *any* morphology.
 
+## The self/world card
+
+The same result reads at a glance as a [self/world card](../diagram-grammar.md#the-selfworld-card)
+— the designed agent, the recovered self-model as an abstract graph (branch point
+ringed), and a world source localized on one limb of the *recovered* graph:
+
+![Self/world card for the branched body: designed agent, recovered self-model graph, world on one limb](../figures/self_world_card_branched.png)
+
 ## What's measured, computed, and plotted
 
 **Raw data:** each joint's own angular velocity `JV` (from its velocity sensor)

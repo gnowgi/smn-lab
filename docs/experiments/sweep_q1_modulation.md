@@ -15,9 +15,9 @@ moves*, sensing **its own** motion. This experiment builds exactly that:
 
 ## Mechanism and provenance (declared)
 Each CAZ predicts its own reafferent consequence from its **own** sensed velocity
-and the local field gradient (`dr_k = ∇m·v_k`). This is the preprint's modulator
-(arXiv:2605.26856, *hm-new-plan*: "by both measuring and moving, modulators
-implement the reafference principle in the body itself"). The per-zone
+and the local field gradient (`dr_k = ∇m·v_k`). This is the preprint's Sensation Modulator
+(arXiv:2605.26856): by both measuring and moving through one substrate, modulators
+implement the reafference principle in the body itself. The per-zone
 implementation is ours. **Foil:** the same body, same sensors, no cancellation
 (modulation off). Conditions vary only modulation on/off and segment count; world,
 exafference, and exploration are matched.

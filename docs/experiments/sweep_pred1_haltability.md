@@ -5,9 +5,10 @@
 
 ![Setup — agent morphology and the world](../figures/setup_sweep_pred1_haltability.png)
 
-Pre-registered in the experiment file. SMN preprint, Predictions & Testable Claims
-#1: *"Tasks requiring mid-course reversals (e.g., deceptive reach) should show
-distinct stoppage–resume patterns and re-pairing among effectors."* This is the HAP
+Pre-registered in the experiment file. This reproduces a testable prediction of the
+SMN preprint (arXiv:2605.26856): *"Tasks requiring mid-course reversals (e.g.,
+deceptive reach) should show distinct stoppage–resume patterns and re-pairing among
+effectors."* This is the HAP
 (Haltable Action Pattern) signature — extending [C1](c1_touch.md)'s halt-on-contact
 to a halt triggered by an internal goal change.
 

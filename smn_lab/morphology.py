@@ -334,6 +334,199 @@ def render_network(ax, schema: BodySchema, seg_w: float = 2.4,
     _finish(ax, centers, hw, hh, compass)
 
 
+# ----------------------------------------- graph views (any body, not just axial)
+# The chain renderers above lay segments out in a line. These generalize the same
+# vocabulary -- segment blocks, the dual-interface CAZ glyph, the light-blue beam --
+# to an arbitrary body *graph* (positions + edges), so a branched body, its
+# recovered self-model, and the world expressed in its self-frame all read in one
+# visual language.
+
+def graph_layout(nodes, edges, *, seed=0, iters=300, k=1.0):
+    """Force-directed (Fruchterman-Reingold) layout from adjacency ALONE.
+
+    Used to draw a graph the agent *recovered* from movement: it knows the
+    topology (who couples to whom) but not metric positions, so its self-model is
+    laid out purely from connectivity -- deliberately NOT the physical body's
+    coordinates. Same connectivity, an embedding the agent could compute itself."""
+    nodes = list(nodes)
+    n = len(nodes)
+    idx = {v: i for i, v in enumerate(nodes)}
+    rng = np.random.default_rng(seed)
+    pos = rng.standard_normal((n, 2)) * 0.1
+    E = [(idx[a], idx[b]) for a, b in edges]
+    for it in range(iters):
+        disp = np.zeros((n, 2))
+        for i in range(n):                              # repulsion, all pairs
+            d = pos[i] - pos
+            dist = np.hypot(d[:, 0], d[:, 1]); dist[i] = 1.0
+            disp[i] += (((k * k) / dist**2)[:, None] * (d / dist[:, None])).sum(0)
+        for i, j in E:                                  # attraction along edges
+            d = pos[i] - pos[j]
+            dist = float(np.hypot(*d)) or 1e-4
+            f = (dist * dist / k) * (d / dist)
+            disp[i] -= f; disp[j] += f
+        t = 0.1 * (1 - it / iters) + 1e-3               # cooling
+        for i in range(n):
+            dl = float(np.hypot(*disp[i])) or 1e-9
+            pos[i] += (disp[i] / dl) * min(dl, t)
+    return {v: (float(pos[idx[v]][0]), float(pos[idx[v]][1])) for v in nodes}
+
+
+def _norm_positions(positions, edges):
+    """Rescale node positions so the median edge length is 1.0 (glyphs then size
+    consistently regardless of the body's physical scale)."""
+    import numpy as _np
+    if edges:
+        L = _np.median([_np.hypot(positions[a][0] - positions[b][0],
+                                  positions[a][1] - positions[b][1]) for a, b in edges])
+    else:
+        L = 1.0
+    L = L or 1.0
+    return {n: (x / L, y / L) for n, (x, y) in positions.items()}
+
+
+def _seg_block(ax, x, y, s, label=None, fc="#dfe6ef", ec="#3a4a5e", lw=1.3, z=4):
+    ax.add_patch(FancyBboxPatch((x - s / 2, y - s / 2), s, s,
+                 boxstyle="round,pad=0,rounding_size=0.1",
+                 facecolor=fc, edgecolor=ec, lw=lw, zorder=z))
+    if label is not None:
+        ax.text(x, y, label, ha="center", va="center", fontsize=7.5,
+                color="#33414f", zorder=z + 1)
+
+
+def _draw_graph_body(ax, positions, edges, *, head=0, beam=True, caz=True,
+                     labels=True, edge_status=None, node_fc=None, hl=None,
+                     faint=False, block=0.40, cazr=0.115, node_style="block",
+                     edge_w=None, node_role=None):
+    """Core renderer for two node styles in one vocabulary.
+
+    ``node_style='block'`` draws the *physical body*: segment blocks with a CAZ
+    split-glyph on each joint and the messaging beam. ``node_style='dot'`` draws
+    the *abstract graph* the body recovers: plain circular nodes and edges (whose
+    width can encode the measured coupling), with no body dress -- so a recovered
+    self-model never looks like a redrawn body.
+
+    edge_status[i] in {'ok','bad'} colours recovered edges; edge_w[i] in [0,1]
+    scales edge width; node_fc / node_role map nodes to face colours; hl maps a
+    node to a highlight ring (branch point / localized world source)."""
+    P = _norm_positions(positions, edges)
+    node_fc = node_fc or {}; hl = hl or {}; node_role = node_role or {}
+    dot = (node_style == "dot")
+    beam_c = "#d9e4ee" if faint else ("#9fb0bd" if dot else NETWORK_COLOR)
+    for i, (a, b) in enumerate(edges):
+        xa, ya = P[a]; xb, yb = P[b]
+        if beam:
+            c = beam_c
+            if edge_status is not None:
+                c = "#3f6d99" if edge_status[i] == "ok" else "#d1483f"
+            lw = (3.0 if not faint else 1.6)
+            if edge_w is not None:
+                lw = 1.0 + 4.2 * float(edge_w[i])
+            ax.plot([xa, xb], [ya, yb], color=c, lw=lw, zorder=2, solid_capstyle="round")
+        if caz and not dot and not faint:
+            caz_glyph(ax, (xa + xb) / 2, (ya + yb) / 2, cazr, dof="lateral", z=6)
+    for n, (x, y) in P.items():
+        if dot:
+            fc = node_fc.get(n) or node_role.get(n, "#8fb4d6")
+            ax.add_patch(Circle((x, y), block * 0.46, facecolor=fc,
+                         edgecolor=("#c4ccd6" if faint else "#33414f"),
+                         lw=1.1 if faint else 1.5, zorder=4))
+            if labels:
+                ax.text(x, y, str(n), ha="center", va="center", fontsize=7.5,
+                        color=("#5c6b78" if faint else "#132029"), zorder=5)
+        else:
+            fc = node_fc.get(n, "#f3f5f8" if faint else ("#bcd0f0" if n == head else "#dfe6ef"))
+            _seg_block(ax, x, y, block, label=(str(n) if labels else None), fc=fc,
+                       ec=("#c4ccd6" if faint else "#3a4a5e"), lw=1.1 if faint else 1.3)
+        if n in hl:
+            ax.add_patch(Circle((x, y), block * (0.78 if dot else 0.85), facecolor="none",
+                         edgecolor=hl[n], lw=2.6, zorder=8))
+    ax.set_aspect("equal"); ax.axis("off")
+
+
+def render_body_graph(ax, positions, edges, *, head=0, title=None):
+    """The DESIGNED agent as a body graph: segment blocks, a CAZ glyph on each
+    joint, the messaging beam along the edges. Branch points read as high-degree
+    nodes automatically."""
+    _draw_graph_body(ax, positions, edges, head=head)
+    if title:
+        ax.set_title(title, fontsize=10)
+
+
+def render_self_model(ax, positions, rec_edges, *, true_edges=None, branch=None,
+                      head=0, title=None, edge_w=None):
+    """The RECOVERED self-model, drawn as an ABSTRACT GRAPH (not a body): plain
+    nodes, edges (width = measured coupling if ``edge_w`` given), the branch point
+    ringed. Nodes are coloured by recovered degree -- leaf, internal, branch --
+    and edges by correctness (blue = matches the true body, red = spurious)."""
+    status = None
+    if true_edges is not None:
+        tset = {frozenset(e) for e in true_edges}
+        status = ["ok" if frozenset(e) in tset else "bad" for e in rec_edges]
+    deg = {}
+    for a, b in rec_edges:
+        deg[a] = deg.get(a, 0) + 1; deg[b] = deg.get(b, 0) + 1
+    role = {n: ("#e8902a" if deg.get(n, 0) >= 3 else
+                ("#cdd6dd" if deg.get(n, 0) <= 1 else "#7aa7cf")) for n in positions}
+    hl = {branch: "#e8902a"} if branch is not None else None
+    _draw_graph_body(ax, positions, rec_edges, head=head, edge_status=status, hl=hl,
+                     node_style="dot", node_role=role, edge_w=edge_w, caz=False)
+    if title:
+        ax.set_title(title, fontsize=10)
+
+
+def render_world_in_self(ax, positions, edges, node_field, *, source_node=None,
+                         modality="chem", head=0, title=None):
+    """The WORLD, expressed in the self-frame: the self-graph with each node shaded
+    by the world-field intensity it senses (in the modality's colour), and the
+    localized source ringed. No absolute coordinates -- the world is painted onto
+    the body's own graph."""
+    import numpy as _np
+    from matplotlib.colors import to_rgba
+    base = MODALITY_COLORS.get(modality, "#2ca25f")
+    v = _np.array([node_field[n] for n in positions])
+    lo, hi = float(v.min()), float(v.max())
+    rng = (hi - lo) or 1.0
+    node_fc = {n: to_rgba(base, alpha=0.12 + 0.88 * (node_field[n] - lo) / rng)
+               for n in positions}
+    hl = {source_node: "#111111"} if source_node is not None else None
+    _draw_graph_body(ax, positions, edges, head=head, node_fc=node_fc, hl=hl,
+                     faint=True, node_style="dot", caz=False)
+    if title:
+        ax.set_title(title, fontsize=10)
+
+
+def self_world_card(positions, edges, rec_edges, *, head=0, branch=None,
+                    edge_w=None, node_field=None, source_node=None,
+                    modality="chem", suptitle=None, layout_seed=3, fig_h=5.2):
+    """Assemble the three-view self/world card for ANY body (chain, tree, ...).
+
+    Panel 1 -- the designed agent, at metric coordinates (a body).
+    Panel 2 -- the recovered self-model, an abstract graph laid out from its OWN
+               adjacency (force-directed), edge width = measured coupling.
+    Panel 3 -- (only if ``node_field`` given) the world in the self-frame: the
+               field painted onto the recovered graph.
+
+    Returns the matplotlib Figure so the caller can save or tweak it."""
+    has_world = node_field is not None
+    ncol = 3 if has_world else 2
+    fig, ax = plt.subplots(1, ncol, figsize=(4.7 * ncol, fig_h))
+    lay = graph_layout(list(positions.keys()), rec_edges, seed=layout_seed)
+    render_body_graph(ax[0], positions, edges, head=head,
+                      title="1 · Designed agent\n(metric — what we built)")
+    render_self_model(ax[1], lay, rec_edges, true_edges=edges, branch=branch,
+                      edge_w=edge_w,
+                      title="2 · Recovered self-model\n(abstract graph from movement; edge width = coupling)")
+    if has_world:
+        render_world_in_self(ax[2], lay, rec_edges, node_field, source_node=source_node,
+                             modality=modality,
+                             title="3 · World in the self-frame\n(source localized on the recovered graph)")
+    if suptitle:
+        fig.suptitle(suptitle, fontsize=13)
+    fig.tight_layout(rect=[0, 0, 1, 0.94] if suptitle else None)
+    return fig
+
+
 # --------------------------------------------------------------- legends -------
 def modality_legend(ax, modalities=None, with_network=True):
     from matplotlib.lines import Line2D

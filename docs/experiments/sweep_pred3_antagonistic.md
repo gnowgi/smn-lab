@@ -6,9 +6,9 @@
 ![Setup — agent morphology and the world](../figures/setup_sweep_pred3_antagonistic.png)
 
 Pre-registered in the experiment file. This is the first of the SMN preprint's
-six *Predictions and Testable Claims* (§Predictions) reproduced in the bench —
-part of turning the preprint's qualitative claims into the quantitative ones it
-explicitly calls for. Prediction #3: *"Perturbation studies should reveal faster
+testable predictions reproduced in the bench — part of turning the preprint's
+qualitative claims into the quantitative ones it explicitly calls for. The SMN
+architecture predicts: *"Perturbation studies should reveal faster
 error correction when antagonistic tension is preserved vs pharmacologically
 reduced."* It is also the mechanism Friston connected to (the equilibrium-point
 hypothesis): co-contraction stiffens the joint, steepening the basin around the
@@ -21,8 +21,8 @@ stiffness**, so co-contraction as previously implemented is *inert for impedance
 Testing #3 with it would give a false null — an artifact of the actuator model.
 
 We therefore add a **muscle-impedance model**, faithful to the preprint
-(`hm-new-plan`: the modulator's "efferent modulation signal adjusts the
-**impedance** … of the antagonistic bundles") and to textbook biomechanics:
+(arXiv:2605.26856): the modulator's efferent activation adjusts the
+**impedance** of the antagonistic bundles, and to textbook biomechanics:
 
 - co-contraction `coc` produces **intrinsic, zero-delay** stiffness & damping
   proportional to `coc` (active muscle is stiffer);
