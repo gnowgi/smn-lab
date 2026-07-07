@@ -35,6 +35,17 @@ from smn_lab.body import MouseSchema
 from smn_lab.model import (build_p0_xml, build_p0v_xml, build_p1v_xml,
                            build_p1_xml, build_p2_xml, build_p3_xml)
 from smn_lab.crawler import build_crawler_xml
+from smn_lab import morphology as gram
+from smn_lab import self_model as sm
+from smn_lab.fields import ScalarField
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+try:
+    import plotly.graph_objects as go
+    HAVE_PLOTLY = True
+except Exception:
+    HAVE_PLOTLY = False
 
 # Every experiment maps to a renderable MuJoCo scene, so the World panel always
 # shows the actual world (a static scene render); P3 additionally animates a run.
@@ -227,10 +238,156 @@ def p3_world_panel():
 
 
 # ----------------------------------------------------------------- layout -----
+# ------------------------------------------------- self/world card (interactive)
+SW_BODIES = {
+    "branched (arms 3 / 2 / 4)": ((0.0, 3), (130.0, 2), (230.0, 4)),
+    "chain (8 segments)":        ((0.0, 7),),
+    "star (4 equal arms)":       ((45.0, 3), (135.0, 3), (225.0, 3), (315.0, 3)),
+    "asymmetric Y (2 / 3 / 4)":  ((90.0, 2), (210.0, 3), (330.0, 4)),
+}
+
+
+@st.cache_data(show_spinner=False)
+def _sw_sim(arms):
+    """Move a body, recover its self-model, and lay it out. Cached per body."""
+    from branched_self_model import run
+    JV, OMEGA, positions, true_edges, jo, arm_struct = run([tuple(a) for a in arms])
+    C = sm.coupling(JV, OMEGA)
+    rec = sm.recover_edges(C)
+    return dict(positions=positions, true_edges=true_edges, C=C, rec=rec,
+                branch=sm.branch_node(rec), edge_w=sm.edge_strength(C),
+                arm_struct=arm_struct, layout=gram.graph_layout(list(positions), rec, seed=3))
+
+
+def _hops_from_head(rec, target, head=0):
+    adj = {}
+    for a, b in rec:
+        adj.setdefault(a, []).append(b); adj.setdefault(b, []).append(a)
+    seen = {head}; frontier = [(head, 0)]
+    while frontier:
+        n, d = frontier.pop(0)
+        if n == target:
+            return d
+        for m in adj.get(n, []):
+            if m not in seen:
+                seen.add(m); frontier.append((m, d + 1))
+    return None
+
+
+def _plotly_graph(layout, edges, node_color, node_text, hover, *, edge_w=None,
+                  edge_color="#5b6b78", highlight=None, hl_color="#e8902a", height=440):
+    fig = go.Figure()
+    for i, (a, b) in enumerate(edges):
+        xa, ya = layout[a]; xb, yb = layout[b]
+        w = 2.5 if edge_w is None else 1.4 + 6.0 * float(edge_w[i])
+        fig.add_trace(go.Scatter(x=[xa, xb], y=[ya, yb], mode="lines",
+                      line=dict(width=w, color=edge_color), hoverinfo="skip", showlegend=False))
+    nodes = list(layout)
+    if highlight is not None and highlight in layout:
+        hx, hy = layout[highlight]
+        fig.add_trace(go.Scatter(x=[hx], y=[hy], mode="markers", hoverinfo="skip",
+                      showlegend=False, marker=dict(size=40, color="rgba(0,0,0,0)",
+                      line=dict(width=3.2, color=hl_color))))
+    fig.add_trace(go.Scatter(
+        x=[layout[n][0] for n in nodes], y=[layout[n][1] for n in nodes],
+        mode="markers+text", text=[node_text[n] for n in nodes],
+        textposition="middle center", textfont=dict(size=11, color="#132029"),
+        marker=dict(size=27, color=[node_color[n] for n in nodes],
+                    line=dict(width=1.5, color="#33414f")),
+        hovertext=[hover[n] for n in nodes], hoverinfo="text", showlegend=False))
+    fig.update_layout(showlegend=False, height=height, dragmode="pan",
+                      margin=dict(l=8, r=8, t=8, b=8), plot_bgcolor="white",
+                      paper_bgcolor="white",
+                      xaxis=dict(visible=False),
+                      yaxis=dict(visible=False, scaleanchor="x", scaleratio=1))
+    return fig
+
+
+def self_world_card_explorer():
+    import math
+    st.subheader("🕸️ Self/world card — interactive")
+    st.caption("A body, the self-model it recovers from its own movement, and the "
+               "world in its own frame. Hover a node for its couplings; move the "
+               "world source to watch the localization follow.")
+    if not HAVE_PLOTLY:
+        st.warning("Install plotly for the interactive graphs: `pip install plotly`.")
+        return
+
+    with st.sidebar:
+        st.header("Self/world card")
+        body = st.selectbox("Body", list(SW_BODIES))
+    arms = SW_BODIES[body]
+    with st.spinner("Moving the body and recovering its self-model "
+                    "(first run ~30 s, then cached)…"):
+        S = _sw_sim(arms)
+    positions, edges, rec = S["positions"], S["true_edges"], S["rec"]
+    branch, edge_w, arm_struct, layout = S["branch"], S["edge_w"], S["arm_struct"], S["layout"]
+
+    with st.sidebar:
+        st.markdown("**World source**")
+        ai = st.selectbox("On limb", range(len(arm_struct)),
+                          format_func=lambda i: f"limb {i} · {arm_struct[i]['angle']:.0f}° · "
+                          f"{len(arm_struct[i]['segs'])} seg")
+        frac = st.slider("Position along limb", 0.0, 1.25, 0.95, 0.05)
+        sigma = st.slider("Source spread", 0.12, 0.5, 0.26, 0.02)
+
+    arm = arm_struct[ai]
+    ang = math.radians(arm["angle"])
+    reach = len(arm["segs"]) * 0.14 * frac
+    field = ScalarField([(reach * math.cos(ang), reach * math.sin(ang), 1.0, sigma)])
+    node_field = {n: field.sample(*positions[n]) for n in positions}
+    source_node = max(node_field, key=node_field.get)
+
+    # per-node recovered neighbourhood (for hover) and degree (for colour)
+    nbrs = {n: [] for n in positions}
+    for i, (a, b) in enumerate(rec):
+        nbrs[a].append(b); nbrs[b].append(a)
+    deg = {n: len(nbrs[n]) for n in positions}
+    role = {n: ("#e8902a" if deg[n] >= 3 else ("#cdd6dd" if deg[n] <= 1 else "#7aa7cf"))
+            for n in positions}
+    hov2 = {n: f"seg {n} · degree {deg[n]}<br>couples: "
+            + ", ".join(f"seg {m}" for m in sorted(nbrs[n])) for n in positions}
+    label = {n: str(n) for n in positions}
+
+    v = np.array([node_field[n] for n in positions]); lo = v.min(); rng = (v.max() - lo) or 1.0
+    wcol = {n: f"rgba(44,162,95,{0.12 + 0.88 * (node_field[n] - lo) / rng:.3f})" for n in positions}
+    hov3 = {n: f"seg {n}<br>field {node_field[n]:.2f}" for n in positions}
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.markdown("**1 · Designed agent** — metric (what we built)")
+        fig, ax = plt.subplots(figsize=(4.4, 4.4))
+        gram.render_body_graph(ax, positions, edges, head=0)
+        st.pyplot(fig, use_container_width=True); plt.close(fig)
+    with c2:
+        st.markdown("**2 · Recovered self-model** — hover a node")
+        st.plotly_chart(_plotly_graph(layout, rec, role, label, hov2, edge_w=edge_w,
+                        edge_color="#3f6d99", highlight=branch, hl_color="#e8902a"),
+                        use_container_width=True)
+    with c3:
+        h = _hops_from_head(rec, source_node)
+        st.markdown(f"**3 · World in the self-frame** — source at seg {source_node}"
+                    + (f", {h} hops from head" if h is not None else ""))
+        st.plotly_chart(_plotly_graph(layout, rec, wcol, label, hov3,
+                        edge_color="#c8d3db", highlight=source_node, hl_color="#111111"),
+                        use_container_width=True)
+    st.caption("Panel 2 is laid out force-directed from the body's *own recovered "
+               "adjacency* (not its coordinates); edge width = measured coupling. "
+               "Panel 3 paints the world onto that recovered graph.")
+
+
 st.title("SMN-Lab — the embodied bench")
 st.caption("A network of dynamical systems doing cognition. Everything below runs "
            "the real experiment code: the world is the controller stepping a MuJoCo "
            "body; the tables are computed live.")
+
+with st.sidebar:
+    _view = st.radio("View", ["Experiments", "🕸️ Self/world card"], index=0)
+    st.divider()
+
+if _view == "🕸️ Self/world card":
+    self_world_card_explorer()
+    st.stop()
 
 exps = discover_experiments()
 keys = list(exps)

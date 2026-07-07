@@ -2,3 +2,4 @@
 # Install with:  pip install -r requirements-ui.txt
 # The core bench (experiments, library) does not need these.
 streamlit>=1.30
+plotly>=5.0        # interactive graphs for the self/world card
