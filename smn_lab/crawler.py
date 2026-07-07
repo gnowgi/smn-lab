@@ -31,7 +31,9 @@ def build_crawler_xml(n_seg: int = 3, h: float = 0.07, w: float = 0.025,
                       gravity_on: bool = False, with_floor: bool = False,
                       with_walls: bool = False, arena_half: float = 2.2,
                       wall_h: float = 0.10, objects=None, touch: bool = False,
-                      floor_friction: float = 0.0, free_root: bool = False) -> str:
+                      floor_friction: float = 0.0, free_root: bool = False,
+                      joint_stiffness: float = 0.0,
+                      joint_damping: float = 0.02) -> str:
     """MJCF for an n_seg axial crawler.
 
     Segments lie head (seg0, +x front) to tail along -x; each segment carries
@@ -67,7 +69,9 @@ def build_crawler_xml(n_seg: int = 3, h: float = 0.07, w: float = 0.025,
                 '      <joint name="yaw" type="hinge" axis="0 0 1" damping="0.3"/>')
         else:
             joints = (f'      <joint name="j{k}" type="hinge" axis="0 0 1" pos="{h} 0 0" '
-                      f'range="{-bend_limit_deg} {bend_limit_deg}" damping="0.02"/>')
+                      f'range="{-bend_limit_deg} {bend_limit_deg}" '
+                      f'stiffness="{joint_stiffness}" springref="0" '
+                      f'damping="{joint_damping}"/>')
         shade = max(0.30, 0.62 - 0.08 * k)
         color = f"0.20 0.45 0.90" if is_head else f"0.30 {shade:.2f} 0.78"
         # segment is frictionless vs the floor (locomotion is the drag medium's

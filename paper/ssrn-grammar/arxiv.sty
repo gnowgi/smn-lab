@@ -1,0 +1,112 @@
+% arxiv.sty
+% Local reimplementation of the kourgeorge/arxiv-style preprint style,
+% based on the NIPS 2018 / NeurIPS template family.
+%
+% Original source: https://github.com/kourgeorge/arxiv-style
+% This file reproduces the principal layout settings of the upstream
+% arxiv.sty so the document compiles identically without an external
+% dependency. If you later move to Overleaf and use the official
+% template, replace this file with the upstream arxiv.sty.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{arxiv}[2024/01/01 arXiv preprint style (local)]
+
+% --- Page geometry: wider text block for comfortable single-column reading
+\RequirePackage[
+  letterpaper,
+  textwidth=6.5in,
+  textheight=9in,
+  marginparsep=7pt,
+  marginparwidth=0.6in,
+  headheight=12pt,
+  headsep=14pt,
+  top=1in,
+  footskip=27pt
+]{geometry}
+
+% --- Header style
+\RequirePackage{fancyhdr}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+
+% Allow document to set a short title for the header.
+% Default: empty; set via \shorttitle{...} in the preamble.
+\def\@shorttitle{}
+\def\shorttitle#1{\gdef\@shorttitle{#1}}
+
+\fancyhead[LE,RO]{\sffamily\small\thepage}
+\fancyhead[RE]{\sffamily\small\itshape\@shorttitle}
+\fancyhead[LO]{\sffamily\small\itshape\@shorttitle}
+
+\pagestyle{fancy}
+
+% --- Title block: NIPS-style centred title with rule above and below
+\renewcommand{\maketitle}{%
+  \par
+  \begingroup
+    \renewcommand\thefootnote{\@fnsymbol\c@footnote}%
+    \def\@makefnmark{\rlap{\@textsuperscript{\normalfont\@thefnmark}}}%
+    \long\def\@makefntext##1{\parindent 1em\noindent
+      \hb@xt@1.8em{\hss\@textsuperscript{\normalfont\@thefnmark}}##1}%
+    \thispagestyle{empty}
+    \@maketitle
+    \@thanks
+  \endgroup
+  \let\maketitle\relax
+  \let\@maketitle\relax
+  \gdef\@thanks{}\gdef\@author{}\gdef\@date{}\gdef\@title{}%
+  \let\thanks\relax
+}
+
+\def\@maketitle{%
+  \newpage
+  \null
+  \vskip 2em
+  \begin{center}%
+    \let \footnote \thanks
+    {\LARGE\bfseries \@title \par}%
+    \vskip 1.5em%
+    {\large \lineskip .5em%
+      \begin{tabular}[t]{c}%
+        \@author
+      \end{tabular}\par}%
+    \vskip 1em%
+    {\large \@date}%
+  \end{center}%
+  \par
+  \vskip 1.5em
+}
+
+% --- Abstract style
+\renewenvironment{abstract}{%
+  \vskip.075in
+  \centerline{\large\bfseries Abstract}
+  \vspace{0.5ex}
+  \begin{quote}
+}{
+  \par
+  \end{quote}
+  \vskip 1ex
+}
+
+% --- Section heading sizes (smaller than article default — saves space)
+\RequirePackage{titlesec}
+\titleformat{\section}
+  {\normalfont\Large\bfseries}
+  {\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries}
+  {\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries}
+  {\thesubsubsection}{1em}{}
+\titleformat{\paragraph}[runin]
+  {\normalfont\normalsize\bfseries}
+  {}{0pt}{}
+
+% Tighter spacing around section headings (also saves vertical space)
+\titlespacing*{\section}{0pt}{1.5ex plus 0.5ex minus 0.2ex}{1ex plus 0.2ex}
+\titlespacing*{\subsection}{0pt}{1.2ex plus 0.5ex minus 0.2ex}{0.6ex plus 0.2ex}
+\titlespacing*{\subsubsection}{0pt}{0.8ex plus 0.4ex minus 0.2ex}{0.4ex plus 0.2ex}
+
+\endinput

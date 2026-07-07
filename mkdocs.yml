@@ -24,6 +24,11 @@ nav:
       - "Preprint prediction 1 — haltability signatures (deceptive reach)": experiments/sweep_pred1_haltability.md
       - "Preprint prediction 2 — zonal dissociations": experiments/sweep_pred2_zonal.md
       - "Preprint prediction 3 — antagonistic benefits": experiments/sweep_pred3_antagonistic.md
+  - "Self / world construction":
+      - "Self-model — body topology from movement": experiments/self_model_topology.md
+      - "W1 — a world feature in the self-graph": experiments/world_in_self_graph.md
+      - "W2 — world-geometry in the self-frame": experiments/world_geometry_self_frame.md
+      - "W3 — the reafference cut in the self-graph": experiments/reafference_cut_self_graph.md
   - Trial experiments:
       - "About the trial experiments (reproducibility note)": reproducibility.md
       - P0 — reafference: experiments/p0_reafference.md

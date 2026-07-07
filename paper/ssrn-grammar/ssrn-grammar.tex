@@ -1,0 +1,132 @@
+\documentclass{article}
+\usepackage{arxiv}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage[round,authoryear]{natbib}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+
+% --- action-pattern shorthands ---
+\newcommand{\smn}{\textsc{smn}}
+\newcommand{\caz}{\textsc{caz}}
+\newcommand{\ecaz}{e\textsc{caz}}
+\newcommand{\fap}{\textsc{fap}}
+\newcommand{\hap}{\textsc{hap}}
+\newcommand{\sap}{\textsc{sap}}
+\newcommand{\usap}{\textsc{usap}}
+\newcommand{\ausap}{\textsc{ausap}}
+\newcommand{\nap}{\textsc{nap}}
+\newcommand{\tap}{\textsc{tap}}
+
+\title{An Enactive Account of Grounding Generative Grammar:\\
+From Haltable through Negotiable to Transactional Action Patterns}
+
+\author{%
+  G.~Nagarjuna\thanks{IISER Pune; \texttt{nagarjuna@iiserpune.ac.in}.} \and
+  Durgaprasad Karnam\thanks{IIT Bombay.}%
+}
+\date{Draft --- \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The generativity of human language is usually explained in one of two ways: as the operation of an abstract, biologically given combinatorial faculty (the cognitivist answer) or as a culturally accumulated practice grounded in embodied interaction (the broadly enactive answer). Neither, on its own, says how a body comes to support recursive, compositional structure. We propose that generative grammar is grounded in the recombinable dynamics of \emph{action patterns}, and that grammar is best understood not as a system that carries meaning but as the \emph{engineering of an interface} --- the protocol by which a high-dimensional relational state (a ``snapshot'') is compressed into a one-dimensional stream, transmitted across a gap between agents, and reconstructed at the other end. We develop a hierarchy of action patterns --- fixed, haltable, saturated, unsaturated, arbitrary-unsaturated, negotiable, and transactional --- and show that it traces the semiotic arc from index through icon to symbol. Two architectural capacities do the generative work: \emph{haltability}, which segments continuous action into discrete, reusable tokens, and the \emph{emancipation} of coordinated action zones from fixed antagonistic pairing, which allows switching and alternative pairing and so yields recursive, hierarchical composition. On this account Chomsky was mapping the stream protocol at the right level of abstraction; what his nativism left unspecified --- the embodied substrate from which the protocol emerges --- is supplied by the action-pattern architecture. We position the proposal among its neighbours (Saussure, the 4E tradition, Global Workspace Theory, G\"ardenfors's conceptual spaces) as a division of labour across levels of one layered process, and we are explicit about what the account grounds, what it reframes, and what remains to be demonstrated. This is the theoretical companion to the Sensation Modulating Network architecture \citep{NagarjunaKarnam2026SMN}; the computational demonstration is future work.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+Human thought is recursively generative: from a finite repertoire we produce and understand an unbounded range of structured expressions. Cognitivism takes this productivity as its central datum and accounts for it with an abstract combinatorial system --- a grammar --- that is biologically given and largely independent of the body's sensorimotor organization \citep{chomsky1957syntactic}. The embodied and enactive traditions, by contrast, take the body's situated, affordance-coupled engagement with the world as the ground of cognition \citep{varela1991embodied,Noe2004ActionVision,OReganNoe2001Sensorimotor}, but have been weaker on exactly the property cognitivism prizes: the compositional, recursive, conventionally stable structure of language and other symbolic practices.
+
+This paper argues that the two pictures are not rivals but descriptions of different layers of one process, and that the missing connection between them is an account of how a body comes to support generative structure at all. We locate that account in the dynamics of \emph{action patterns}. The claim has two parts. First, generativity is grounded in two capacities of an opponent, sensing-and-acting body: \emph{haltability} --- the capacity to interrupt, segment, and recompose an ongoing action --- and the \emph{emancipation} of coordinated action zones from fixed antagonistic pairing, which makes their fragments freely switchable and recombinable. Second, grammar itself is best read not as the bearer of meaning but as the \emph{engineering of an interface}: the protocol that compresses a holistic relational state into a serial stream for transmission and supports its reconstruction by a receiver who does not share the sender's situation.
+
+The architecture we build on is the Sensation Modulating Network (\smn) \citep{NagarjunaKarnam2026SMN}, in which cognition is the modulation of sensation through action, the elementary unit is an opponent pair that senses and acts through one substrate, and the body holds itself in dynamic equilibrium against the fields it lives in. That paper establishes the basal and haltable layers of the action-pattern hierarchy and the reafferent self/world distinction; it flags the step to generative structure as a hypothesis. The present paper is the development of that hypothesis. The computational demonstration --- exercising the recombination mechanism on the open \smn-Lab bench --- is deliberately left to future work; what we offer here is the theoretical statement, with its scope and its open problems marked plainly (Section~\ref{sec:scope}).
+
+\section{The action-pattern hierarchy and the semiotic arc}\label{sec:hierarchy}
+
+The \smn{} architecture organizes behaviour as a hierarchy of action patterns, ordered by the degree of regulated freedom they exhibit. The hierarchy is not a developmental replacement sequence: the lower layers are present from birth and persist; the layers coexist, and their interaction is what gives human action its characteristic richness.
+
+\begin{description}[leftmargin=2em,style=nextline]
+\item[Fixed Action Pattern (\fap)] A rhythmic, metabolically entrained pattern that unfolds without voluntary interruption --- heartbeat, peristalsis, respiratory and locomotor rhythm. \fap{}s are the temporal scaffold on which other patterns ride; their basic rhythm is endogenous.
+\item[Haltable Action Pattern (\hap)] An action sequence the agent can \emph{interrupt}, \emph{segment}, and \emph{recompose}. The capacity for halting is the critical innovation: it introduces temporal gaps into the continuous flow of action, and these gaps are the precondition for tokenisation. A reach that can be halted mid-trajectory, a vocalisation that can be stopped and restarted, a grasp suspended while a subtask is performed --- all are \hap{}s. The \hap{} is the unit that makes both tool use and language possible.
+\item[Saturated Action Pattern (\sap)] A \hap{} in which all argument positions are filled: agent, action, and object are physically co-present (the hand holds the cup). The pattern is saturated with its referents; there is little ambiguity. Through practice, \sap{}s become fast, automatic, and absorbed back into the body's habitual repertoire.
+\item[Unsaturated Action Pattern (\usap)] A \hap{} whose object position is empty: the agent performs the action without the object (a mime of holding a cup). The gesture \emph{mimics the affordance} of the missing object; this is the first step of abstraction --- referring to something without acting on it. The term echoes Frege's unsaturated proposition, a function with an empty argument place \citep{Frege1891Function}, and Quine's variable awaiting a value \citep{Quine1969NaturalizedEpistemology}. Because the \usap{} gesture is \emph{iconic}, interpretive variance is low.
+\item[Arbitrary Unsaturated Action Pattern (\ausap)] The iconic gesture replaced by an \emph{arbitrary} token --- the spoken word ``cup,'' the written mark. The resemblance to the affordance vanishes; the mapping to the referent is purely conventional and requires a shared rule to decode.
+\item[Negotiable Action Pattern (\nap)] A \hap{} that is \emph{adjustable} through interaction with the affordance landscape and with other agents: an adaptive stride over uneven terrain, a conversational turn that modulates to the listener's reaction. Negotiability is the capacity that makes social coordination possible at the action-pattern level.
+\item[Transactional Action Pattern (\tap)] An action pattern performed \emph{between} agents that leaves a \emph{public trace} --- a gesture, a vocalisation, an inscription --- recoverable by others. \tap{}s are the units of the constructed world of public tokens: the patterns through which conventions are enacted, norms enforced, and institutions maintained.
+\end{description}
+
+The trajectory $\sap \to \usap \to \ausap$ traces the semiotic arc from \emph{index} (physical co-presence) through \emph{icon} (resemblance) to \emph{symbol} (arbitrary convention) --- Peirce's triad realised in the body's action repertoire \citep{peirce1992essential}. It is also the trajectory from direct engagement to the conventional world of language and inscription.
+
+\paragraph{Reference and naming.} The arc grounds reference in two stages. An unsaturated pattern already supports \emph{general} naming: the mime for grasping can stand for ``graspable things,'' classification by affordance type. \emph{Proper} naming --- naming \emph{this} thing rather than a kind --- requires that the thing be individuated as a particular, which in the \smn{} account depends on site-fidelity and a sufficiently rich relational neighbourhood, the embodied analogue of Russell's and Strawson's accounts of definite reference \citep{Russell1905OnDenoting,Strawson1950Referring}. Naming and the discreteness that grammar needs thus both have action-pattern precursors before any conventional symbol is in place.
+
+\section{Halting and tokenisation}\label{sec:tokenisation}
+
+Why does grammar need \emph{discrete} units at all? The \smn{} answer is that the body's default cognitive mode is not discrete. The agent's current state --- what we call the \emph{snapshot} --- is a holistic, continuously revised relational structure, a dynamic equilibrium of opponent tensions rather than a string of symbols. Nothing in the snapshot is, by itself, a token.
+
+Tokenisation is what halting provides. Each \hap{} halt introduces a temporal gap that segments the continuous flow of action into a discrete, re-paced unit; repeated, recognisable across occurrences, such a unit can be reused, compared, and recombined. A continuous holistic process cannot participate in compositional reuse; a halted, segmented one can. Discreteness, on this account, is not a primitive of a symbol system but an achievement of an interrupting body --- the same capacity (haltability) that the \smn{} architecture identifies as the ground of object-directed attention \citep{NagarjunaKarnam2026SMN}.
+
+This reframes the relation between the holistic and the serial. The snapshot is the ontological baseline --- meaning constituted in coupling. The \emph{stream} is what emerges when modulation becomes serial: when haltable units are executed one after another, each providing a distinct prompt that seeks a response from the whole network. The stream is not a different kind of cognition; it is the temporal structure that serial, haltable action imposes on an otherwise simultaneous process.
+
+\section{Emancipated coordinated action zones and recursive composition}\label{sec:ecaz}
+
+Halting yields gaps, but gaps alone do not yield productivity. A body that can only stop and restart the same fixed sequence has tokens but no grammar. Generativity requires \emph{non-monotonous recomposition}: the capacity to depart from a single fixed continuation, to re-pair partial sequences with alternative partners, and to re-pace them across the body's zones \citep{Lashley1951SerialOrder}.
+
+The \smn{} architecture locates this capacity in a specifically expanded class of coordinated action zones. A coordinated action zone (\caz) is, in its basal form, a fixed opponent pair. An \emph{emancipated} coordinated action zone (\ecaz) is one freed from fixed antagonistic pairing, so that its fragments can be switched and re-paired across effectors and their controllers. \ecaz{}s support combinatorial ``motor syntax'' that is recursive, hierarchical, and context-sensitive \citep{Bizzi2013_MuscleSynergies,Koechlin2007PrefrontalHierarchy,Schieber2004HandSynergies}. This capacity piggybacks on conserved affordance-competition dynamics --- multiple candidate actions concurrently specified and biased by task and context \citep{CisekKalaska2010_DecisionsAction,PezzuloCisek2016AffordanceLandscape} --- and becomes distinctively human as cortical expansion and cortico-subcortical re-wiring increase the ease of pausing, re-targeting, and re-coupling action fragments. Mandatory pulsations such as cardiac rhythm are paradigmatic non-\hap{}s and cannot participate in such recomposition.
+
+The self-modulatable patterns built from \ecaz{}s admit three composition modes:
+\begin{enumerate}[leftmargin=2em,itemsep=2pt]
+\item \emph{iterative} --- repetition of the same \hap{};
+\item \emph{recursive} --- embedding of one \hap{} within another (part--whole nesting);
+\item \emph{alternating} --- interleaving across zones (left--right, hand--mouth).
+\end{enumerate}
+Bilateral segmentation and multizonal organisation make all three modes biomechanically available; \ecaz{} emancipation makes them haltable, switchable, and recombinable. The generative power of language, on this account, is the generative power of emancipated coordinated action zones applied to the unsaturated, socially stabilised tokens of the conventional world. The same competence underwrites tool use, fabrication, and other generative cultural practices; its potential is genetic but its actualisation is context-dependent.
+
+It is worth marking precisely what is and is not claimed here. The recursive composition mode establishes that hierarchical, embedded, part--whole structure is \emph{biomechanically available and architecturally recombinable} in an emancipated, haltable body. Whether this substrate yields the specific formal properties linguists attribute to syntactic recursion --- unbounded embedding, displacement, the operation of Merge --- is a further question that the architecture makes tractable but does not, in this paper, settle (Section~\ref{sec:scope}).
+
+\section{The stream as a transmission protocol, and Chomsky reframed}\label{sec:chomsky}
+
+If the snapshot is the mode in which meaning is constituted, the stream requires explanation: why would an organism with a powerful holistic processor adopt a mode of communication that is sequential, incremental, and lossy by comparison? The answer is social and evolutionary, not cognitive. The stream is not a better way of making meaning; it is a way of \emph{transmitting} meaning across the gap between two organisms who do not share a perceptual field. Coordination within a shared scene can proceed without language --- through gaze, posture, gesture, shared attention, and the physical ``games'' of co-present action \citep{Bates1975Performatives,Tomasello2005Understanding}. But the moment coordination must reach absent objects, future events, hypotheticals, or the accumulated knowledge of previous generations, a transmission protocol is required. Speech is that protocol: a way of inducing, in a receiver who does not share one's perceptual field, something close enough to one's own snapshot to enable coordinated action. The stream is a compression of the snapshot into a form that can travel through a one-dimensional channel and be reconstructed at the other end. The social capacities this exploits were almost certainly in place for physical coordination and were \emph{exapted} for language \citep{GouldVrba1982Exaptation}.
+
+From this vantage the elaborate apparatus of human language --- syntax, morphology, recursion, the devices for marking topic and focus, the use of pronouns to recall established referents, connectives that signal logical relations --- is best understood as \emph{engineering in service of reconstruction}. Each device is a tool for helping the receiver reassemble, from the serial stream, the relational structure the sender held as a snapshot.
+
+This is the reading of generative grammar the account proposes. \textbf{Chomsky's generative linguistics is a theory of the stream protocol} --- the rules that govern the tokenisation, combination, and recursive nesting of units in the transmission channel. The deep/surface distinction is, on this reading, a recognition at the semiotic level that the stream does not directly deliver meaning: the surface structure is what the channel transmits, and recovery of the semantically relevant structure requires inferential work by the receiver. Its domain is the interface, not the meaning.
+
+On the core Chomskyan claim --- that the space of possible human languages is not the space of all formal systems but a biologically constrained subspace, not learned from input in any simple sense --- the present framework agrees. Where it differs is in the \emph{location} of that biological basis. Chomsky placed the language faculty in an abstract, amodal computational module, largely independent of the sensorimotor system. The framework developed here places it in the body's capacity for haltable, switchable, recombinable action patterns. Recursive syntax is not a free-standing abstract system; it inherits its combinatorial structure from the body's capacity to interrupt one action, initiate another, and compose sequences from independently haltable units. This grounding does not undermine the formal insights --- it extends them downward into the substrate that makes them possible. Chomsky was mapping the stream protocol at the correct level of abstraction; his nativism marked the biological constraint without specifying its substrate, and the action-pattern architecture specifies the substrate.
+
+The same move resolves a long-standing puzzle. The symbol-grounding problem arises from treating syntax as an amodal system that must then be connected to a world; if syntax is from the outset the serialisation protocol of a grounded, action-constituted snapshot, the gap to be bridged was an artefact of the level of description.
+
+\section{Affinities: a division of labour, not a competition}\label{sec:affinities}
+
+Several traditions have mapped parts of this layered process; read together, and assigned to their levels, they are complementary rather than competing.
+
+\paragraph{Saussure.} Saussure approached meaning from the side of the sign system, giving a structural account of how value is constituted differentially --- a sign means what it means by its differences from all others in the system \citep{Saussure1916Course}. This is a description of the snapshot at the \emph{semiotic} level: a synchronic relational whole the receiver activates rather than assembles piece by piece. His \emph{langue}/\emph{parole} distinction brackets precisely the question we address --- how the synchronic structure is accessed through a diachronic, serial stream.
+
+\paragraph{The 4E tradition.} Enactive and embodied approaches describe the snapshot at the \emph{epistemic} level: the stochastic, affordance-coupled, environmentally entangled character of the cognitive substrate \citep{varela1991embodied,Noe2004ActionVision}. The tradition was right that perception is active constitution, not passive decoding. Where it has struggled is exactly the stream interface --- the compositionality and conventional stability cognitivism correctly emphasised --- and its characteristic response, extending the boundary of cognition into the environment \citep{ClarkChalmers1998Extended,Hutchins1995-bt}, describes the entanglement without specifying how the grounded substrate generates the combinatorial capacity from within. The \hap$\to$\tap{} trajectory is that account. No\"e's notion of \emph{entanglement} at the crossing point between organism and organised environment \citep{Noe2015} maps directly onto the boundary between grounded snapshot and conventional stream.
+
+\paragraph{Global Workspace Theory.} Global Workspace Theory describes a shared medium that integrates distributed processing and makes it globally available \citep{Baars1988CognitiveTheory,Dehaene2014Consciousness}. In the \smn{} framework this is the broadcast function of the communication board --- but Global Workspace locates it in the cortex, where the present account locates a whole-body, multi-scale state-space of which the cortical workspace is the apex. The two also differ in explanandum: Global Workspace explains conscious access, the \smn{} framework explains coordination; the relation is a division of labour, not a contradiction.
+
+\paragraph{Conceptual spaces.} G\"ardenfors's conceptual spaces give the geometry the account needs: meaning carried by grounded, geometric, structural relations rather than amodal symbols, with events modelled as force-and-result mappings \citep{Gardenfors2020Events,Gardenfors2019Robot}. We read conceptual spaces as the bridge from \emph{grounded} to \emph{positional} meaning --- the level at which embodied structure becomes a navigable geometry, and at which the externalised, serialised stream can be reconstructed.
+
+\paragraph{The map.} Merleau-Ponty mapped the snapshot at the ontological level \citep{Merleau-Ponty2013-vs}; Saussure the snapshot at the semiotic level; Chomsky the stream at the semiotic level; the 4E tradition the snapshot at the epistemic level; Global Workspace the communication board at the cortical level. None contradicts the others; they answer different questions about the same layered process. What the action-pattern account adds is the \emph{trajectory} connecting the levels: from the embodied substrate, through haltability-grounded tokenisation, to the conventional construction that transactional patterns sustain --- and the inverse trajectory by which artificial systems begin at the conventional end and attempt to simulate, from the outside, the grounded flexibility biological systems build from within.
+
+\section{Scope, open problems, and the road to demonstration}\label{sec:scope}
+
+We state the scope of the claim precisely, to avoid over-reading it.
+
+\emph{What the account grounds.} It grounds the \emph{function} of grammar (serialisation for transmission and reconstruction), its \emph{substrate} (haltable, emancipated, recombinable action patterns), the \emph{discreteness} of linguistic units (tokenisation by halting), and the \emph{availability} of hierarchical, embedded, recursive composition (the three \ecaz{} composition modes). It also reframes grammar's \emph{domain}: the interface, not the meaning.
+
+\emph{What it does not yet establish.} Three problems remain open and are, we think, where the account should be pressed. First, the step from \emph{biomechanically available} recursive composition to the \emph{specific} formal properties of syntactic recursion (unbounded hierarchical embedding, displacement, Merge) is argued by structural analogy; a tighter argument, or a model that exhibits those properties from \ecaz{} recomposition, is owed. Second, ``emancipation from fixed antagonistic pairing'' is characterised here largely at the level of its consequences; a crisper architectural specification --- what changes, formally, when a \caz{} becomes an \ecaz{} --- would strengthen the account. Third, the proposal is at present a theoretical statement; its demonstration is future work.
+
+\emph{The road to demonstration.} That demonstration is the natural next experiment on the \smn-Lab bench \citep{NagarjunaKarnam2026SMN}: instantiating \ecaz{} switching and nested composition in a multi-zone agent and testing whether the predicted signatures of recursive, recombinable ``motor syntax'' appear, with matched non-emancipated controls. The companion architecture paper establishes the basal and haltable layers and the reafferent self/world distinction on which the present hypothesis builds; this paper supplies the route from those layers to generative structure; the bench is where the route will be walked.
+
+\section{Conclusion}\label{sec:conclusion}
+
+We have argued that generative grammar is grounded in the recombinable dynamics of action patterns, and is best understood as the engineering of a transmission interface rather than as a disembodied symbol system. Haltability segments continuous action into discrete, reusable tokens; the emancipation of coordinated action zones from fixed pairing makes those tokens switchable and recombinable, yielding iterative, recursive, and alternating composition; and the resulting stream is a compression of a holistic snapshot for transmission across the gap between agents. On this reading Chomsky mapped the stream protocol at the right level of abstraction, and the action-pattern architecture supplies the embodied substrate his account left unspecified --- reconciling the cognitivist insistence on generativity with the enactive insistence on grounding, as a division of labour across levels of one process. What remains is to make the recombination mechanism precise and to demonstrate it; the architecture and its open bench are built for exactly that.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
