@@ -20,10 +20,22 @@ measurement functions the figures come from.
 
 The sidebar selects among all documented experiments; P3 is the interactive one.
 
+## The self/world card (interactive)
+
+Switch the sidebar **View** to *🕸️ Self/world card* for an interactive version of
+the [self/world card](diagram-grammar.md#the-selfworld-card). Pick a body
+(branched, chain, star, …); the bench moves it and recovers its self-model on the
+spot (cached after the first run). Three live panels: the **designed agent**
+(metric), the **recovered self-model** as a graph you can pan and hover — each
+node shows the segments it couples — and the **world in the self-frame**, whose
+shading follows a world source you slide along any limb. The self-graph is laid
+out force-directed from the body's own recovered adjacency, and edge width is the
+measured coupling.
+
 ## Run it
 
 ```bash
-pip install -r requirements-ui.txt      # one extra dependency: streamlit
+pip install -r requirements-ui.txt      # streamlit + plotly
 streamlit run app.py                     # from the smn-lab/ directory
 ```
 
