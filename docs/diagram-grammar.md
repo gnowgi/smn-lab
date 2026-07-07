@@ -155,9 +155,40 @@ new block (and its CAZ) unlocks the next epistemic transition:
 
 ![The 1/2/3-block morphological ladder: object → self/world → aboutness](figures/morphology_ladder.png)
 
+## The self/world card
+
+Any experiment can emit a **self/world card** — three views of the agent in one
+visual language, from `morphology.self_world_card(...)`:
+
+1. **The designed agent** (metric) — what we built: segment blocks, a CAZ glyph per
+   joint, the messaging beam.
+2. **The recovered self-model** (topology) — the *abstract graph* the agent
+   reconstructs from its own movement, laid out force-directed from its **own
+   recovered adjacency** (never the body's coordinates), with **edge width set by
+   the measured coupling** and the branch point ringed. Drawn as plain nodes and
+   edges, not a body, so it never looks like a redrawn agent — and it doubles as a
+   design-vs-recovered check.
+3. **The world in the self-frame** — a field source painted onto the *recovered*
+   self-graph, landing on a specific node or limb: the world in the body's own
+   frame, never in absolute space.
+
+The three renderers take only positions + edges, so the card works for any
+morphology. A branched body and a chain:
+
+![Self/world card for a branched body: designed agent, recovered self-model as an abstract graph, and the world source localized on one limb](figures/self_world_card_branched.png)
+
+![Self/world card for a chain body: designed agent, recovered self-model, and the world localized along the chain](figures/self_world_card_chain.png)
+
+The recovery is `self_model.coupling` / `recover_edges` — each joint (a CAZ) finds
+the two segments it hinges because its own angular velocity **is** their yaw-rate
+difference; the layout is `morphology.graph_layout`, a small force-directed routine
+(no new dependency). See the [self-model](experiments/self_model_topology.md) and
+[branched-body](experiments/branched_self_model.md) experiments for the mechanism.
+
 ## Regenerating the figures
 
 ```bash
 cd experiments && ../.venv/bin/python morphology_figs.py   # grammar + ladder
 cd experiments && ../.venv/bin/python menagerie_figs.py     # the menagerie
+cd experiments && ../.venv/bin/python self_world_card.py    # self/world cards
 ```

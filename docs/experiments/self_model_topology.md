@@ -73,6 +73,14 @@ It is the foundation the world-model series builds on:
 [W2](world_geometry_self_frame.md) reads relations in its units, and
 [W3](reafference_cut_self_graph.md) makes the reafference cut in its frame.
 
+## The self/world card
+
+Assembled into a [self/world card](../diagram-grammar.md#the-selfworld-card) — the
+designed chain, the recovered self-model as an abstract graph (a path; edge width =
+measured coupling), and a world source localized along the *recovered* graph:
+
+![Self/world card for the chain body: designed agent, recovered self-model path, world localized along the chain](../figures/self_world_card_chain.png)
+
 ## What's measured, computed, and plotted
 
 **Raw data:** per-zone commanded torque `TAU` (efference) and joint angular
