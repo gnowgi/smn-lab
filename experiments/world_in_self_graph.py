@@ -45,6 +45,8 @@ import mujoco
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from smn_lab.crawler import build_crawler_xml, apply_anisotropic_drag
 from smn_lab.fields import ScalarField
+# self-frame localization of a world feature (the model): see smn_lab.worldmodel.
+from smn_lab.worldmodel import zone_xy, localization_weights as weights
 
 DT = 0.002
 N_SEG = 8
@@ -54,20 +56,6 @@ T_CAL, T_SELF, T_WORLD = 8.0, 12.0, 16.0
 SRC_AMP, SRC_SIG = 1.0, 0.26          # a localized Gaussian 'where'
 SRC_Y = 0.30                           # offset to one side of the axial chain
 SRC_X0, SRC_X1 = -0.20, -0.80          # source sweeps across the body in phase 3
-SHARP = 4.0                            # weight sharpening exponent for localization
-
-
-def zone_xy(data, sL, sR, k):
-    return 0.5 * (data.site_xpos[sL[k]][:2] + data.site_xpos[sR[k]][:2])
-
-
-def weights(readings):
-    """Above-baseline, sharpened reading weights (peakier -> less centroid bias)."""
-    w = np.clip(readings - readings.min(), 0.0, None)
-    if w.max() < 1e-9:
-        return np.ones_like(w) / len(w)
-    w = (w / w.max()) ** SHARP
-    return w / w.sum()
 
 
 def run():
@@ -117,12 +105,14 @@ def run():
             nom = (nom * nom_n + pos) / (nom_n + 1); nom_n += 1
             continue
 
-        w = weights(s)
+        # --8<-- [start:localize]
+        w = weights(s)                                     # sharpened reading weights
         # self-referred: centroid over self-graph node indices (body-anchored)
         self_node = float((w * node_idx).sum())
         # allocentric: centroid over world x, mapped to nearest nominal node
         allo_x = float((w * pos[:, 0]).sum())
         allo_node = float(np.argmin(np.abs(nom[:, 0] - allo_x)))
+        # --8<-- [end:localize]
         # ground truth: node whose NOMINAL position is nearest the source
         src = np.array([src_x(t), SRC_Y])
         true_node = float(np.argmin(np.linalg.norm(nom - src, axis=1)))

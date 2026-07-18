@@ -63,7 +63,7 @@ quantitatively sensible one.
   different observable and remains as found — smooth static fields give redundant
   per-zone reads, so density does not help there.
 
-This is also the first C-series prediction to be **confirmed** rather than
+This is also the first progression prediction to be **confirmed** rather than
 corrected (after [S1](sweep_geometry_worldmodel.md), [Q1](sweep_q1_modulation.md),
 and [Q2](q2_reafference.md) each corrected one) — a small reassurance that the
 framework is being tested, not bent: predictions sometimes hold and sometimes do

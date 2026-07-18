@@ -1,31 +1,38 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 G. Nagarjuna and Durgaprasad Karnam
-"""E3 — haltability generates aboutness (the manipulator unit).
+"""E3 — the haltable action *pattern* generates object-directedness.
 
-The claim: a **halt-in-contact** is not a stop but a *directed state* — the
-agent's limb committed to the object. We show that halt is
+Consistent with the progression, the agent first builds its **self-model**, then
+its object-directedness *in that self-frame*.
 
-  - **persistent** : it holds while the agent presses (the object + the press
-    are a halt equilibrium), and is restored after a perturbation;
-  - **returnable** : on withdraw → re-press the agent re-acquires the SAME object
-    (the object's place is a returnable possibility of modulation);
-  - **side-specific** : an object on the left makes the LEFT limb halt-in-contact
-    while the right limb, given the same command, swings free — the bilateral
-    asymmetry (L-halt / R-free) *is* directedness toward the object.
+1. **Self-model (first).** In free space the agent drives its two limbs with
+   independent probes and applies the SAME framework read-out
+   (:func:`smn_lab.self_model.coupling`): each zone responds to its *own* efference
+   and not the other's -- an off-diagonal ~ 0 coupling. That recovers the
+   self-referred frame: *I have a left zone and a right zone, independently
+   modulable.* (Being bilateral, the two are mirror-alike -- as in the
+   [branched body], a symmetric self cannot yet tell its mirror-zones apart.)
 
-That triad — persistent, returnable, side-specific — is what we mean by the
-halt being *about* the object.
+2. **Object-directedness (in the self-frame).** With an object on the left, a
+   haltable action **pattern** -- not a one-time halt -- produces a halt-in-contact
+   that is
 
-Foil: a **CPG** drives the limb rhythmically. It touches the object every cycle
-but can never *hold* a directed halt — the object state only flickers. Rhythm is
-not aboutness; haltability is.
+     - **persistent** : it holds while the agent presses, and is restored after a
+       perturbation (recoverable);
+     - **returnable** : withdraw -> re-press re-acquires the SAME object (recurrent,
+       recognisable-as-same);
+     - **side-specific** : the LEFT self-zone halts while the RIGHT, given the same
+       command, swings free.
 
-(The deeper "co-activated equilibrium with tunable stiffness in free space" needs
-muscle/tendon actuators — a later refinement; here the object supplies the
-equilibrium and the press restores it after perturbation.)
+   The object breaks the bilateral symmetry: it individuates the self's left zone
+   AND the object together. That recurrent, recognisable, side-specific pattern --
+   expressed in the self-frame -- *is* being directed at the object. Haltability is
+   the capacity ([the pivot demo]); this pattern is what makes it *about* something.
+
+Foil: a **CPG** rhythm touches the object every cycle but never *holds* a directed
+halt -- rhythm is not aboutness; the haltable *pattern* is.
 
 Run:  ../.venv/bin/python p6_haltability_aboutness.py
-Outputs: ../figures/p6_haltability_aboutness.png
 """
 from __future__ import annotations
 import os
@@ -39,6 +46,7 @@ import mujoco
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from smn_lab.manipulator import build_manip_xml, LimbInterface, CMAX
+from smn_lab.self_model import coupling            # the self-model read-out (unchanged)
 
 DT = 0.002
 T = 6.0
@@ -50,9 +58,13 @@ VEL_THR = 0.30
 CPG_FREQ = 1.2
 
 
+# --8<-- [start:pattern]
 def smn_press(t):
-    """Haltable press: acquire → a long committed HOLD → withdraw → rest, repeated.
-    The hold is sustained as long as the agent chooses — the mark of a halt."""
+    """The haltable action PATTERN: acquire -> a long committed HOLD -> withdraw ->
+    rest, REPEATED every PERIOD. A pattern, not a one-time halt: the hold recurs and
+    is recognisable across cycles (returnable), and is restored after a perturbation
+    (recoverable). That recurrent, recognisable hold is what makes it *about* the
+    object."""
     ph = t % PERIOD
     if ph < 0.40:
         return CMAX * (ph / 0.40)
@@ -61,11 +73,39 @@ def smn_press(t):
     if ph < 1.70:
         return CMAX * (1.0 - (ph - 1.40) / 0.30)
     return 0.0
+# --8<-- [end:pattern]
 
 
 def cpg_press(t):
     """A rhythm: presses and releases every cycle, never holds."""
     return CMAX * max(0.0, math.sin(2 * math.pi * CPG_FREQ * t))
+
+
+# --8<-- [start:selfmodel]
+def self_model(seed=0, T_probe=4.0):
+    """Self-model FIRST. In free space, drive each limb with an independent probe
+    and apply the framework read-out coupling(efference, motion). Each zone responds
+    to its OWN efference and not the other's (off-diagonal ~ 0): the two zones are
+    independently modulable -- the self-referred frame (my-left, my-right), each
+    fixed by its own efference->motion contingency, prior to any object."""
+    model = mujoco.MjModel.from_xml_string(
+        build_manip_xml(left="free", right="free", actuation="smn"))
+    data = mujoco.MjData(model); mujoco.mj_forward(model, data)
+    liL, liR = LimbInterface(model, "L", "smn"), LimbInterface(model, "R", "smn")
+    rng = np.random.default_rng(seed)
+    n = int(T_probe / DT)
+    DRV = np.zeros((n, 2)); VEL = np.zeros((n, 2))
+    cL = cR = 0.0
+    for k in range(n):
+        cL += (-cL / 0.3) * DT + 3.0 * np.sqrt(DT) * rng.standard_normal()   # independent
+        cR += (-cR / 0.3) * DT + 3.0 * np.sqrt(DT) * rng.standard_normal()   # probes
+        liL.drive(data, CMAX * (0.5 + 0.5 * math.tanh(cL)))
+        liR.drive(data, CMAX * (0.5 + 0.5 * math.tanh(cR)))
+        mujoco.mj_step(model, data)
+        DRV[k] = (cL, cR); VEL[k] = (liL.read(data)["vel"], liR.read(data)["vel"])
+    C = np.abs(coupling(DRV, VEL))               # 2x2 zone self-model
+    return C / (C.max() + 1e-9)
+# --8<-- [end:selfmodel]
 
 
 def run(drive):
@@ -126,10 +166,20 @@ def main():
     here = os.path.dirname(os.path.abspath(__file__))
     figdir = os.path.join(here, "..", "figures"); os.makedirs(figdir, exist_ok=True)
 
+    # --- self-model first (the self-referred frame the aboutness is expressed in) ---
+    C = self_model()
+    offdiag = 0.5 * (C[0, 1] + C[1, 0])
+    print("\n=== E3 — the haltable pattern generates object-directedness ===")
+    print("  [1] self-model (free space, framework coupling):")
+    print(f"      zone-coupling matrix (normalized)  L: [{C[0,0]:.2f} {C[0,1]:.2f}]  "
+          f"R: [{C[1,0]:.2f} {C[1,1]:.2f}]")
+    print(f"      off-diagonal = {offdiag:.2f}  ->  two independently-modulable zones "
+          f"(my-left, my-right); a bilateral self cannot yet tell them apart.")
+    print("  [2] object-directedness (the object breaks the symmetry, in the self-frame):")
+
     smn = run(smn_press)
     cpg = run(cpg_press)
 
-    print("\n=== E3 — haltability generates aboutness ===")
     print(f"  {'agent/limb':18s} {'longest halt (s)':>16s} {'episodes':>10s} {'held fraction':>14s}")
     rows = [("SMN left (object)", smn["haltL"], smn["press"]),
             ("SMN right (none)", smn["haltR"], smn["press"]),
@@ -143,7 +193,23 @@ def main():
           f"{longest_halt(smn['haltR']):.2f}s")
 
     # --- figure ---
-    fig, (axA, axB, axC) = plt.subplots(3, 1, figsize=(11, 9), sharex=False)
+    fig = plt.figure(figsize=(13, 8))
+    gs = fig.add_gridspec(2, 2, width_ratios=[1, 2.6])
+    axSM = fig.add_subplot(gs[0, 0])          # self-model (computed first)
+    axC = fig.add_subplot(gs[1, 0])           # summary bar
+    axA = fig.add_subplot(gs[0, 1])           # SMN time series
+    axB = fig.add_subplot(gs[1, 1])           # CPG time series
+
+    # SM: the self-model — a 2x2 zone-coupling matrix (off-diagonal ~ 0 = two zones)
+    im = axSM.imshow(C, cmap="Blues", vmin=0, vmax=1)
+    for i in range(2):
+        for j in range(2):
+            axSM.text(j, i, f"{C[i,j]:.2f}", ha="center", va="center",
+                      color="white" if C[i, j] > 0.5 else "#333", fontsize=11)
+    axSM.set_xticks([0, 1]); axSM.set_yticks([0, 1])
+    axSM.set_xticklabels(["L", "R"]); axSM.set_yticklabels(["L", "R"])
+    axSM.set_title("(1) self-model, first\ncoupling(efference, motion):\ntwo decoupled zones "
+                   f"(off-diag {offdiag:.2f})", fontsize=9)
 
     # A: SMN — left vs right contact; halt episodes shaded; perturbation marked
     axA.plot(smn["t"], smn["conL"], color="#2c6a9c", lw=1.5, label="left (object)")
@@ -155,8 +221,9 @@ def main():
         axA.axvspan(smn["t"][pw][0], smn["t"][pw][-1], color="#b03030", alpha=0.25)
         axA.text(smn["t"][pw][0], smn["conL"].max(), " perturbation", color="#b03030", fontsize=8, va="top")
     axA.set_ylabel("contact force (N)")
-    axA.set_title("(A) SMN: the halt is persistent, returnable, side-specific\n"
-                  "(left holds the object across cycles & restores after perturbation; right never holds)", fontsize=10)
+    axA.set_title("(2) object-directedness in the self-frame: the halt is persistent, returnable, "
+                  "side-specific\n(the LEFT self-zone holds the object across cycles & restores after "
+                  "perturbation; the RIGHT never holds)", fontsize=9.5)
     axA.legend(fontsize=8, loc="upper right"); axA.grid(alpha=0.25)
 
     # B: CPG — left contact flickers, never a sustained held halt
@@ -176,8 +243,8 @@ def main():
     for i, v in enumerate(vals):
         axC.text(i, v + 0.02, f"{v:.2f}", ha="center", fontsize=9)
 
-    fig.suptitle("E3 — haltability generates aboutness: a halt-in-contact that is persistent, "
-                 "returnable, and side-specific", fontsize=11)
+    fig.suptitle("E3 — self-model first, then the haltable action pattern → object-directedness "
+                 "(persistent · returnable · side-specific)", fontsize=11)
     fig.tight_layout(rect=(0, 0, 1, 0.95))
     out = os.path.join(figdir, "p6_haltability_aboutness.png")
     fig.savefig(out, dpi=120)

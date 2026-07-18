@@ -16,6 +16,27 @@ localized to a self-graph node by the [W1](world_in_self_graph.md) read-out. The
 world-geometry is the signed node separation `d = node_B − node_A`. We sweep the
 true separation of the two sources and read back `d`.
 
+## Formalism — world-geometry in self-graph units
+
+Each feature is localized to a self-graph node by the
+[W1](world_in_self_graph.md#formalism-locating-a-where-on-the-self-graph) read-out;
+the world-geometry is their **signed node separation** — a relation, expressed in the
+body's own units, against an allocentric foil in world units:
+
+\[
+d_{\text{self}} = \hat n_B - \hat n_A = \sum_k w^B_k\,k - \sum_k w^A_k\,k,
+\qquad
+d_{\text{allo}} = \frac{x_B - x_A}{\ell_{\text{seg}}}.
+\]
+
+```python
+--8<-- "experiments/world_geometry_self_frame.py:separation"
+```
+
+A *relation* cancels the body's common-mode self-motion, so world-geometry in the
+self-frame is even more stable than a single location — the body is the ruler. The
+parameter varied is the **true separation** of the two sources.
+
 ## Pre-registered prediction
 
 1. **World-metric in self-units** — as the true separation of the two sources
@@ -57,14 +78,15 @@ self-frame inherits this robustness for free.
 
 Next: [W3](reafference_cut_self_graph.md) makes the self/world cut in this frame.
 
-## What's measured, computed, and plotted
+## What's measured and plotted
 
 **Raw data:** two per-zone readings `sA_k`, `sB_k` (two modality channels), zone
-world positions, nominal positions from calibration. **Computed:** self-graph
-location of each feature = node-index centroid of its sharpened reading weights;
-separation `d = node_B − node_A`; a linear fit of recovered `d` vs true
-separation. **Plotted:** recovered vs true separation with the ideal slope-1 line;
-the separation time series for one configuration while the body deforms.
+world positions, nominal positions from calibration. **Computed:** each feature's
+self-graph location and the signed separation — defined as running code in
+[Formalism](#formalism-world-geometry-in-self-graph-units) above — plus a linear fit
+of recovered `d` vs true separation. **Plotted:** recovered vs true separation with
+the ideal slope-1 line; the separation time series for one configuration while the
+body deforms.
 
 ## Run
 

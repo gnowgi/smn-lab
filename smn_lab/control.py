@@ -37,6 +37,7 @@ class OpponentBoard:
         self.cmax = cmax
         self.coc = cocontraction
 
+    # --8<-- [start:opponent_commands]
     def commands(self, theta, theta_dot, theta_cmd, theta_dot_cmd):
         tau = self.kp * (theta_cmd - theta) + self.kd * (theta_dot_cmd - theta_dot)
         a_r = float(np.clip(tau, 0.0, self.cmax))
@@ -45,6 +46,7 @@ class OpponentBoard:
             a_r = min(self.cmax, a_r + self.coc)
             a_l = min(self.cmax, a_l + self.coc)
         return a_r, a_l, tau
+    # --8<-- [end:opponent_commands]
 
 
 class ReafferencePredictor:
@@ -383,6 +385,7 @@ class MessagingBeam:
         self.phase = -phase_lag * np.arange(self.n, dtype=float)
         self.msg = np.zeros(self.n)
 
+    # --8<-- [start:beam_command]
     def command(self, dt: float, bias: float = 0.0) -> np.ndarray:
         """Advance the coupled oscillators by dt and return per-joint angle
         commands (traveling wave + chemotactic turn bias)."""
@@ -397,6 +400,7 @@ class MessagingBeam:
             dphi[i] += self.coupling * m
         self.phase = self.phase + dphi * dt
         return self.amp * np.sin(self.phase) + self.turn_gain * bias
+    # --8<-- [end:beam_command]
 
 
 class DeadReckoner:

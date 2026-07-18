@@ -8,7 +8,7 @@ cannot drift from the code that ran.
 
 Outputs:
   figures/diagram_grammar.png   -- the annotated A3 crawler + modality legend.
-  figures/morphology_ladder.png -- the 1/2/3-block ladder of Lesson 1.
+  figures/morphology_ladder.png -- the 1/2/3-block ladder.
 
 Run:  ../.venv/bin/python morphology_figs.py        (from this directory)
 """
@@ -67,7 +67,7 @@ def fig_ladder(out):
                                               is_head=(k == 0)) for k in range(n)])
         render_morphology(ax, schema, show_labels=True, compass=False)
         ax.set_title(title, fontsize=9.5, loc="left")
-    fig.suptitle("The morphological ladder (Lesson 1): each new block unlocks a transition",
+    fig.suptitle("The morphological ladder: each new block unlocks a transition",
                  fontsize=10.5)
     fig.tight_layout(rect=(0, 0, 1, 0.97))
     fig.savefig(out, dpi=130)

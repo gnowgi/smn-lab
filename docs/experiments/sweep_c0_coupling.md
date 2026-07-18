@@ -35,14 +35,38 @@ not in the parts.**
   phase-lag coherence.
 
 
-## What's measured, computed, and plotted
-**Raw data (per run = one coupling value x one seed; 70 runs):** head `(x, y)` over
-time; `dphi` = the phase difference between the two joint oscillators.
+## Formalism — the coupling is the independent variable
 
-**Computed (the math):**
-- `net_disp` per run (as C0).
-- `phase_coherence = |mean over time of exp(i*dphi)|` — 1 if the joints hold a fixed phase relation, → 0 if they drift apart.
-- across seeds, per coupling value: mean net_disp, its **95% CI** (= `1.96 x sem`), and its standard deviation.
+The body, actuators, and medium are exactly [C0](c0_crawler.md#formalism-locomotion-from-local-coupling);
+this experiment varies **one** term in the messaging-beam law — the coupling
+strength \(K\) — and nothing else:
+
+```python
+--8<-- "experiments/sweep_c0_coupling.py:couplings"
+```
+
+\(K=0\) is the **matched foil**: the two oscillators keep their random initial phase
+offset (\(\dot\varphi_i=\omega\), no message term), so each seed walks a different
+gait. \(K>0\) pulls every seed to the same productive phase lag \(\delta\).
+
+**The order parameter — did the network lock?** Temporal phase-lag coherence, the
+magnitude of the mean phasor of the inter-joint phase difference \(\Delta\varphi\)
+over the run (1 = a fixed phase relation held; 0 = the joints drifted apart):
+
+\[
+R = \left|\, \tfrac{1}{T}\sum_{t} e^{\,i\,\Delta\varphi_t} \,\right|.
+\]
+
+```python
+--8<-- "experiments/sweep_c0_coupling.py:coherence"
+```
+
+## What's measured and plotted
+**Raw data (per run = one coupling value × one seed; 70 runs):** head `(x, y)` over
+time; `dphi` = the phase difference between the two joint oscillators. **Computed:**
+`net_disp` (as C0), the phase-coherence order parameter \(R\) above, and — across
+seeds per coupling value — mean `net_disp`, its **95% CI** (`1.96·sem`), and its
+standard deviation (the variance collapse).
 
 **Plotted:** **A** mean net_disp vs coupling with the 95% CI band, the foil (coupling = 0) circled; **B** the across-seed standard deviation of net_disp vs coupling (the variance collapse).
 
@@ -72,5 +96,5 @@ wave. Locomotion is reproducible only when the zones are coupled — a network
 effect, demonstrated with a matched foil and a seed ensemble rather than a single
 illustrative run.
 
-This is the template for the C-series: an explicit order parameter, a matched
+This is the template for the progression: an explicit order parameter, a matched
 non-modulatory foil, replicated seeds, and exported data for re-analysis.

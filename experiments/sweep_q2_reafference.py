@@ -136,12 +136,14 @@ def run_one(params, seed):
         m = float(vals.mean())
         A = np.column_stack([np.ones(len(pts)), pts[:, 0], pts[:, 1]])
         _, gx, gy = np.linalg.lstsq(A, vals, rcond=None)[0]    # field gradient (world)
+        # --8<-- [start:reaff]
         pred_basis = gx * dx_acc + gy * dy_acc                 # grad . self-displacement
-        pred_self = scale * pred_basis
+        pred_self = scale * pred_basis                         # calibrated self-term
         if m_prev is not None:
-            dm = m - m_prev
-            res_reaff = dm - pred_self                         # world term survives
-            res_foil = dm                                      # no cancellation
+            dm = m - m_prev                                    # observed change in reading
+            res_reaff = dm - pred_self                         # reafferent: world term survives
+            res_foil = dm                                      # foil: no cancellation
+        # --8<-- [end:reaff]
             if t < T_LEARN:                                    # calibrate the self-gain
                 cal_num += dm * pred_basis; cal_den += pred_basis ** 2
                 phase = 0

@@ -45,6 +45,7 @@ import mujoco
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from smn_lab.crawler import build_crawler_xml, apply_anisotropic_drag
 from smn_lab.fields import ScalarField
+from smn_lab.worldmodel import zone_xy
 
 DT = 0.002
 N_SEG = 8
@@ -61,10 +62,6 @@ SWEEP_AMP, SWEEP_HZ = 0.9, 0.15        # systematic whole-body self-motion (a sl
 
 def node_x(k):
     return -SEGLEN * k
-
-
-def zone_xy(data, sL, sR, k):
-    return 0.5 * (data.site_xpos[sL[k]][:2] + data.site_xpos[sR[k]][:2])
 
 
 def run():
@@ -131,12 +128,15 @@ def run():
             continue
 
         # baseline: mean self-referred reading over an early settle inside self-motion
+        # --8<-- [start:reaff]
+        # per-zone reafference: subtract each zone's learned self-term g_k.(pos-nom)
         s_self = s - np.einsum("kd,kd->k", g, pos - nom)
         if t < T_CAL + 2.0:
             base = (base * base_n + s_self) / (base_n + 1); base_n += 1
 
         reaf_dev = s_self - base                       # world-caused change, per node
         naive_dev = s - base                           # raw deviation (self + world)
+        # --8<-- [end:reaff]
         phase = 1 if t < T_CAL + T_SELF else 2
         # localize the world change on the self-graph (positive-deviation centroid)
         w = np.clip(reaf_dev, 0.0, None)

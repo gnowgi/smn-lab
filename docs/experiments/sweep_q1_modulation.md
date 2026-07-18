@@ -22,6 +22,37 @@ implementation is ours. **Foil:** the same body, same sensors, no cancellation
 (modulation off). Conditions vary only modulation on/off and segment count; world,
 exafference, and exploration are matched.
 
+## Formalism — per-zone (distributed) reafference
+
+Q1 is the **distributed** form of the [reafference cut](q2_reafference.md): instead
+of one head-velocity prediction, **each zone** cancels its **own** self-motion — the
+dual-port modulator, each zone both sensing and moving:
+
+\[
+\text{basis}_k = \nabla m \cdot \Delta\mathrm{pos}_k,
+\qquad
+r^{\text{mod}}_k = \Delta r_k - s_k\,\text{basis}_k,
+\qquad
+r^{\text{foil}}_k = \Delta r_k.
+\]
+
+Each zone accumulates its **own** sensed displacement (dual-port):
+
+```python
+--8<-- "experiments/sweep_q1_modulation.py:dualport"
+```
+
+and cancels its own self-caused change; the foil does not:
+
+```python
+--8<-- "experiments/sweep_q1_modulation.py:modulate"
+```
+
+Because each zone cancels its *own* term, extra zones add resolution **only when
+modulated** — the resolution principle: resolution scales with CAZ density × internal
+capacity, not raw transducer count. The parameters varied are **segment count ×
+mode** (modulated / foil).
+
 ## Result
 
 ![Q1 — with per-zone modulation the self/world ratio stays high at all body sizes while the foil collapses to ~1; modulation holds the self-caused residual at the noise floor while the foil's grows with zone count](../figures/sweep_q1_modulation.png)
@@ -69,15 +100,13 @@ the noise floor. The narrower "absolute resolution scales up with density" claim
 **not** established (confounded) and is left open.
 
 
-## What's measured, computed, and plotted
-**Raw data (per run = segment count x mode {modulated, foil} x seed):** each zone
+## What's measured and plotted
+**Raw data (per run = segment count × mode {modulated, foil} × seed):** each zone
 accumulates its **own** sensed displacement (the dual-port modulator). Every 0.25 s
 window: each zone's mean reading `r_k`, the aggregate residual, and a phase tag.
-
-**Computed (per-zone reafference):**
-- per zone: predicted change `basis_k = grad · disp_k` (gradient · that zone's own displacement); actual `dr_k = r_k - r_prev_k`;
-- **modulated** residual_k `= dr_k - scale_k * basis_k` (each zone cancels its own self-motion); **foil** residual_k `= dr_k`;
-- aggregate residual = mean over zones; `ratio = mean|aggregate| in exafference / in self-test`; `self_res = mean|aggregate| in self-test`.
+**Computed:** the per-zone `basis`, the modulated/foil residuals, and the
+exafference/self-test `ratio` — defined as running code in
+[Formalism](#formalism-per-zone-distributed-reafference) above.
 
 **Plotted:** **A** ratio vs segment count, modulated vs foil; **B** the self-test residual (the noise floor) vs segment count, modulated vs foil.
 

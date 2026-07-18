@@ -35,6 +35,7 @@ import mujoco
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from smn_lab.crawler import build_crawler_xml, apply_anisotropic_drag
 from smn_lab.fields import ScalarField
+from smn_lab.worldmodel import zone_xy, localization_weights as weights
 
 DT = 0.002
 N_SEG = 8
@@ -46,23 +47,10 @@ SRC_Y = 0.30
 SEGLEN = 0.14                          # inter-node spacing (2*h in the builder)
 A_NODE = 2                             # feature A parked near node 2
 B_NODES = [3, 4, 5, 6]                 # feature B at increasing separation
-SHARP = 4.0
 
 
 def node_x(k):
     return -SEGLEN * k                  # nominal world-x of node k (head=0 at +x)
-
-
-def zone_xy(data, sL, sR, k):
-    return 0.5 * (data.site_xpos[sL[k]][:2] + data.site_xpos[sR[k]][:2])
-
-
-def weights(readings):
-    w = np.clip(readings - readings.min(), 0.0, None)
-    if w.max() < 1e-9:
-        return np.ones_like(w) / len(w)
-    w = (w / w.max()) ** SHARP
-    return w / w.sum()
 
 
 def run_pair(b_node, seed):
@@ -102,12 +90,14 @@ def run_pair(b_node, seed):
             continue
         sA = np.array([fieldA.sample(*pos[k]) for k in range(N_SEG)]) + rng.normal(0, SENSOR_NOISE, N_SEG)
         sB = np.array([fieldB.sample(*pos[k]) for k in range(N_SEG)]) + rng.normal(0, SENSOR_NOISE, N_SEG)
+        # --8<-- [start:separation]
         wA, wB = weights(sA), weights(sB)
         # self-referred: separation in self-graph node units
         d_self.append(float((wB * node_idx).sum() - (wA * node_idx).sum()))
         # allocentric: separation in world x, expressed in node units (/SEGLEN)
         xA = float((wA * pos[:, 0]).sum()); xB = float((wB * pos[:, 0]).sum())
         d_allo.append((xA - xB) / SEGLEN)          # +x is head; node grows away from head
+        # --8<-- [end:separation]
     return np.array(d_self), np.array(d_allo)
 
 

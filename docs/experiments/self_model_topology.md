@@ -28,6 +28,83 @@ the body's connectivity graph assembles itself.
 We recover a **topology, not a metric** — a *graph, not a ruler*. No absolute
 distance is ever measured; only who-is-near-whom, in hops.
 
+## Formalism — the transmission gain \(G\)
+
+While the body moves, each zone \(i\) logs two channels: its **own efference**
+\(\tau_{t,i}\) (the torque it commands, `TAU`) and, on the broadcast, every zone
+\(j\)'s **afferent motion** \(v_{t,j}\) (joint angular velocity, `VEL`). Before
+reading, the whole-body common mode is stripped — the reafference move — so only
+motion *relative to the body* survives:
+
+\[
+v_{t,j} \;\leftarrow\; v_{t,j} - \frac{1}{n_J}\sum_{j'} v_{t,j'}.
+\]
+
+```python
+--8<-- "experiments/self_model_topology.py:commonmode"
+```
+
+The self-model read-out is the magnitude of the normalized correlation between
+zone \(i\)'s efference and zone \(j\)'s afferent motion, symmetrized, self-terms
+zeroed:
+
+\[
+G_{ij} \;=\; \Bigl|\, \tfrac{1}{n}\sum_{t} \hat{z}(\tau)_{t,i}\,\hat{z}(v)_{t,j} \,\Bigr|,
+\qquad G \leftarrow \tfrac{1}{2}\bigl(G + G^{\top}\bigr), \quad G_{ii}=0,
+\]
+
+with \(\hat{z}\) the per-channel z-score (same operator as on the
+[template page](../formalism-and-code.md)). Because the zones' drives are
+independent, \(G_{ij}\) isolates *how much \(j\) moves because \(i\) moved* — the
+transmission gain, which elastic attenuation makes fall off with hop-distance.
+
+This read-out is **the model** — it lives in the framework
+([`smn_lab/self_model.py`](../self-model-and-measurement.md)), not in this script,
+because it is what the theory says the *agent* computes:
+
+```python
+--8<-- "smn_lab/self_model.py:transfer"
+```
+
+Each row is one zone's own [`local_read`](../self-model-and-measurement.md) — its
+efference correlated against the broadcast — so no zone ever holds the whole matrix
+(**C3**). The body graph is then the union of each zone's own strongest-co-mover
+edge, decided locally.
+
+Recovering the whole **chain order** is different: it needs the entire matrix at
+once (the Fiedler vector \(\nu_2\) of the Laplacian \(L = D - G\)), so it is *not*
+something a zone can do — it is the **experimenter's** summary, and it lives in
+[`smn_lab/metrics.py`](../self-model-and-measurement.md), not in the agent:
+
+\[
+L = D - G, \qquad \text{order} = \operatorname{argsort}\,\nu_2(L).
+\]
+
+```python
+--8<-- "smn_lab/metrics.py:seriation_order"
+```
+
+### The parameter the live demo varies
+
+The read-out is only informative because the substrate is **elastic**. Joint
+stiffness \(k\) (`joint_stiffness` in `crawler.py`) is the single varied parameter;
+the three conditions are exactly:
+
+```python
+--8<-- "experiments/self_model_topology.py:conditions"
+```
+
+| condition | \(k\) | drive | what happens to \(G\) |
+|---|---|---|---|
+| **elastic** | `0.6` | on | co-movement **decays with hops** → chain order recovered |
+| **rigid** | `80.0` | on | body moves as one common mode → no differential signal to read |
+| **frozen** | `0.6` | off | no movement → \(G\) carries nothing |
+
+In the seminar the slider is \(k\): the audience watches the transfer matrix's
+super/sub-diagonal band (the recovered adjacency) wash out as \(k\) rises — the
+[result below](#result-prediction-confirmed) at \(k=0.6\), and the rigid foil at
+\(k=80\).
+
 ## Pre-registered prediction
 
 For an **elastic** chain, `G[i,j]` decays monotonically with hop-distance, so each
@@ -81,15 +158,15 @@ measured coupling), and a world source localized along the *recovered* graph:
 
 ![Self/world card for the chain body: designed agent, recovered self-model path, world localized along the chain](../figures/self_world_card_chain.png)
 
-## What's measured, computed, and plotted
+## What's measured and plotted
 
-**Raw data:** per-zone commanded torque `TAU` (efference) and joint angular
-velocity `VEL` (afference), common-mode removed. **Computed:** `G[i,j] =
-|corr(TAU_i, VEL_j)|`, symmetrized; the hop-distance curve `mean G vs |i-j|`;
-chain order by the Fiedler vector of the `G`-graph Laplacian (spectral seriation);
-1-hop neighbour accuracy = fraction of zones whose argmax co-mover is a true
-neighbour. **Plotted:** transfer-vs-hops curve for all three conditions; the
-elastic transfer matrix.
+**Raw data (per run = one condition × one seed):** per-zone commanded torque `TAU`
+(efference) and joint angular velocity `VEL` (afference), common-mode removed.
+**Computed:** the transmission gain \(G\), the hop-distance curve, and the recovered
+chain order — all defined and shown as running code in
+[Formalism](#formalism-the-transmission-gain-g) above. **Plotted:** the
+transfer-vs-hops curve for all three conditions and the elastic transfer matrix
+(the bright super/sub-diagonal band = recovered chain adjacency).
 
 ## Run
 

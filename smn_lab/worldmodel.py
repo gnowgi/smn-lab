@@ -131,3 +131,27 @@ def dump_npz(path: str, **arrays) -> None:
     import os
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     np.savez_compressed(path, **arrays)
+
+
+# --8<-- [start:localize]
+# --- localizing a world feature in the self-frame --------------------------
+# The world model is world-geometry expressed in the SELF-model's frame: the
+# agent never uses an absolute pose, only the positions of its own zones and how
+# strongly each zone senses the feature.
+def zone_xy(data, sL, sR, k):
+    """Zone k's planar position = the midpoint of its bilateral (L, R) sensor
+    sites. This is the self-frame anchor: world features are placed relative to
+    the agent's own zones, never in an absolute world frame."""
+    return 0.5 * (data.site_xpos[sL[k]][:2] + data.site_xpos[sR[k]][:2])
+
+
+def localization_weights(readings, sharp: float = 4.0):
+    """Above-baseline, sharpened per-zone weights (peakier -> less centroid bias),
+    for localizing a world feature as a weighted centroid over the zones. ``sharp``
+    is the sharpening exponent (4.0 in the world-model experiments)."""
+    w = np.clip(readings - readings.min(), 0.0, None)
+    if w.max() < 1e-9:
+        return np.ones_like(w) / len(w)
+    w = (w / w.max()) ** sharp
+    return w / w.sum()
+# --8<-- [end:localize]
