@@ -22,10 +22,10 @@ under the paper section it realizes:
 
 | Preprint § | Bench pages |
 |---|---|
-| **§1 The atom** | the moving opponent body — C0, S0, antagonistic benefits |
+| **§1 The modular unit** | the moving opponent body — C0, S0, antagonistic benefits; **R1** tonic-load coupling, **R2** resumption latency |
 | **§2 Generative morphology** | the diagram grammar, the construction of experience |
 | **§3 The self-model** | topology / branched / sheet–tube / nested self-model |
-| **§4 World-model & self/world/other** | Q2, the reafference cut, W1/W2, Q1, and the resolution principle (S1, Q1b) |
+| **§4 World-model & self/world/other** | Q2, the reafference cut, W1/W2, Q1, the resolution principle (S1, Q1b), **R5** dual-signal residual |
 | **§5 Haltability & object-directedness** | C1, the manipulator (E1), the haltable pattern (E3), haltability signatures |
 | **§6 From resistance to object** | self/field/object (E2), cross-modal (deferred) |
 | **§7 Taxonomy of action patterns** | the layering pivot, network scaling, zonal dissociations |
