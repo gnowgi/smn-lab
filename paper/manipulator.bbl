@@ -1,0 +1,108 @@
+\begin{thebibliography}{17}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bateson(1972)]{Bateson1972}
+Gregory Bateson.
+\newblock \emph{Steps to an Ecology of Mind}.
+\newblock Chandler Publishing, 1972.
+
+\bibitem[Beer(2003)]{Beer2003}
+Randall~D. Beer.
+\newblock The dynamics of active categorical perception in an evolved model
+  agent.
+\newblock \emph{Adaptive Behavior}, 11\penalty0 (4):\penalty0 209--243, 2003.
+
+\bibitem[Brooks(1991)]{Brooks1991}
+Rodney~A. Brooks.
+\newblock Intelligence without representation.
+\newblock \emph{Artificial Intelligence}, 47\penalty0 (1--3):\penalty0
+  139--159, 1991.
+
+\bibitem[Chen et~al.(2018)Chen, Rubanova, Bettencourt, and
+  Duvenaud]{Chen2018NeuralODE}
+Ricky T.~Q. Chen, Yulia Rubanova, Jesse Bettencourt, and David Duvenaud.
+\newblock Neural ordinary differential equations.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2018.
+
+\bibitem[G{\"a}rdenfors(2014)]{Gardenfors2014}
+Peter G{\"a}rdenfors.
+\newblock \emph{The Geometry of Meaning: Semantics Based on Conceptual Spaces}.
+\newblock MIT Press, 2014.
+
+\bibitem[G{\"a}rdenfors(2020)]{Gardenfors2020}
+Peter G{\"a}rdenfors.
+\newblock Events and causal mappings modeled in conceptual spaces.
+\newblock \emph{Frontiers in Psychology}, 11:\penalty0 630, 2020.
+\newblock \doi{10.3389/fpsyg.2020.00630}.
+
+\bibitem[G{\"a}rdenfors and Warglien(2012)]{GardenforsWarglien2012}
+Peter G{\"a}rdenfors and Massimo Warglien.
+\newblock Using conceptual spaces to model actions and events.
+\newblock \emph{Journal of Semantics}, 29\penalty0 (4):\penalty0 487--519,
+  2012.
+
+\bibitem[Gibson(1979)]{Gibson1979}
+James~J. Gibson.
+\newblock \emph{The Ecological Approach to Visual Perception}.
+\newblock Houghton Mifflin, 1979.
+
+\bibitem[Maass et~al.(2002)Maass, Natschl{\"a}ger, and Markram]{Maass2002}
+Wolfgang Maass, Thomas Natschl{\"a}ger, and Henry Markram.
+\newblock Real-time computing without stable states: A new framework for neural
+  computation based on perturbations.
+\newblock \emph{Neural Computation}, 14\penalty0 (11):\penalty0 2531--2560,
+  2002.
+
+\bibitem[Nagarjuna and Karnam(2026)]{NagarjunaKarnam2026SMN}
+G.~Nagarjuna and Durgaprasad Karnam.
+\newblock The sensation modulating network.
+\newblock \emph{arXiv preprint arXiv:2605.26856}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2605.26856}.
+
+\bibitem[O'Regan and No{\"e}(2001)]{ORegan2001}
+J.~Kevin O'Regan and Alva No{\"e}.
+\newblock A sensorimotor account of vision and visual consciousness.
+\newblock \emph{Behavioral and Brain Sciences}, 24\penalty0 (5):\penalty0
+  939--973, 2001.
+
+\bibitem[Parr et~al.(2022)Parr, Pezzulo, and Friston]{ParrPezzuloFriston2022}
+Thomas Parr, Giovanni Pezzulo, and Karl~J. Friston.
+\newblock \emph{Active Inference: The Free Energy Principle in Mind, Brain, and
+  Behavior}.
+\newblock MIT Press, 2022.
+
+\bibitem[Pezzulo and Cisek(2016)]{PezzuloCisek2016}
+Giovanni Pezzulo and Paul Cisek.
+\newblock Navigating the affordance landscape: Feedback control as a process
+  model of behavior and cognition.
+\newblock \emph{Trends in Cognitive Sciences}, 20\penalty0 (6):\penalty0
+  414--424, 2016.
+
+\bibitem[Pfeifer and Bongard(2006)]{PfeiferBongard2006}
+Rolf Pfeifer and Josh Bongard.
+\newblock \emph{How the Body Shapes the Way We Think: A New View of
+  Intelligence}.
+\newblock MIT Press, 2006.
+
+\bibitem[Smith(1996)]{Smith1996}
+Brian~Cantwell Smith.
+\newblock \emph{On the Origin of Objects}.
+\newblock MIT Press, Cambridge, MA, 1996.
+
+\bibitem[Talmy(1988)]{Talmy1988}
+Leonard Talmy.
+\newblock Force dynamics in language and cognition.
+\newblock \emph{Cognitive Science}, 12\penalty0 (1):\penalty0 49--100, 1988.
+
+\bibitem[Wolff(2007)]{Wolff2007}
+Phillip Wolff.
+\newblock Representing causation.
+\newblock \emph{Journal of Experimental Psychology: General}, 136\penalty0
+  (1):\penalty0 82--111, 2007.
+
+\end{thebibliography}

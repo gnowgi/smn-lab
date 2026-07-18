@@ -1,0 +1,79 @@
+\begin{thebibliography}{11}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Beer(2003)]{Beer2003}
+Randall~D. Beer.
+\newblock The dynamics of active categorical perception in an evolved model
+  agent.
+\newblock \emph{Adaptive Behavior}, 11\penalty0 (4):\penalty0 209--243, 2003.
+
+\bibitem[Bohg et~al.(2017)Bohg, Hausman, Sankaran, Brock, Kragic, Schaal, and
+  Sukhatme]{Bohg2017}
+Jeannette Bohg, Karol Hausman, Bharath Sankaran, Oliver Brock, Danica Kragic,
+  Stefan Schaal, and Gaurav~S. Sukhatme.
+\newblock Interactive perception: Leveraging action in perception and
+  perception in action.
+\newblock \emph{IEEE Transactions on Robotics}, 33\penalty0 (6):\penalty0
+  1273--1291, 2017.
+
+\bibitem[Brooks(1991)]{Brooks1991}
+Rodney~A. Brooks.
+\newblock Intelligence without representation.
+\newblock \emph{Artificial Intelligence}, 47\penalty0 (1--3):\penalty0
+  139--159, 1991.
+
+\bibitem[Chen et~al.(2018)Chen, Rubanova, Bettencourt, and
+  Duvenaud]{Chen2018NeuralODE}
+Ricky T.~Q. Chen, Yulia Rubanova, Jesse Bettencourt, and David Duvenaud.
+\newblock Neural ordinary differential equations.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2018.
+
+\bibitem[Gibson(1979)]{Gibson1979}
+James~J. Gibson.
+\newblock \emph{The Ecological Approach to Visual Perception}.
+\newblock Houghton Mifflin, 1979.
+
+\bibitem[Hasani et~al.(2021)Hasani, Lechner, Amini, Rus, and
+  Grosu]{Hasani2021Liquid}
+Ramin Hasani, Mathias Lechner, Alexander Amini, Daniela Rus, and Radu Grosu.
+\newblock Liquid time-constant networks.
+\newblock In \emph{Proceedings of the AAAI Conference on Artificial
+  Intelligence}, 2021.
+
+\bibitem[Jaeger and Haas(2004)]{JaegerHaas2004}
+Herbert Jaeger and Harald Haas.
+\newblock Harnessing nonlinearity: Predicting chaotic systems and saving energy
+  in wireless communication.
+\newblock \emph{Science}, 304\penalty0 (5667):\penalty0 78--80, 2004.
+
+\bibitem[Maass et~al.(2002)Maass, Natschl{\"a}ger, and Markram]{Maass2002}
+Wolfgang Maass, Thomas Natschl{\"a}ger, and Henry Markram.
+\newblock Real-time computing without stable states: A new framework for neural
+  computation based on perturbations.
+\newblock \emph{Neural Computation}, 14\penalty0 (11):\penalty0 2531--2560,
+  2002.
+
+\bibitem[Nagarjuna and Karnam(2026)]{NagarjunaKarnam2026SMN}
+G.~Nagarjuna and Durgaprasad Karnam.
+\newblock The sensation modulating network.
+\newblock \emph{arXiv preprint arXiv:2605.26856}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2605.26856}.
+
+\bibitem[O'Regan and No{\"e}(2001)]{ORegan2001}
+J.~Kevin O'Regan and Alva No{\"e}.
+\newblock A sensorimotor account of vision and visual consciousness.
+\newblock \emph{Behavioral and Brain Sciences}, 24\penalty0 (5):\penalty0
+  939--973, 2001.
+
+\bibitem[Pfeifer and Bongard(2006)]{PfeiferBongard2006}
+Rolf Pfeifer and Josh Bongard.
+\newblock \emph{How the Body Shapes the Way We Think: A New View of
+  Intelligence}.
+\newblock MIT Press, 2006.
+
+\end{thebibliography}

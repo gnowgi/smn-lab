@@ -1,0 +1,158 @@
+\begin{thebibliography}{20}
+\providecommand{\natexlab}[1]{#1}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\selectlanguage}[1]{\relax}
+\providecommand{\bibAnnoteFile}[1]{%
+  \IfFileExists{#1}{\begin{quotation}\noindent\textsc{Key:} #1\\
+  \textsc{Annotation:}\ \input{#1}\end{quotation}}{}}
+\providecommand{\bibAnnote}[2]{%
+  \begin{quotation}\noindent\textsc{Key:} #1\\
+  \textsc{Annotation:}\ #2\end{quotation}}
+
+\bibitem[{Baars(2005)}]{Baars2005GlobalWorkspace}
+Baars, B.~J. (2005).
+\newblock Global workspace theory of consciousness: Toward a cognitive
+  neuroscience of human experience.
+\newblock \emph{Progress in Brain Research} 150, 45--53.
+\newblock \doi{10.1016/S0079-6123(05)50004-9}
+\bibAnnoteFile{Baars2005GlobalWorkspace}
+
+\bibitem[{Chomsky(1957)}]{chomsky1957syntactic}
+Chomsky, N. (1957).
+\newblock \emph{Syntactic Structures} (Mouton de Gruyter)
+\bibAnnoteFile{chomsky1957syntactic}
+
+\bibitem[{Crapse and Sommer(2008)}]{CrapseSommer2008}
+Crapse, T.~B. and Sommer, M.~A. (2008).
+\newblock Corollary discharge across the animal kingdom.
+\newblock \emph{Nature Reviews Neuroscience} 9, 587--600
+\bibAnnoteFile{CrapseSommer2008}
+
+\bibitem[{Dehaene(2014)}]{Dehaene2014Consciousness}
+Dehaene, S. (2014).
+\newblock \emph{Consciousness and the Brain: Deciphering How the Brain Codes
+  Our Thoughts} (Viking)
+\bibAnnoteFile{Dehaene2014Consciousness}
+
+\bibitem[{Feldman(1986)}]{Feldman1986_EquilibriumPoint}
+Feldman, A.~G. (1986).
+\newblock Once more on the equilibrium-point hypothesis (lambda model) for
+  motor control.
+\newblock \emph{Journal of Motor Behavior} 18, 17--54
+\bibAnnoteFile{Feldman1986_EquilibriumPoint}
+
+\bibitem[{Friston(2010)}]{Friston2010FreeEnergyPrinciple}
+Friston, K. (2010).
+\newblock The free-energy principle: a unified brain theory?
+\newblock \emph{Nature Reviews Neuroscience} 11, 127--138
+\bibAnnoteFile{Friston2010FreeEnergyPrinciple}
+
+\bibitem[{G\"ardenfors(2019)}]{Gardenfors2019Robot}
+G\"ardenfors, P. (2019).
+\newblock Using event representations to generate robot semantics.
+\newblock \emph{ACM Transactions on Human-Robot Interaction} 8, 21.
+\newblock TODO verify co-authors
+\bibAnnoteFile{Gardenfors2019Robot}
+
+\bibitem[{G\"ardenfors(2020)}]{Gardenfors2020Events}
+G\"ardenfors, P. (2020).
+\newblock Events and causal mappings modeled in conceptual spaces.
+\newblock \emph{Frontiers in Psychology} 11, 630.
+\newblock TODO verify co-authors
+\bibAnnoteFile{Gardenfors2020Events}
+
+\bibitem[{Kuramoto(1984)}]{Kuramoto1984Oscillations}
+Kuramoto, Y. (1984).
+\newblock \emph{Chemical Oscillations, Waves, and Turbulence} (Berlin:
+  Springer)
+\bibAnnoteFile{Kuramoto1984Oscillations}
+
+\bibitem[{Latash(2008)}]{Latash2008EquilibriumPointHistory}
+Latash, M.~L. (2008).
+\newblock Evolution of motor control: From reflexes and motor programs to the
+  equilibrium-point hypothesis.
+\newblock \emph{Journal of Human Kinetics} 19, 3--24.
+\newblock \doi{10.2478/v10078-008-0001-2}
+\bibAnnoteFile{Latash2008EquilibriumPointHistory}
+
+\bibitem[{Levin(2014)}]{Levin2014MolecularBioelectricity}
+Levin, M. (2014).
+\newblock Molecular bioelectricity: how endogenous voltage potentials control
+  cell behavior and instruct pattern regulation in vivo.
+\newblock \emph{Molecular Biology of the Cell} 25, 3835--3850.
+\newblock \doi{10.1091/mbc.E13-12-0708}
+\bibAnnoteFile{Levin2014MolecularBioelectricity}
+
+\bibitem[{Levin and
+  Pezzulo(2016)}]{LevinPezzulo2017EndogenousBioelectricNetworks}
+Levin, M. and Pezzulo, G. (2016).
+\newblock Endogenous bioelectric signaling networks: Exploiting voltage
+  gradients for control of growth and form.
+\newblock \emph{Annual Review of Biomedical Engineering} 18, 243--268.
+\newblock \doi{10.1146/annurev-bioeng-071114-040647}
+\bibAnnoteFile{LevinPezzulo2017EndogenousBioelectricNetworks}
+
+\bibitem[{Nagarjuna and Karnam(2026)}]{NagarjunaKarnamNAPprep}
+Nagarjuna, G. and Karnam, D. (2026).
+\newblock An enactive account of grounding generative grammar: From haltable
+  through negotiable to transactional action patterns.
+\newblock In preparation
+\bibAnnoteFile{NagarjunaKarnamNAPprep}
+
+\bibitem[{O'Regan and No{\"e}(2001)}]{OReganNoe2001Sensorimotor}
+O'Regan, J.~K. and No{\"e}, A. (2001).
+\newblock A sensorimotor account of vision and visual consciousness.
+\newblock \emph{Behavioral and Brain Sciences} 24, 939--1031
+\bibAnnoteFile{OReganNoe2001Sensorimotor}
+
+\bibitem[{Parr et~al.(2022)Parr, Pezzulo, and Friston}]{ParrPezzuloFriston2022}
+Parr, T., Pezzulo, G., and Friston, K.~J. (2022).
+\newblock \emph{Active Inference: The Free Energy Principle in Mind, Brain, and
+  Behavior} (MIT Press)
+\bibAnnoteFile{ParrPezzuloFriston2022}
+
+\bibitem[{Pfeifer and Bongard(2006)}]{PfeiferBongard2006}
+Pfeifer, R. and Bongard, J. (2006).
+\newblock \emph{How the Body Shapes the Way We Think: A New View of
+  Intelligence} (MIT Press)
+\bibAnnoteFile{PfeiferBongard2006}
+
+\bibitem[{Proske and Gandevia(2012)}]{ProskeGandevia2012}
+Proske, U. and Gandevia, S.~C. (2012).
+\newblock The proprioceptive senses: Their roles in signalling body shape, body
+  position and movement, and muscle force.
+\newblock \emph{Physiological Reviews} 92, 1651--1697.
+\newblock Summary: Comprehensive review of proprioceptors and their central
+  integration; underwrites our claim that modulators supply body-referenced
+  frames for composition. Keywords: proprioception, muscle spindles, Golgi
+  organs, motor control.
+\bibAnnoteFile{ProskeGandevia2012}
+
+\bibitem[{Smith(1996)}]{Smith1996OriginObjects}
+Smith, B.~C. (1996).
+\newblock \emph{On the Origin of Objects} (Cambridge, MA: MIT Press)
+\bibAnnoteFile{Smith1996OriginObjects}
+
+\bibitem[{Tomasello et~al.(2005)Tomasello, Carpenter, Call, Behne, and
+  Moll}]{Tomasello2005Understanding}
+Tomasello, M., Carpenter, M., Call, J., Behne, T., and Moll, H. (2005).
+\newblock Understanding and sharing intentions: The origins of cultural
+  cognition.
+\newblock \emph{Behavioral and Brain Sciences} 28, 675--691.
+\newblock \doi{10.1017/S0140525X05000129}
+\bibAnnoteFile{Tomasello2005Understanding}
+
+\bibitem[{von Holst and Mittelstaedt(1950)}]{vonHolstMittelstaedt1950}
+von Holst, E. and Mittelstaedt, H. (1950).
+\newblock Das reafferenzprinzip.
+\newblock \emph{Naturwissenschaften} 37, 464--476.
+\newblock Summary: Classical statement of the reafference principle,
+  distinguishing self-generated from external sensory changes; anchors our
+  claim about modulators enabling composable identity. Keywords: reafference,
+  efference copy, motor control, perception.
+\bibAnnoteFile{vonHolstMittelstaedt1950}
+
+\end{thebibliography}

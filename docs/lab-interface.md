@@ -34,6 +34,18 @@ node shows the segments it couples — and the **world in the self-frame**, whos
 follows a source you slide along any limb. The self-graph is laid out force-directed
 from the body's own recovered adjacency, edge width = the measured coupling.
 
+## The self/world card (interactive)
+
+Switch the sidebar **View** to *🕸️ Self/world card* for an interactive version of
+the [self/world card](diagram-grammar.md#the-selfworld-card). Pick a body
+(branched, chain, star, …); the bench moves it and recovers its self-model on the
+spot (cached after the first run). Three live panels: the **designed agent**
+(metric), the **recovered self-model** as a graph you can pan and hover — each
+node shows the segments it couples — and the **world in the self-frame**, whose
+shading follows a world source you slide along any limb. The self-graph is laid
+out force-directed from the body's own recovered adjacency, and edge width is the
+measured coupling.
+
 ## Run it
 
 ```bash
