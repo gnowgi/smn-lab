@@ -83,10 +83,12 @@ def _pca2(X):
     return Y, (ev[:2].sum() / max(ev.sum(), 1e-12))
 
 
+# --8<-- [start:loop_area]
 def _loop_area(xy):
     """Signed area enclosed by a closed path (shoelace)."""
     x, y = xy[:, 0], xy[:, 1]
     return 0.5 * float(np.sum(x * np.roll(y, -1) - np.roll(x, -1) * y))
+# --8<-- [end:loop_area]
 
 
 def plot_state_space(ax, trace, c=None, labels=("state 1", "state 2"),

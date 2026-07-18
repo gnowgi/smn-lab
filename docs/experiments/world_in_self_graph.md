@@ -26,6 +26,34 @@ the point:
 Two phases: **self-motion** (source static, body bending) and **world-motion**
 (source sweeping along the body).
 
+## Formalism — locating a "where" on the self-graph
+
+The sharpened, above-baseline reading weights (the framework's
+[`localization_weights`](../self-model-and-measurement.md)) say how strongly each
+zone senses the source. The **self-referred** location is the weighted centroid of
+the zones' own **node indices** — a place in the body's topology, needing no external
+frame; the **allocentric** foil is the same weights over **world x**:
+
+\[
+\hat n_{\text{self}} = \sum_k w_k\,k,
+\qquad
+\hat x_{\text{allo}} = \sum_k w_k\,x_k,
+\qquad
+w = \texttt{localization\_weights}(s).
+\]
+
+```python
+--8<-- "smn_lab/worldmodel.py:localize"
+```
+
+```python
+--8<-- "experiments/world_in_self_graph.py:localize"
+```
+
+The self-referred node is body-anchored — it stays put when the body bends; the
+allocentric estimate drifts, because the zones carry their readings to new places as
+they move. The parameter varied is the **phase** (self-motion vs world-motion).
+
 ## Pre-registered prediction
 
 The self-referred location holds still while the body moves (source static) and
@@ -62,15 +90,14 @@ Next: [W2](world_geometry_self_frame.md) reads the *relation* between two featur
 in self-graph units; [W3](reafference_cut_self_graph.md) makes the self/world cut
 in the same frame.
 
-## What's measured, computed, and plotted
+## What's measured and plotted
 
 **Raw data:** per-zone field reading `s_k` (mean of the two bilateral sites) and
 world position; nominal zone positions learned in a short calibration.
-**Computed:** sharpened, above-baseline reading weights `w_k`; self-referred
-location = `Σ k·w_k` (node-index centroid); allocentric location = `Σ x_k·w_k`
-mapped to the nearest nominal node; ground truth = the node whose nominal position
-is nearest the source. **Plotted:** all three (true, self-referred, allocentric)
-over time, across the self-motion and world-motion windows.
+**Computed:** the self-referred and allocentric locations, and the ground-truth node
+— defined as running code in [Formalism](#formalism-locating-a-where-on-the-self-graph)
+above. **Plotted:** all three (true, self-referred, allocentric) over time, across
+the self-motion and world-motion windows.
 
 ## Run
 

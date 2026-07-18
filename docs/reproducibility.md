@@ -56,7 +56,7 @@ the record rather than silently contradicting the review document.
 
 The review's **methodological** observations — single-seed demonstrations,
 saturating metrics, the mixed-ablation [topology sweep](experiments/p2_topology_sweep.md),
-and foil balance — remain valid. They are addressed by reframing the P/E series as
-[exploratory trials](index.md#the-two-experiment-series) and by the disciplined
-C-series ([C0](experiments/c0_crawler.md), [C1](experiments/c1_touch.md)) going
-forward.
+and foil balance — remain valid. They are addressed by reframing the P-series as
+[provenance / exploratory studies](index.md#the-experiments-a-two-phase-research-programme)
+and by the disciplined [Phase I programme](phase1.md) on a single well-characterized
+body ([C0](experiments/c0_crawler.md), [C1](experiments/c1_touch.md)) — going forward.

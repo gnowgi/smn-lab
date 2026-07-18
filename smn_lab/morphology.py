@@ -372,6 +372,38 @@ def graph_layout(nodes, edges, *, seed=0, iters=300, k=1.0):
     return {v: (float(pos[idx[v]][0]), float(pos[idx[v]][1])) for v in nodes}
 
 
+def graph_layout_weighted(nodes, W, *, seed=0, iters=400, k=1.0):
+    """Force-directed layout of a WEIGHTED graph: attraction between two nodes is
+    proportional to their coupling weight W[i,j], repulsion is uniform. A
+    potentially-complete broadcast graph, laid out by the weights of differentiated
+    action, collapses to the self-model whose shape the morphology predicts."""
+    nodes = list(nodes)
+    n = len(nodes)
+    rng = np.random.default_rng(seed)
+    pos = rng.standard_normal((n, 2)) * 0.1
+    Wn = np.asarray(W, float).copy()
+    np.fill_diagonal(Wn, 0.0)
+    Wn = Wn / (Wn.max() + 1e-9)
+    for it in range(iters):
+        disp = np.zeros((n, 2))
+        for i in range(n):                              # repulsion, all pairs
+            d = pos[i] - pos
+            dist = np.hypot(d[:, 0], d[:, 1]); dist[i] = 1.0
+            disp[i] += (((k * k) / dist**2)[:, None] * (d / dist[:, None])).sum(0)
+        for i in range(n):                              # attraction, weighted
+            for j in range(n):
+                if i == j or Wn[i, j] <= 0:
+                    continue
+                d = pos[i] - pos[j]
+                dist = float(np.hypot(*d)) or 1e-4
+                disp[i] -= Wn[i, j] * (dist * dist / k) * (d / dist)
+        t = 0.1 * (1 - it / iters) + 1e-3
+        for i in range(n):
+            dl = float(np.hypot(*disp[i])) or 1e-9
+            pos[i] += (disp[i] / dl) * min(dl, t)
+    return {v: (float(pos[i, 0]), float(pos[i, 1])) for i, v in enumerate(nodes)}
+
+
 def _norm_positions(positions, edges):
     """Rescale node positions so the median edge length is 1.0 (glyphs then size
     consistently regardless of the body's physical scale)."""

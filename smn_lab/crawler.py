@@ -163,6 +163,7 @@ def apply_anisotropic_drag(model, data, body_ids,
     push net forward thrust; ``c_rot`` damps spin. Call once per step *before*
     ``mj_step``.
     """
+    # --8<-- [start:drag]
     res = np.zeros(6)
     for bid in body_ids:
         mujoco.mj_objectVelocity(model, data, mujoco.mjtObj.mjOBJ_BODY, bid, res, 1)
@@ -172,3 +173,4 @@ def apply_anisotropic_drag(model, data, body_ids,
         R = data.xmat[bid].reshape(3, 3)
         data.xfrc_applied[bid, 0:3] = R @ f_local
         data.xfrc_applied[bid, 3:6] = R @ t_local
+    # --8<-- [end:drag]

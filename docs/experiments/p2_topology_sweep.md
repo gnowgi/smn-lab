@@ -4,8 +4,8 @@
     Part of the bench's first exploratory series, built while learning the bench:
     a **proof-of-concept**, not a clean ablation (several runs are single-seed and
     some metrics saturate). The disciplined model organism and the going-forward
-    line is the **C-series** — [C0](c0_crawler.md), [C1](c1_touch.md) — grounded in
-    [Lesson 1](../lesson1.md).
+    line is the **progression** — [C0](c0_crawler.md), [C1](c1_touch.md) — grounded in
+    [The Construction of Experience](../construction-of-experience.md).
 
 
 ## Question
@@ -66,5 +66,5 @@ it (no BAP, no HAP, heavy proprioceptive noise) are equally visible.*
     These conditions vary routing, morphology, ±BAP/±HAP, and noise *together*, so
     this is an ablation **panel**, not a clean test of coupling topology with body,
     world, and task held fixed. Treat the topology contrast as suggestive.
-    Isolating coupling topology as a single independent variable is a C-series
+    Isolating coupling topology as a single independent variable is a progression
     target.

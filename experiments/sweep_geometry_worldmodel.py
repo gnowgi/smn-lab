@@ -41,6 +41,8 @@ from smn_lab.crawler import build_crawler_xml, apply_anisotropic_drag
 from smn_lab.control import OpponentBoard, MessagingBeam
 from smn_lab.fields import ScalarField
 from smn_lab.sweep import run_sweep, export_curated
+# held-out decoding skill + shuffle control (the experimenter's world-model score).
+from smn_lab.metrics import decoding_skill as _knn_skill
 
 DT = 0.002
 T_END = 90.0              # [adj] longer run -> comparable coverage + more samples
@@ -102,26 +104,6 @@ def run_one(params, seed):
     log["t"] = np.array(log["t"]); log["x"] = np.array(log["x"])
     log["y"] = np.array(log["y"]); log["S"] = np.array(log["S"])
     return log
-
-
-def _knn_skill(S, P, rng, k=8, shuffle=False):
-    """Held-out kNN decoding skill of position P from internal state S.
-    Split 60/40 by time; predict each test point from its k nearest train states.
-    skill = 1 - MAE_decoder / MAE_naive (naive = predict the train-mean position)."""
-    n = len(S)
-    cut = int(0.6 * n)
-    Str, Ptr, Ste, Pte = S[:cut], P[:cut], S[cut:], P[cut:]
-    if shuffle:                               # destroy the state<->position relation
-        Ptr = Ptr[rng.permutation(len(Ptr))]
-    # standardize state dims so kNN distance is not dominated by one channel
-    mu, sd = Str.mean(0), Str.std(0) + 1e-9
-    A, B = (Str - mu) / sd, (Ste - mu) / sd
-    d2 = ((B[:, None, :] - A[None, :, :]) ** 2).sum(-1)      # (n_te, n_tr)
-    idx = np.argsort(d2, axis=1)[:, :k]
-    pred = Ptr[idx].mean(axis=1)
-    mae = float(np.mean(np.hypot(*(pred - Pte).T)))
-    naive = float(np.mean(np.hypot(*(Pte - Ptr.mean(0)).T)))
-    return 1.0 - mae / max(naive, 1e-9)
 
 
 def summarize(log, params, seed):

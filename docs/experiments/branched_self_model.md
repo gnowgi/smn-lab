@@ -9,34 +9,54 @@ recover a **tree**, with its branch points as higher-degree nodes — and if it
 does, the body is literally computing its own structure from its own movement. It
 also lets us make a sharper point about **asymmetry**.
 
-## The local rule
+## Formalism — the same read-out, on a tree
 
-Each joint (a CAZ) is the hinge between exactly two segments, and its own angular
-velocity *is* their yaw-rate difference:
+This experiment runs the **same** self-model read-out as the
+[chain](self_model_topology.md), unchanged — the point is that it is
+topology-general. Each joint (a CAZ) is the hinge between two segments, and its own
+angular velocity *is* their yaw-rate difference, \(\dot\theta_j = \omega_{\text{child}} - \omega_{\text{parent}}\).
+So the **signed** read-out \(C_{j,s} = \mathrm{Xcorr}(\dot\theta_j, \omega_s)\)
+gives each joint a positive correlate (its child) and a negative correlate (its
+parent). It is the framework's `coupling` — no per-experiment copy:
 
+```python
+--8<-- "smn_lab/self_model.py:coupling"
 ```
-JV_j = omega_child - omega_parent
+
+Each joint then decides **its own** edge locally — (co-rotating, counter-rotating)
+= (argmax, argmin) of its row — and the body graph is the union of those local
+edges. The hub, being the parent of three arm-joints, is the negative correlate of
+three of them, so it surfaces as a **degree-3 node** (the branch point) with no zone
+ever reading the whole body (**C3**):
+
+```python
+--8<-- "smn_lab/self_model.py:local_edge"
 ```
 
-So a joint finds the two segments it couples as the one it **co-rotates** with
-(its strongest positive correlate) and the one it **counter-rotates** with (its
-strongest negative correlate) — one edge of the body tree, read from local
-signals. The union of every joint's edge is the recovered morphology. The hub,
-being the parent of three arm-joints, is the negative correlate of three of them —
-so it surfaces as a **degree-3 node**, the branch point, with no zone ever seeing
-the whole body.
+### The parameter this experiment varies
 
-## Two bodies
+Here the varied parameter is not stiffness but **body morphology** — the arm
+structure itself (angle and segment-count per arm):
+
+```python
+--8<-- "experiments/branched_self_model.py:configs"
+```
 
 - **asymmetric** — a hub with three arms of *different* lengths (3, 2, 4 segments).
 - **symmetric** — a stem with two *equal*, mirror-image arms.
 
-## Pre-registered prediction
+### The measurement — can the body tell its arms apart?
 
-Both recover the tree topology and the degree-3 branch point (the topology is
-always readable from movement). But the two bodies differ in whether the body can
-tell its own arms apart, measured by the **arm-swap residual**
-`||C − swap(C)|| / ||C||` (near 0 ⇒ the two arms are interchangeable in the data):
+Both bodies recover the tree and the degree-3 branch point (topology is always
+readable). They differ in whether the self-model can *individuate* mirror-parts —
+an **experimenter's** probe (it uses the known arm assignment, so it lives in
+`smn_lab.metrics`, not the agent): the arm-swap residual
+\(\lVert C - \mathrm{swap}(C)\rVert / \lVert C\rVert\), near 0 ⇔ the two arms are
+interchangeable in the data.
+
+```python
+--8<-- "smn_lab/metrics.py:arm_swap_residual"
+```
 
 - symmetric → small residual: the two equal arms are indistinguishable; the body
   cannot tell left from right.
@@ -82,15 +102,16 @@ ringed), and a world source localized on one limb of the *recovered* graph:
 
 ![Self/world card for the branched body: designed agent, recovered self-model graph, world on one limb](../figures/self_world_card_branched.png)
 
-## What's measured, computed, and plotted
+## What's measured and plotted
 
-**Raw data:** each joint's own angular velocity `JV` (from its velocity sensor)
-and each segment's world yaw-rate `omega` (from `mj_objectVelocity`), while the
-body moves under independent per-joint OU drive. **Computed:** the signed coupling
-`C[j, s] = corr(JV_j, omega_s)`; each joint's edge = (argmax, argmin) over
-segments; node degrees from the recovered edges; the arm-swap residual per arm
-pair. **Plotted:** the recovered tree over the true morphology for both bodies
-(branch point highlighted), and the min arm-swap residual per body.
+**Raw data:** each joint's own angular velocity `JV` (velocity sensor) and each
+segment's world yaw-rate `omega` (`mj_objectVelocity`), while the body moves under
+independent per-joint OU drive. **Computed:** the signed coupling, each joint's
+local edge, node degrees, and the arm-swap residual — all defined as running code in
+[Formalism](#formalism-the-same-read-out-on-a-tree) above (the read-out and edges
+from `smn_lab.self_model`, the residual from `smn_lab.metrics`). **Plotted:** the
+recovered tree over the true morphology for both bodies (branch point highlighted),
+and the min arm-swap residual per body.
 
 ## Run
 

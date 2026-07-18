@@ -1,0 +1,220 @@
+\begin{thebibliography}{31}
+\providecommand{\natexlab}[1]{#1}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\selectlanguage}[1]{\relax}
+\providecommand{\bibAnnoteFile}[1]{%
+  \IfFileExists{#1}{\begin{quotation}\noindent\textsc{Key:} #1\\
+  \textsc{Annotation:}\ \input{#1}\end{quotation}}{}}
+\providecommand{\bibAnnote}[2]{%
+  \begin{quotation}\noindent\textsc{Key:} #1\\
+  \textsc{Annotation:}\ #2\end{quotation}}
+
+\bibitem[{Auvray et~al.(2009)Auvray, Lenay, and
+  Stewart}]{Auvray2009PerceptualCrossing}
+Auvray, M., Lenay, C., and Stewart, J. (2009).
+\newblock Perceptual interactions in a minimalist virtual environment.
+\newblock \emph{New Ideas in Psychology} 27, 32--47
+\bibAnnoteFile{Auvray2009PerceptualCrossing}
+
+\bibitem[{Baars(2005)}]{Baars2005GlobalWorkspace}
+Baars, B.~J. (2005).
+\newblock Global workspace theory of consciousness: Toward a cognitive
+  neuroscience of human experience.
+\newblock \emph{Progress in Brain Research} 150, 45--53.
+\newblock \doi{10.1016/S0079-6123(05)50004-9}
+\bibAnnoteFile{Baars2005GlobalWorkspace}
+
+\bibitem[{Beer(2003)}]{Beer2003}
+Beer, R.~D. (2003).
+\newblock The dynamics of active categorical perception in an evolved model
+  agent.
+\newblock \emph{Adaptive Behavior} 11, 209--243
+\bibAnnoteFile{Beer2003}
+
+\bibitem[{Brooks(1991)}]{Brooks1991}
+Brooks, R.~A. (1991).
+\newblock Intelligence without representation.
+\newblock \emph{Artificial Intelligence} 47, 139--159
+\bibAnnoteFile{Brooks1991}
+
+\bibitem[{Chomsky(1957)}]{chomsky1957syntactic}
+Chomsky, N. (1957).
+\newblock \emph{Syntactic Structures} (Mouton de Gruyter)
+\bibAnnoteFile{chomsky1957syntactic}
+
+\bibitem[{Crapse and Sommer(2008)}]{CrapseSommer2008}
+Crapse, T.~B. and Sommer, M.~A. (2008).
+\newblock Corollary discharge across the animal kingdom.
+\newblock \emph{Nature Reviews Neuroscience} 9, 587--600
+\bibAnnoteFile{CrapseSommer2008}
+
+\bibitem[{Dehaene(2014)}]{Dehaene2014Consciousness}
+Dehaene, S. (2014).
+\newblock \emph{Consciousness and the Brain: Deciphering How the Brain Codes
+  Our Thoughts} (Viking)
+\bibAnnoteFile{Dehaene2014Consciousness}
+
+\bibitem[{Di~Paolo et~al.(2017)Di~Paolo, Buhrmann, and
+  Barandiaran}]{DiPaolo2017SensorimotorLife}
+Di~Paolo, E.~A., Buhrmann, T., and Barandiaran, X.~E. (2017).
+\newblock \emph{Sensorimotor Life: An Enactive Proposal} (Oxford University
+  Press)
+\bibAnnoteFile{DiPaolo2017SensorimotorLife}
+
+\bibitem[{Estelle et~al.(2025)Estelle, Dayantri, Meng, Morrissey, and
+  Froese}]{EstelleFroese2025EnactiveTorch}
+[Dataset] Estelle, M., Dayantri, A., Meng, J., Morrissey, P., and Froese, T.
+  (2025).
+\newblock The enactive torch: An open-source sensory substitution device.
+\newblock \url{https://ssrn.com/abstract=5749009}.
+\newblock SSRN 5749009
+\bibAnnoteFile{EstelleFroese2025EnactiveTorch}
+
+\bibitem[{Feldman(1986)}]{Feldman1986_EquilibriumPoint}
+Feldman, A.~G. (1986).
+\newblock Once more on the equilibrium-point hypothesis (lambda model) for
+  motor control.
+\newblock \emph{Journal of Motor Behavior} 18, 17--54
+\bibAnnoteFile{Feldman1986_EquilibriumPoint}
+
+\bibitem[{Feldman(2015)}]{Feldman2015ReferentControl}
+Feldman, A.~G. (2015).
+\newblock \emph{Referent Control of Action and Perception: Challenging
+  Conventional Theories in Behavioral Neuroscience} (New York: Springer).
+\newblock \doi{10.1007/978-1-4939-2736-4}
+\bibAnnoteFile{Feldman2015ReferentControl}
+
+\bibitem[{Friston(2010)}]{Friston2010FreeEnergyPrinciple}
+Friston, K. (2010).
+\newblock The free-energy principle: a unified brain theory?
+\newblock \emph{Nature Reviews Neuroscience} 11, 127--138
+\bibAnnoteFile{Friston2010FreeEnergyPrinciple}
+
+\bibitem[{Froese and Di~Paolo(2010)}]{FroeseDiPaolo2010PerceptualCrossing}
+Froese, T. and Di~Paolo, E.~A. (2010).
+\newblock Modelling social interaction as perceptual crossing: an investigation
+  into the dynamics of the interaction process.
+\newblock \emph{Connection Science} 22, 43--68
+\bibAnnoteFile{FroeseDiPaolo2010PerceptualCrossing}
+
+\bibitem[{Gallagher(2005)}]{gallagher2005how}
+Gallagher, S. (2005).
+\newblock \emph{How the Body Shapes the Mind} (Oxford: Oxford University Press)
+\bibAnnoteFile{gallagher2005how}
+
+\bibitem[{Gallagher(2017)}]{Gallagher2017Enactivist}
+Gallagher, S. (2017).
+\newblock \emph{Enactivist Interventions: Rethinking the Mind} (Oxford
+  University Press).
+\newblock Summary: Argues for enactive, embodied accounts of cognition,
+  emphasizing how body and environment co-constitute experience; supports the
+  shift from CNS-centric to body-as-network perspectives. Keywords: enactivism,
+  embodiment, phenomenology, cognition.
+\bibAnnoteFile{Gallagher2017Enactivist}
+
+\bibitem[{Gallagher(2021)}]{gallagher2021action}
+Gallagher, S. (2021).
+\newblock \emph{Action and Interaction} (Oxford University Press)
+\bibAnnoteFile{gallagher2021action}
+
+\bibitem[{G{\"a}rdenfors(2004)}]{Gardenfors2004ConceptualSpaces}
+G{\"a}rdenfors, P. (2004).
+\newblock \emph{Conceptual Spaces: The Geometry of Thought} (MIT Press)
+\bibAnnoteFile{Gardenfors2004ConceptualSpaces}
+
+\bibitem[{G{\"a}rdenfors(2014)}]{Gardenfors2014Geometry}
+G{\"a}rdenfors, P. (2014).
+\newblock \emph{The Geometry of Meaning} (MIT Press)
+\bibAnnoteFile{Gardenfors2014Geometry}
+
+\bibitem[{Haken et~al.(1985)Haken, Kelso, and Bunz}]{HakenKelsoBunz1985}
+Haken, H., Kelso, J. A.~S., and Bunz, H. (1985).
+\newblock A theoretical model of phase transitions in human hand movements.
+\newblock \emph{Biological Cybernetics} 51, 347--356.
+\newblock \doi{10.1007/BF00336922}
+\bibAnnoteFile{HakenKelsoBunz1985}
+
+\bibitem[{Hutto and Myin(2017)}]{hutto2017}
+Hutto, D.~D. and Myin, E. (2017).
+\newblock \emph{Evolving enactivism: Basic minds meet content} (MIT press)
+\bibAnnoteFile{hutto2017}
+
+\bibitem[{Kuramoto(1984)}]{Kuramoto1984Oscillations}
+Kuramoto, Y. (1984).
+\newblock \emph{Chemical Oscillations, Waves, and Turbulence} (Berlin:
+  Springer)
+\bibAnnoteFile{Kuramoto1984Oscillations}
+
+\bibitem[{Latash(2008)}]{Latash2008EquilibriumPointHistory}
+Latash, M.~L. (2008).
+\newblock Evolution of motor control: From reflexes and motor programs to the
+  equilibrium-point hypothesis.
+\newblock \emph{Journal of Human Kinetics} 19, 3--24.
+\newblock \doi{10.2478/v10078-008-0001-2}
+\bibAnnoteFile{Latash2008EquilibriumPointHistory}
+
+\bibitem[{Nagarjuna and Karnam(2026)}]{NagarjunaKarnam2026SMN}
+Nagarjuna, G. and Karnam, D. (2026).
+\newblock The sensation modulating network.
+\newblock \emph{arXiv preprint arXiv:2605.26856}
+\bibAnnoteFile{NagarjunaKarnam2026SMN}
+
+\bibitem[{O'Regan and No{\"e}(2001)}]{OReganNoe2001Sensorimotor}
+O'Regan, J.~K. and No{\"e}, A. (2001).
+\newblock A sensorimotor account of vision and visual consciousness.
+\newblock \emph{Behavioral and Brain Sciences} 24, 939--1031
+\bibAnnoteFile{OReganNoe2001Sensorimotor}
+
+\bibitem[{Parr et~al.(2022)Parr, Pezzulo, and Friston}]{ParrPezzuloFriston2022}
+Parr, T., Pezzulo, G., and Friston, K.~J. (2022).
+\newblock \emph{Active Inference: The Free Energy Principle in Mind, Brain, and
+  Behavior} (MIT Press)
+\bibAnnoteFile{ParrPezzuloFriston2022}
+
+\bibitem[{Pfeifer and Bongard(2006)}]{PfeiferBongard2006}
+Pfeifer, R. and Bongard, J. (2006).
+\newblock \emph{How the Body Shapes the Way We Think: A New View of
+  Intelligence} (MIT Press)
+\bibAnnoteFile{PfeiferBongard2006}
+
+\bibitem[{Purcell(1977)}]{Purcell1977LowRe}
+Purcell, E.~M. (1977).
+\newblock Life at low reynolds number.
+\newblock \emph{American Journal of Physics} 45, 3--11.
+\newblock \doi{10.1119/1.10903}
+\bibAnnoteFile{Purcell1977LowRe}
+
+\bibitem[{Smith(1996)}]{Smith1996OriginObjects}
+Smith, B.~C. (1996).
+\newblock \emph{On the Origin of Objects} (Cambridge, MA: MIT Press)
+\bibAnnoteFile{Smith1996OriginObjects}
+
+\bibitem[{Thompson(2007)}]{Thompson2007MindInLife}
+Thompson, E. (2007).
+\newblock \emph{Mind in Life: Biology, Phenomenology, and the Sciences of Mind}
+  (Cambridge, MA: Harvard University Press)
+\bibAnnoteFile{Thompson2007MindInLife}
+
+\bibitem[{Tomasello et~al.(2005)Tomasello, Carpenter, Call, Behne, and
+  Moll}]{Tomasello2005Understanding}
+Tomasello, M., Carpenter, M., Call, J., Behne, T., and Moll, H. (2005).
+\newblock Understanding and sharing intentions: The origins of cultural
+  cognition.
+\newblock \emph{Behavioral and Brain Sciences} 28, 675--691.
+\newblock \doi{10.1017/S0140525X05000129}
+\bibAnnoteFile{Tomasello2005Understanding}
+
+\bibitem[{von Holst and Mittelstaedt(1950)}]{vonHolstMittelstaedt1950}
+von Holst, E. and Mittelstaedt, H. (1950).
+\newblock Das reafferenzprinzip.
+\newblock \emph{Naturwissenschaften} 37, 464--476.
+\newblock Summary: Classical statement of the reafference principle,
+  distinguishing self-generated from external sensory changes; anchors our
+  claim about modulators enabling composable identity. Keywords: reafference,
+  efference copy, motor control, perception.
+\bibAnnoteFile{vonHolstMittelstaedt1950}
+
+\end{thebibliography}

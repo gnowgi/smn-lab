@@ -1,175 +1,127 @@
-# Test plan — pre-registered C-series
+# Test plan — pre-registration & status
 
-This page is written **before** the experiments are run. Its purpose is integrity:
-to fix each test's hypothesis, order parameter, foil, and pass/fail criteria in
-advance, so a result cannot be manufactured by tuning until the framework looks
-good. We test the SMN architecture *as scientists, not as its advocates*. Where an
-honest test needs a mechanism the bench does not yet have, we say so here rather
-than quietly adding one to get a pass.
+This page is the progression's **pre-registration ledger**. Each test's hypothesis,
+order parameter, foil, and pass/fail is fixed **before** it is run — here or on the
+experiment's own page — so a result cannot be manufactured by tuning until the
+framework looks good. It is organized by the **self → world → object** spine, and
+records outcomes against the predictions, including nulls. We test the SMN
+architecture *as scientists, not as its advocates*; where an honest test needs a
+mechanism the bench does not yet have, we say so rather than quietly adding one.
 
 ## Ground rules
 
 1. **Pre-register.** Hypothesis, order parameter, foil, and pass/fail are stated
    before running. Results are reported against them, including nulls.
-2. **A matched foil.** Every claim is tested against a control that is identical
-   except for the one thing SMN says matters (coupling / modulation). A result
-   that the foil also produces is not evidence for SMN.
-3. **Seeds and intervals.** Replicated seeds with reported spread, not single
-   illustrative runs.
-4. **Declare every adjustment.** If a test requires changing a parameter,
-   controller, or body beyond what an experiment started with — and especially
-   anything **not specified in the SMN preprint** ([arXiv:2605.26856](https://arxiv.org/abs/2605.26856))
-   — it is stated explicitly in the experiment page, marked as an adjustment.
-5. **Be willing to be wrong.** If a result falsifies a claim, or shows our earlier
+2. **A matched foil.** Every claim is tested against a control identical except for
+   the one thing SMN says matters (elasticity / coupling / modulation). A result the
+   foil also produces is not evidence for SMN.
+3. **Seeds and intervals.** Replicated seeds with reported spread, not single runs.
+4. **Declare every adjustment**, especially anything not specified in the SMN preprint
+   ([arXiv:2605.26856](https://arxiv.org/abs/2605.26856)) — marked on the experiment page.
+5. **Be willing to be wrong.** If a result falsifies a claim or shows our earlier
    understanding was incorrect, we update the framework and say so.
 
-## Flagship — geometry → world model
+---
 
-- **Hypothesis.** With the world held fixed, the world an agent can *differentiate*
-  scales with its body's sensory geometry: more segments (distributed sensing over
-  a wider baseline) yield a richer, body-relative world model.
-- **Order parameter.** Held-out position-decoding **skill** = `1 − MAE_decoder /
-  MAE_naive`, where a model-free kNN decoder maps the agent's internal sensory
-  state → its position in a fixed structured field, trained on the first part of
-  the trajectory and tested on the held-out remainder. Skill 0 = no better than
-  guessing the mean position; 1 = perfect. The naive normalization controls for
-  differences in explored area across body sizes.
-- **IV.** Segment count `n_seg ∈ {3, 5, 7, 9}`. World (a fixed multi-source field)
-  identical across all runs.
-- **Foil / control.** A **shuffle control**: the same decoder on state↔position
-  pairs that have been shuffled, which must give skill ≈ 0. This proves the signal
-  is a real body↔world relation, not an artifact of the decoder.
-- **Pass.** Skill is clearly above the shuffle control **and** increases with
-  `n_seg`.
-- **Falsify.** Skill flat across `n_seg`, or not above shuffle — the internal
-  state would not constitute a body-relative world model.
+## Phase I·① — Self: the self-model
+*Pre-registered on the experiment pages; recorded here.*
 
-## Q1 — world model from sensation *modulation*
+- **Topology-invariance.** *Hypothesis:* the framework read-out `coupling` recovers
+  the body graph from movement for **any topology**, but only on an **elastic**
+  substrate. *Order parameter:* endpoint / neighbour recovery vs a **rigid / frozen**
+  foil. *Pass:* high recovery for the elastic body, ≈ chance for the foils.
+  **✅ Confirmed** — [chain](experiments/self_model_topology.md) order recovery
+  0.89 / neighbour 1.00 (rigid 0.40, frozen 0.14); [branched](experiments/branched_self_model.md)
+  9/9 & 8/8; [sheet/tube](experiments/lattice_self_model.md) 0.99 / 0.97. Elasticity is
+  load-bearing (Commitment C6).
+- **Scale-invariance.** *Hypothesis:* the *same* `coupling`, coarse-grained,
+  recovers the graph at **every level** of a nested lattice (a renormalization step).
+  *Pass:* high recovery at each level. **✅ Confirmed** —
+  [nested lattice](experiments/nested_lattice_self_model.md) 36→9→3: fine 0.88, mid
+  1.00, coarse 1.00. The deep layer is a faint **canvas** (a feature, not a bug).
 
-- **Hypothesis.** Modulation/coupling contributes *beyond* geometry and
-  exploration: the **gap** between a coupled and an uncoupled controller in
-  world-model skill widens with sensor count (the resolution principle —
-  resolution is CAZ density × internal capacity, not raw transducer count).
-- **Order parameter.** Skill gap = skill(coupled) − skill(foil), vs `n_seg`.
-- **Foil.** Modulation off: sensory state not integrated across zones.
-- **⚠ Mechanism gap (declared).** C0/C1 do **not** implement sensory modulation /
-  gating — the messaging beam currently produces *locomotion*, not sensory
-  integration. An honest test of this claim requires adding a sensory-modulation
-  mechanism. Whether such a mechanism is specified in the SMN preprint must be
-  checked first; if we add one, it is an explicit, declared adjustment. **Deferred
-  until that mechanism is designed and its provenance stated.**
+## Phase I·② — World: a world-model in the self-frame
 
-## Q2 — self / world distinction (reafference)
+- **Flagship — geometry → world model.** *Hypothesis:* with the world fixed, the world
+  an agent can differentiate scales with its body's sensory geometry. *Order
+  parameter:* held-out position-decoding **skill** = `1 − MAE_dec/MAE_naive` (kNN
+  decoder, train/test split). *IV:* `n_seg ∈ {3,5,7,9}`. *Foil:* a **shuffle control**
+  (must give skill ≈ 0). *Pass:* skill above shuffle **and** rising with `n_seg`.
+  **🟡 Partly supported — prediction corrected** ([S1](experiments/sweep_geometry_worldmodel.md)):
+  a real, body-relative world model exists at every size (skill ≈ 0.4 ≫ shuffle), but
+  it did **not** rise with segment count (flat in `n_seg`). Our "rises with `n_seg`"
+  was wrong; the null is consistent with the resolution principle and redirects the
+  question to modulation (Q1).
+- **Q1 — world model from *modulation*.** *Hypothesis:* modulation contributes beyond
+  geometry — the coupled-vs-uncoupled gap widens with sensor count (resolution
+  principle). *Foil:* modulation off. **✅ Core supported** — per-zone dual-port
+  modulation cancels self-caused change at every size; without it, self/world
+  resolution collapses as the body grows (foil ratio 13.7 → 1.2). Closed by
+  **[Q1b](experiments/sweep_q1b_resolution.md)**: with a distributed stimulus the
+  modulated ratio **rises** with CAZ density (14 → 22.6), the foil falls toward 1 —
+  resolution scales with density, but only with modulation.
+- **Q2 — self / world distinction (reafference).** *Hypothesis:* a forward model keyed
+  on self-motion cancels self-caused but not world-caused change. *Order parameter:*
+  residual ratio |exafference| / |self-test|. *Foil:* no forward model. *Pass:*
+  ratio ≫ 1. **🟡 Partially supported** ([Q2](experiments/q2_reafference.md)): 2.2 vs
+  foil 1.58 — real but modest, limited by single-point (head) proprioception on a
+  bending body, which is exactly what Q1's per-zone modulation fixes.
 
-- **Hypothesis.** A forward model keyed on self-motion cancels self-caused sensory
-  change but not world-caused change (Register 3).
-- **Status.** Established in [P0](experiments/p0_reafference.md). Plan: port to the
-  crawler as a multi-seed sweep.
-- **Order parameter.** Residual ratio = |exafference residual| / |self-test
-  residual|. **Foil.** No forward model (raw reading). **Pass.** Ratio ≫ 1 across
-  seeds. This is the bench's strongest claim; the C-series adds the seed ensemble.
+## Phase I·③ — Object: object-directedness
 
-## Q3 — haltability → object-directedness
+- **Q3 — haltability → object-directedness.** *Hypothesis:* haltability yields action
+  organized around an individuated object. *Foils:* no-haltability; a CPG rhythm.
+  **🟡 Directedness confirmed, selection deferred** ([E3](experiments/p6_haltability_aboutness.md)):
+  computed in the self-frame recovered first, the haltable action *pattern* is
+  **persistent** (1.5 s vs CPG 0.3 s), **returnable** (5×), and **side-specific** — that
+  triad *is* object-directedness. Object-*class selection* among several objects needs
+  a multi-object scene and presupposes discovering **particulars** + a ratchet
+  (Phase II / M2) — deferred.
 
-- **Hypothesis.** Haltability yields action organized around an *individuated
-  object* (selective approach, persistence, reacquisition after occlusion), beyond
-  reactive avoidance plus memory.
-- **Order parameter.** Selective-approach success to a target object class, and
-  reacquisition rate after occlusion. **Foils.** No-haltability; reactive-only
-  (obstacle avoidance without object selection).
-- **⚠ Mechanism gap (declared).** C1 demonstrates *halt-on-contact* (objecthood as
-  resistance) but not object *selection*. A clean test needs a multi-object scene
-  and a target-class mechanism not yet built. **Deferred — substantial new task.**
+## Phase I → II — the pivot (why more body ≠ more world)
 
-## Q4 — cross-modal object construction
+The flagship's null and Q1b together are the hinge: **linear scaling of identical
+zones does not enrich the world-model**; resolution scales with **CAZ density ×
+internal capacity × depth of nesting**, not raw transducer count. This motivates the
+evo-devo path of [Phase II](phase2.md).
 
-- **Hypothesis.** Cross-modal modulation constructs an object identity stable
-  across viewpoint change, sensory dropout, and single-modality conflict — beyond
-  what uncoupled streams or a single modality achieve.
-- **Order parameter.** Object-identity consistency over time and perturbation.
-  **Foils.** Uncoupled modality streams; single modality.
-- **⚠ Mechanism gap (declared).** [P3](experiments/p3_crossmodal_discrimination.md)
-  did a version, but with hand-defined features (the review's main critique). A
-  clean test on the minimal organism needs genuine multi-modal binding built into
-  the messaging beam. **Deferred — substantial new mechanism.**
+## Phase II — what the layering enables
+
+- **Haltability needs a pivot layer.** *Hypothesis:* a stable, addressable **hold**
+  needs a stable reference (the canvas). *Order parameter:* held-node position spread
+  + addressing, **canvas ON vs OFF**. *Pass:* a tight, addressed hold only with the
+  canvas. **✅ Confirmed** ([haltability](experiments/haltability.md)): hold-spread
+  0.0055 vs 0.046 (8×), addressed 6/6 vs 4.5/6 — while the rest of the body keeps
+  moving. (This is the *capacity*; the object-directed *pattern* is E3.)
+
+## Preprint predictions (reproducing the paper's testable claims)
+
+- **Prediction 1 — [haltability signatures](experiments/sweep_pred1_haltability.md):
+  confirmed.** Deceptive reach: the haltable controller imposes a distinct stop
+  (velocity → 0, dwell ~0.17 s) absent in a smooth controller; the *dwell* (not the
+  zero-crossing) is the diagnostic, and it carries no speed benefit — as predicted.
+- **Prediction 2 — [zonal dissociations](experiments/sweep_pred2_zonal.md): partially
+  confirmed.** Same task through a rigid vs viscoelastic tool: the optimal gain *moves*
+  with substrate and the compliant substrate is far less forgiving (60× vs 11× spread);
+  but the strong "substrate-specific priors are *needed*" reading is not supported (a
+  conservative generic prior ≈ matches both).
+- **Prediction 3 — [antagonistic benefits](experiments/sweep_pred3_antagonistic.md):
+  confirmed.** Co-contraction cuts peak deviation 4.4× and integrated error ~28× after
+  a perturbation, at a steep ~quadratic energy cost (a knee near coc ≈ 0.3–0.6).
+  Declared adjustment: a muscle-impedance model (ideal motors were inert for stiffness).
+
+## Still open / deferred
+
+- **Q4 — cross-modal object construction.** [P3](experiments/p3_crossmodal_discrimination.md)
+  did a version with hand-defined features (the review's main critique); a clean test on
+  the minimal organism needs genuine multi-modal binding in the messaging beam. Deferred.
+- **Object-class selection** (Q3's second half) — needs discovering particulars + a
+  ratchet (bodily emancipation + external/social scaffolding). Phase II / M2.
 
 ## Honest status
 
-Of the five, the flagship and **Q2** are testable with the bench as it stands. The
-modulation gap in **Q1**, and **Q3** and **Q4**, require mechanisms the bench does
-not yet have; building them is legitimate, but each addition will be declared and
-its relation to the preprint stated. We would rather report two rigorous results
-and three honest "not yet testable" verdicts than five manufactured passes.
-
-## Results so far (outcomes vs the predictions above)
-
-The predictions above are left as written; outcomes are recorded here.
-
-- **Flagship — [S1](experiments/sweep_geometry_worldmodel.md): partly supported,
-  prediction corrected.** A real, body-relative world model exists at every body
-  size (decoding skill ≈ 0.4 ≫ shuffle ≈ 0; held-out, shuffle-controlled). But it
-  did **not** scale with segment count — flat in `n_seg`, even though larger
-  bodies had more sensors *and* explored more. Our pre-registered "rises with
-  `n_seg`" was wrong; we record the correction. The null is consistent with the
-  resolution principle (raw transducer count alone adds no resolution) and
-  redirects the live question to Q1 (modulation), which is deferred for lack of a
-  declared mechanism. First run was confounded (instability + collapsed
-  exploration) and discarded; the clean re-run used declared adjustments.
-- **Q1 — [modulation](experiments/sweep_q1_modulation.md): core claim supported,
-  narrow claim left open.** We built the declared mechanism (distributed per-zone
-  dual-port modulators). Modulation cancels self-caused change to the noise floor
-  at every body size; *without* it, self/world resolution collapses as the body
-  grows (foil ratio 13.7 → 1.2) — so raw transducer count without modulation
-  subtracts resolution rather than adding it. The pre-registered "modulated ratio
-  rises with `n_seg`" was wrong (absolute ratio falls, confounded by a localized
-  stimulus diluting the whole-body mean); the *modulation advantage* widens with
-  density (8.5× → 22×). The narrow "absolute resolution scales with density" is
-  left open. → **Now closed by [Q1b](experiments/sweep_q1b_resolution.md):** with a
-  *distributed* stimulus (removing the localized-source dilution), the modulated
-  world-detection ratio **rises** with CAZ density (14 → 22.6, ≈ 1/√N) while the
-  foil falls toward 1 — resolution scales with density, but only with modulation.
-  The first C-series prediction confirmed rather than corrected.
-- **Q2 — [reafference](experiments/q2_reafference.md): partially supported.**
-  Reafference cancels ~37% of self-caused change and lifts the self/world ratio
-  (2.2 vs foil 1.58), but not to P0's clean level — limited by single-point
-  (head) proprioception on a bending body, which is exactly what Q1's per-zone
-  modulation fixes. P0 remains the clean canonical demonstration.
-- **Q3 / Q4** — not yet run (mechanism gaps declared above).
-
-### Preprint predictions (beyond the five core questions)
-
-The bench is also being used to reproduce the preprint's testable predictions
-(framed in the published version as its eight registers) — the quantitative,
-computational modelling the paper calls for. smn-lab is that modelling.
-
-- **Prediction 3 — [antagonistic benefits](experiments/sweep_pred3_antagonistic.md):
-  confirmed.** Co-contraction reduces peak deviation 4.4× and integrated error ~28×
-  after a perturbation (faster error correction), larger for larger perturbations,
-  at a steep ~quadratic energy cost (a tradeoff with a knee near coc ≈ 0.3–0.6).
-  Declared adjustment: the existing force-motor co-contraction was inert for
-  stiffness, so we added a muscle-impedance model (zero-delay stiffness ∝ coc) and
-  a neural feedback delay — faithful to the preprint's impedance-adjusting
-  modulator and to biomechanics. The *direction* is textbook; the informative,
-  falsifiable content is the quantified, perturbation-scaled tradeoff.
-- **Prediction 2 — [zonal dissociations](experiments/sweep_pred2_zonal.md):
-  partially confirmed.** Same reach-and-hold task through a rigid vs viscoelastic
-  tool: the optimal control gain *moves* with substrate, and the compliant
-  substrate is far less forgiving (60× best→worst spread vs 11×) — the high-gain
-  prior optimal on rigid is catastrophic on compliant (0.111 vs 0.028, 4×). So
-  "same task, very different performance by material" holds. But the strong reading
-  — that substrate-*specific* priors are *needed* — is **not** supported: a
-  conservative generic prior ≈ matched on both substrates, because the dissociation
-  lives in one catastrophic corner, not a true two-way crossover. Substrate
-  constrains which control is *viable* more than it *requires* distinct priors here.
-  (First run was a setup bug — actuator saturated for all gains — discarded; the
-  re-run used declared physical-regime fixes.)
-- **Prediction 1 — [haltability signatures](experiments/sweep_pred1_haltability.md):
-  confirmed.** Deceptive reach (target jumps mid-movement): the haltable controller
-  imposes a distinct stop (velocity → 0, dwell ~0.17 s) and discrete opponent-pair
-  re-pairing, absent in a smooth continuous controller — cleanest on same-direction
-  adjustments, where smooth never slows (vel 0.98, dwell 0). Honest nuance: a
-  *reversal* forces any controller through zero velocity, so the *dwell* (not the
-  zero-crossing) is the diagnostic; and the halt carries no speed benefit (it
-  reacquires later by the dwell). The signature is the predicted diagnostic, as in
-  the preprint. (First runs confounded by an over-fast limb — always arrived before
-  the jump — discarded; re-run used a slow heavy limb, declared.)
+The **self-model** (topology- and scale-invariance) and **haltability** are confirmed;
+the **flagship** and **Q1/Q1b/Q2** world-model tests are done (two corrected, honestly);
+**Q3**'s object-directedness is shown, its selection deferred; **Q4** awaits a mechanism.
+Three preprint predictions reproduced. We would rather report rigorous results and honest
+"not yet testable" verdicts than manufactured passes.

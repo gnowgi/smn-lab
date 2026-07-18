@@ -59,10 +59,12 @@ BIAS_SIGN = -1.0
 SEG_MASS = 0.05                  # must match build_crawler_xml default
 GRAV = 9.81
 WEIGHT = SEG_MASS * GRAV          # resting ventral load borne per segment (N)
+# --8<-- [start:haltparams]
 TOUCH_MARGIN = 0.03              # N of contact force above resting load = contact
                                   # (this slow drag-driven worm pushes only gently)
 HALT_GATE = 0.12                 # wave amplitude while halted (a residual tonus)
 HALT_S = 2.0                     # how long contact holds the halt
+# --8<-- [end:haltparams]
 
 
 def run():
@@ -92,13 +94,16 @@ def run():
 
     for i in range(n):
         t = i * DT
+        # --8<-- [start:touchskin]
         # ventral skin = resting weight load + simulated object/wall contact force
         contact_force = np.array([float(data.sensordata[touch_adr[k]]) for k in range(N_SEG)])
         touch = WEIGHT + contact_force
         contact = contact_force.max() > TOUCH_MARGIN
+        # --8<-- [end:touchskin]
 
         cL = FIELD.sample(*data.site_xpos[senseL][:2])
         cR = FIELD.sample(*data.site_xpos[senseR][:2])
+        # --8<-- [start:halt]
         if contact:                                       # contact recruits the HAP halt
             halt_timer = int(HALT_S / DT)
         halted = halt_timer > 0
@@ -107,7 +112,8 @@ def run():
         if halt_timer > 0:
             halt_timer -= 1
 
-        theta_cmd = beam.command(DT, bias=bias) * gate
+        theta_cmd = beam.command(DT, bias=bias) * gate   # the HAP gates the BAP wave
+        # --8<-- [end:halt]
         for k in range(len(j_ids)):
             th, thd = float(data.qpos[j_qadr[k]]), float(data.qvel[j_vadr[k]])
             a_r, a_l, _ = boards[k].commands(th, thd, theta_cmd[k], 0.0)

@@ -23,6 +23,47 @@ Order parameter: residual ratio = mean |residual| (exafference / self-test).
 **Foil:** no forward model (no cancellation). Pass: ratio ≫ 1 for the reafferent
 agent and ≈ 1 for the foil.
 
+## Formalism — the reafference cut
+
+A sensed change decomposes into a self-caused and a world-caused part:
+
+\[
+\frac{dm}{dt} = \underbrace{\nabla m \cdot v}_{\text{self-caused}}
+              + \underbrace{\left.\tfrac{\partial m}{\partial t}\right|_{\text{world}}}_{\text{exafference}}.
+\]
+
+A reafferent agent predicts the self term and keeps the residual as the world term.
+On this crawler the forward model is a **gradient projection**: the field gradient
+\((g_x,g_y)\) (a least-squares plane-fit over the sensor sites) dotted with the
+agent's own sensed displacement, with an online-calibrated gain:
+
+\[
+\widehat{\Delta m}_{\text{self}} = \text{scale}\,(g_x\,\Delta x + g_y\,\Delta y),
+\quad
+r_{\text{reaff}} = \Delta m - \widehat{\Delta m}_{\text{self}},
+\quad
+r_{\text{foil}} = \Delta m.
+\]
+
+```python
+--8<-- "experiments/sweep_q2_reafference.py:reaff"
+```
+
+The **order parameter** is the residual ratio — mean \(|r|\) in the exafference
+window over the self-test window; \(\gg 1\) for the reafferent agent, \(\approx 1\)
+for the foil.
+
+!!! note "One principle, three forward models"
+    The residual operation \(r = \text{actual} - \widehat{\text{self}}\) is the
+    invariant; the *forward model* producing \(\widehat{\text{self}}\) is body-plan
+    specific. The framework's [`ReafferencePredictor`](../concepts.md)
+    (`smn_lab/control.py`) learns it as a **yaw-binned running mean** (used by the
+    P-series); Q2 uses a **gradient projection** (its contingency is
+    reading-vs-displacement); [W3](reafference_cut_self_graph.md) uses a **per-zone**
+    gain in the self-graph frame. Different contingencies, one cut — so the forward
+    models are genuinely distinct, not copies to merge. What they share — the
+    residual and the exafference/self-test ratio — is what's worth stating once.
+
 ## Declared adjustments
 
 This was the hardest port so far, and several choices were needed — all declared,
@@ -78,18 +119,13 @@ reafference**. P0 remains the clean canonical demonstration of the principle;
 the crawler shows it is real but needs distributed modulation to be clean.
 
 
-## What's measured, computed, and plotted
+## What's measured and plotted
 **Raw data (per run = one seed):** each step, the agent's own (proprioceptive,
 noisy) head displacement `(dx, dy)` is accumulated. Every 0.25 s window: the mean
 field reading `m` over the body's sensor sites; a phase tag (learn / self-test /
-exafference).
-
-**Computed (the reafference decomposition `dm/dt = grad(m)·v + dm/dt|world`):**
-- gradient `(gx, gy)` = least-squares plane fit of the readings over the sensor sites' positions;
-- predicted self-caused change `pred_self = scale * (gx*dx + gy*dy)` (gradient · own displacement); `scale` is fit by least squares during the learn phase;
-- actual change `dm = m - m_prev`;
-- **reafferent residual** `= dm - pred_self` (the world term survives); **foil residual** `= dm` (no cancellation);
-- `ratio = mean|residual| in exafference / mean|residual| in self-test`, for reafferent and foil.
+exafference). **Computed:** the gradient plane-fit, the predicted self-term, the
+reafferent and foil residuals, and the residual ratio — defined as running code in
+[Formalism](#formalism-the-reafference-cut) above.
 
 **Plotted:** **A** `|residual|` over time (one seed), reafferent vs foil, with the self-test and exafference windows shaded; **B** the ratio across seeds, reafferent vs foil.
 

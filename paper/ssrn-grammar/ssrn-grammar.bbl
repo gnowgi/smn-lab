@@ -1,0 +1,190 @@
+\begin{thebibliography}{28}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Baars(1988)]{Baars1988CognitiveTheory}
+Bernard~J. Baars.
+\newblock \emph{A Cognitive Theory of Consciousness}.
+\newblock Cambridge University Press, Cambridge, 1988.
+
+\bibitem[Bates et~al.(1975)Bates, Camaioni, and
+  Volterra]{Bates1975Performatives}
+Elizabeth Bates, Luigia Camaioni, and Virginia Volterra.
+\newblock The acquisition of performatives prior to speech.
+\newblock \emph{Merrill-Palmer Quarterly}, 21\penalty0 (3):\penalty0 205--226,
+  1975.
+
+\bibitem[Bizzi and Cheung(2013)]{Bizzi2013_MuscleSynergies}
+Emilio Bizzi and Vincent C.~K. Cheung.
+\newblock The neural origin of muscle synergies.
+\newblock \emph{Frontiers in Computational Neuroscience}, 7\penalty0 (51),
+  2013.
+\newblock \doi{10.3389/fncom.2013.00051}.
+\newblock Evidence that CNS organizes movements via low-dimensional synergies
+  spanning agonist–antagonist groups and bilateral coordination.
+
+\bibitem[Chomsky(1957)]{chomsky1957syntactic}
+Noam Chomsky.
+\newblock \emph{Syntactic Structures}.
+\newblock Mouton de Gruyter, 1957.
+
+\bibitem[Cisek and Kalaska(2010)]{CisekKalaska2010_DecisionsAction}
+Paul Cisek and John~F. Kalaska.
+\newblock Neural mechanisms for interacting with a world full of action
+  choices.
+\newblock \emph{Annual Review of Neuroscience}, 33:\penalty0 269--298, 2010.
+
+\bibitem[Clark and Chalmers(1998)]{ClarkChalmers1998Extended}
+Andy Clark and David Chalmers.
+\newblock The extended mind.
+\newblock \emph{Analysis}, 58\penalty0 (1):\penalty0 7--19, 1998.
+
+\bibitem[{de Saussure}(1916)]{Saussure1916Course}
+Ferdinand {de Saussure}.
+\newblock \emph{Course in General Linguistics}.
+\newblock Philosophical Library, New York, 1916.
+\newblock Edited by Charles Bally and Albert Sechehaye; translated by Wade
+  Baskin (1959).
+
+\bibitem[Dehaene(2014)]{Dehaene2014Consciousness}
+Stanislas Dehaene.
+\newblock \emph{Consciousness and the Brain: Deciphering How the Brain Codes
+  Our Thoughts}.
+\newblock Viking, 2014.
+\newblock ISBN 9780520274503.
+
+\bibitem[Frege(1891)]{Frege1891Function}
+Gottlob Frege.
+\newblock Function and concept.
+\newblock In \emph{Translations from the Philosophical Writings of Gottlob
+  Frege}. Blackwell, 1891.
+\newblock 1960 ed., Geach \& Black.
+
+\bibitem[G\"ardenfors(2019)]{Gardenfors2019Robot}
+Peter G\"ardenfors.
+\newblock Using event representations to generate robot semantics.
+\newblock \emph{ACM Transactions on Human-Robot Interaction}, 8\penalty0
+  (4):\penalty0 21, 2019.
+\newblock TODO verify co-authors.
+
+\bibitem[G\"ardenfors(2020)]{Gardenfors2020Events}
+Peter G\"ardenfors.
+\newblock Events and causal mappings modeled in conceptual spaces.
+\newblock \emph{Frontiers in Psychology}, 11:\penalty0 630, 2020.
+\newblock TODO verify co-authors.
+
+\bibitem[Gould and Vrba(1982)]{GouldVrba1982Exaptation}
+Stephen~Jay Gould and Elisabeth~S. Vrba.
+\newblock Exaptation---a missing term in the science of form.
+\newblock \emph{Paleobiology}, 8\penalty0 (1):\penalty0 4--15, 1982.
+
+\bibitem[Hutchins(1995)]{Hutchins1995-bt}
+Edwin Hutchins.
+\newblock How a cockpit remembers its speeds.
+\newblock \emph{Cogn. Sci.}, 19:\penalty0 265--288, July 1995.
+\newblock ISSN 0364-0213, 1551-6709.
+\newblock \doi{10.1207/s15516709cog1903\_1}.
+
+\bibitem[Koechlin and Summerfield(2007)]{Koechlin2007PrefrontalHierarchy}
+Etienne Koechlin and Christopher Summerfield.
+\newblock An information theoretical approach to prefrontal executive function.
+\newblock \emph{Trends in Cognitive Sciences}, 11\penalty0 (6):\penalty0
+  229--235, 2007.
+\newblock Argues for hierarchical control policies in PFC enabling nested,
+  context-sensitive sequencing.
+
+\bibitem[Lashley(1951)]{Lashley1951SerialOrder}
+K.~S. Lashley.
+\newblock The problem of serial order in behavior.
+\newblock In L.~A. Jeffress, editor, \emph{Cerebral Mechanisms in Behavior},
+  pages 112--146. Wiley, 1951.
+\newblock Classic argument that sequential behavior relies on hierarchical
+  plans, anticipating generative recombination beyond chained reflexes.
+
+\bibitem[Merleau-Ponty(2013)]{Merleau-Ponty2013-vs}
+Maurice Merleau-Ponty.
+\newblock \emph{Phenomenology of Perception}.
+\newblock Routledge, London, England, April 2013.
+\newblock ISBN 9781135718602.
+\newblock \doi{10.4324/9780203720714}.
+
+\bibitem[Nagarjuna and Karnam(2026)]{NagarjunaKarnam2026SMN}
+G.~Nagarjuna and Durgaprasad Karnam.
+\newblock The sensation modulating network.
+\newblock \emph{arXiv preprint arXiv:2605.26856}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2605.26856}.
+
+\bibitem[No{\"e}(2004)]{Noe2004ActionVision}
+Alva No{\"e}.
+\newblock \emph{Action in Perception}.
+\newblock MIT Press, 2004.
+
+\bibitem[No\"e(2015)]{Noe2015}
+Alva No\"e.
+\newblock \emph{Strange Tools: Art and Human Nature}.
+\newblock Hill and Wang, New York, 2015.
+
+\bibitem[O'Regan and No{\"e}(2001)]{OReganNoe2001Sensorimotor}
+J.~Kevin O'Regan and Alva No{\"e}.
+\newblock A sensorimotor account of vision and visual consciousness.
+\newblock \emph{Behavioral and Brain Sciences}, 24\penalty0 (5):\penalty0
+  939--1031, 2001.
+
+\bibitem[Peirce(1992)]{peirce1992essential}
+Charles~Sanders Peirce.
+\newblock \emph{The Essential Peirce, Volume 2: Selected Philosophical Writings
+  (1893-1913)}, volume~2.
+\newblock Indiana University Press, 1992.
+
+\bibitem[Pezzulo and Cisek(2016)]{PezzuloCisek2016AffordanceLandscape}
+Giovanni Pezzulo and Paul Cisek.
+\newblock Navigating the affordance landscape: Feedback control as a process
+  model of behavior and cognition.
+\newblock \emph{Trends in Cognitive Sciences}, 20\penalty0 (6):\penalty0
+  414--424, 2016.
+
+\bibitem[Quine(1969)]{Quine1969NaturalizedEpistemology}
+Willard Van~Orman Quine.
+\newblock Epistemology naturalized.
+\newblock In \emph{Ontological Relativity and Other Essays}, pages 69--90.
+  Columbia University Press, New York, 1969.
+
+\bibitem[Russell(1905)]{Russell1905OnDenoting}
+Bertrand Russell.
+\newblock On denoting.
+\newblock \emph{Mind}, 14\penalty0 (56):\penalty0 479--493, 1905.
+\newblock \doi{10.1093/mind/XIV.4.479}.
+
+\bibitem[Schieber and Santello(2004)]{Schieber2004HandSynergies}
+Marc~H. Schieber and Marco Santello.
+\newblock Hand function: Peripheral and central constraints on performance.
+\newblock \emph{Journal of Applied Physiology}, 96\penalty0 (6):\penalty0
+  2293--2300, 2004.
+\newblock Shows how hand synergies and neural control allow flexible
+  recombination underlying dexterity.
+
+\bibitem[Strawson(1950)]{Strawson1950Referring}
+P.~F. Strawson.
+\newblock On referring.
+\newblock \emph{Mind}, 59\penalty0 (235):\penalty0 320--344, 1950.
+\newblock \doi{10.1093/mind/LIX.235.320}.
+
+\bibitem[Tomasello et~al.(2005)Tomasello, Carpenter, Call, Behne, and
+  Moll]{Tomasello2005Understanding}
+Michael Tomasello, Malinda Carpenter, Josep Call, Tanya Behne, and Henrike
+  Moll.
+\newblock Understanding and sharing intentions: The origins of cultural
+  cognition.
+\newblock \emph{Behavioral and Brain Sciences}, 28\penalty0 (5):\penalty0
+  675--691, 2005.
+\newblock \doi{10.1017/S0140525X05000129}.
+
+\bibitem[Varela et~al.(1991)Varela, Thompson, and Rosch]{varela1991embodied}
+Francisco Varela, Evan Thompson, and Eleanor Rosch.
+\newblock \emph{The Embodied Mind: Cognitive Science and Human Experience}.
+\newblock MIT Press, 1991.
+
+\end{thebibliography}

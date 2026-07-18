@@ -45,7 +45,9 @@ DT = 0.002
 T_END = 30.0
 N_SEG = 3
 DRAG_LONG, DRAG_TRANS = 0.5, 7.0
+# --8<-- [start:couplings]
 COUPLINGS = [0.0, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0]    # 0.0 = the matched foil
+# --8<-- [end:couplings]
 SEEDS = list(range(10))
 
 
@@ -92,8 +94,10 @@ def summarize(log, params, seed):
     x, y = log["x"], log["y"]
     net = float(np.hypot(x[-1] - x[0], y[-1] - y[0]))
     path = float(np.sum(np.hypot(np.diff(x), np.diff(y))))
+    # --8<-- [start:coherence]
     # temporal phase-lag coherence: |<e^{i dphi}>| over the run
     coh = float(np.abs(np.mean(np.exp(1j * log["dphi"]))))
+    # --8<-- [end:coherence]
     return {"net_disp": net, "path_len": path, "phase_coherence": coh,
             "straightness": net / max(path, 1e-9)}
 

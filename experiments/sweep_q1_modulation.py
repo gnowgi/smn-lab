@@ -105,10 +105,12 @@ def run_one(params, seed):
         apply_anisotropic_drag(model, data, seg_ids, c_long=DRAG_LONG, c_trans=DRAG_TRANS)
         mujoco.mj_step(model, data)
 
+        # --8<-- [start:dualport]
         for k in range(N):            # each zone senses its OWN motion (dual-port)
             mujoco.mj_objectVelocity(model, data, mujoco.mjtObj.mjOBJ_BODY, seg_ids[k], vel, 0)
             disp[k, 0] += vel[3] * (1 + rng.normal(0, PROPRIO_NOISE)) * DT
             disp[k, 1] += vel[4] * (1 + rng.normal(0, PROPRIO_NOISE)) * DT
+        # --8<-- [end:dualport]
 
         if i % WIN != 0:
             continue
@@ -122,6 +124,7 @@ def run_one(params, seed):
         pts = np.array(pts); vals = np.array(vals)
         A = np.column_stack([np.ones(len(pts)), pts[:, 0], pts[:, 1]])
         _, gx, gy = np.linalg.lstsq(A, vals, rcond=None)[0]
+        # --8<-- [start:modulate]
         basis = gx * disp[:, 0] + gy * disp[:, 1]          # per-zone predicted change
         if r_prev is not None:
             dr = r - r_prev
@@ -129,6 +132,7 @@ def run_one(params, seed):
                 res = dr - scale * basis                    # per-zone reafferent cancel
             else:
                 res = dr.copy()                             # foil: no cancellation
+        # --8<-- [end:modulate]
             agg = float(np.mean(res))                       # aggregate over zones
             if t < T_LEARN:
                 cal_num += dr * basis; cal_den += basis ** 2

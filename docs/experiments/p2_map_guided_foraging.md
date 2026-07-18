@@ -4,8 +4,8 @@
     Part of the bench's first exploratory series, built while learning the bench:
     a **proof-of-concept**, not a clean ablation (several runs are single-seed and
     some metrics saturate). The disciplined model organism and the going-forward
-    line is the **C-series** — [C0](c0_crawler.md), [C1](c1_touch.md) — grounded in
-    [Lesson 1](../lesson1.md).
+    line is the **progression** — [C0](c0_crawler.md), [C1](c1_touch.md) — grounded in
+    [The Construction of Experience](../construction-of-experience.md).
 
 
 `experiments/p2_map_guided_foraging.py`

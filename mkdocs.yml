@@ -5,33 +5,54 @@ theme:
   name: material
 nav:
   - Home: index.md
-  - About the bench:
+  # Reference cluster — how to read the bench; background for the whole arc.
+  - "The framework (reference)":
       - Concepts: concepts.md
-      - "Lesson 1 — the construction of experience": lesson1.md
-      - Diagram grammar: diagram-grammar.md
+      - "Formalism ↔ code ↔ live bench": formalism-and-code.md
+      - "Self-model read-out: model vs. measurement": self-model-and-measurement.md
       - Lab interface: lab-interface.md
       - Assumptions: assumptions.md
       - Datasets (generative model): datasets.md
-      - "Test plan (pre-registered)": test-plan.md
-  - Experiments:
-      - "C0 — minimal axial crawler (non-inertial movement)": experiments/c0_crawler.md
-      - "C1 — gravity, touch skin, objects (halt-on-contact)": experiments/c1_touch.md
-      - "S0 — coupling sweep (locomotion is a network effect)": experiments/sweep_c0_coupling.md
-      - "S1 — geometry → world model (flagship)": experiments/sweep_geometry_worldmodel.md
-      - "Q2 — self/world distinction (reafference)": experiments/q2_reafference.md
-      - "Q1 — modulation & the resolution principle": experiments/sweep_q1_modulation.md
-      - "Q1b — resolution scales with CAZ density": experiments/sweep_q1b_resolution.md
-      - "Preprint prediction 1 — haltability signatures (deceptive reach)": experiments/sweep_pred1_haltability.md
-      - "Preprint prediction 2 — zonal dissociations": experiments/sweep_pred2_zonal.md
-      - "Preprint prediction 3 — antagonistic benefits": experiments/sweep_pred3_antagonistic.md
-  - "Self / world construction":
-      - "Self-model — body topology from movement": experiments/self_model_topology.md
-      - "Branched body — a morphological computer": experiments/branched_self_model.md
+      - "Pre-registration & status": test-plan.md
+  # The groups below follow the preprint's section order (arXiv:2605.26856).
+  - "§1 · The atom — the moving opponent body":
+      - "C0 — it moves (non-inertial axial crawler)": experiments/c0_crawler.md
+      - "S0 — locomotion is a network effect (coupling sweep)": experiments/sweep_c0_coupling.md
+      - "Antagonistic benefits — the opponent pair earns its keep": experiments/sweep_pred3_antagonistic.md
+  - "§2 · Generative morphology":
+      - "Diagram grammar": diagram-grammar.md
+      - "The Construction of Experience": construction-of-experience.md
+  - "§3 · The self-model":
+      - "Phase I — overview (self, world, object)": phase1.md
+      - "The read-out — one function, any body": experiments/self_model_topology.md
+      - "Branched body — same function, a tree": experiments/branched_self_model.md
+      - "Sheet & tube — same function, a 2-D body": experiments/lattice_self_model.md
+      - "Nested lattice — same function, any level (scale-invariance)": experiments/nested_lattice_self_model.md
+  - "§4 · The world-model & self / world / other":
+      - "Self vs world — the reafference cut (Q2)": experiments/q2_reafference.md
+      - "The cut in the self-graph (W3)": experiments/reafference_cut_self_graph.md
       - "W1 — a world feature in the self-graph": experiments/world_in_self_graph.md
       - "W2 — world-geometry in the self-frame": experiments/world_geometry_self_frame.md
-      - "W3 — the reafference cut in the self-graph": experiments/reafference_cut_self_graph.md
-  - Trial experiments:
-      - "About the trial experiments (reproducibility note)": reproducibility.md
+      - "Q1 — modulation builds the world model": experiments/sweep_q1_modulation.md
+      - "S1 — more body ≠ more world (segment-count null)": experiments/sweep_geometry_worldmodel.md
+      - "Q1b — resolution = CAZ density, not transducer count (hinges to §7)": experiments/sweep_q1b_resolution.md
+  - "§5 · Haltability & object-directedness":
+      - "C1 — objecthood as resistance (halt-on-contact)": experiments/c1_touch.md
+      - "E1 — objecthood as resistance (manipulator)": experiments/p4_manipulator_objecthood.md
+      - "E3 — the haltable pattern generates object-directedness": experiments/p6_haltability_aboutness.md
+      - "Haltability signatures — the deceptive-reach prediction": experiments/sweep_pred1_haltability.md
+  - "§6 · From resistance to object (multimodal)":
+      - "E2 — self / field / object factoring": experiments/p5_self_field_object.md
+      - "P3 — cross-modal discrimination (deferred; the object seam)": experiments/p3_crossmodal_discrimination.md
+  - "§7 · Taxonomy — more body, not more transducers":
+      - "Phase II — overview": phase2.md
+      - "Haltability — the pivot that layering enables": experiments/haltability.md
+      - "World model scales with the network (E4)": experiments/p7_scaling_network.md
+      - "Objecthood as a coupling-density transition (E4b)": experiments/p8_objecthood_transition.md
+      - "Zonal dissociations — the nested-zone prediction": experiments/sweep_pred2_zonal.md
+  # First exploratory studies — kept as provenance, read as proofs-of-concept.
+  - "Provenance / exploratory studies":
+      - "About these studies (reproducibility note)": reproducibility.md
       - P0 — reafference: experiments/p0_reafference.md
       - P0-visual — reafference at the visual level: experiments/p0_visual.md
       - P1-visual — multi-CAZ eye, ±body yaw: experiments/p1_visual.md
@@ -42,17 +63,25 @@ nav:
       - Living snapshot (map decay): experiments/p2_living_snapshot.md
       - Basal coupling (why move): experiments/p2_basal_coupling.md
       - Map-guided foraging (decay as survival): experiments/p2_map_guided_foraging.md
-      - P3 — cross-modal discrimination (recognition): experiments/p3_crossmodal_discrimination.md
-      - "E1 — objecthood as resistance (manipulator)": experiments/p4_manipulator_objecthood.md
-      - "E2 — self / field / object factoring": experiments/p5_self_field_object.md
-      - "E3 — haltability generates aboutness": experiments/p6_haltability_aboutness.md
-      - "E4 — objecthood as composition; world model scales with the network": experiments/p7_scaling_network.md
-      - "E4b — objecthood as a coupling-density transition": experiments/p8_objecthood_transition.md
   - Integrations:
       - NetLogo (feasibility report): integrations/netlogo.md
 hooks:
   - docs/hooks.py
+extra_javascript:
+  # equation ↔ code ↔ live-bench must render identically: MathJax renders the
+  # arithmatex output; the CDN loads at view time (public site, no CSP).
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 markdown_extensions:
   - tables
   - admonition
   - pymdownx.superfences
+  - pymdownx.arithmatex:
+      generic: true
+  # single-source-of-truth: code shown on a page is READ FROM smn_lab/*.py at
+  # build time (named sections), never pasted. base_path is the repo root (the
+  # mkdocs working dir); check_paths fails the build if an anchor goes missing.
+  - pymdownx.snippets:
+      base_path:
+        - .
+      check_paths: true

@@ -1,4 +1,4 @@
-# Lesson 1 — The Construction of Experience
+# The Construction of Experience
 
 ## Non-inertial movement as the work of living and cognizing at once
 

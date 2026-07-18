@@ -75,8 +75,9 @@ resolution is CAZ density × internal capacity, **not** raw transducer count, so
 ungated extra sensors should not add resolution. The geometry experiment therefore
 does not settle the world-model question by itself; it **redirects** it to the
 real test: does *modulation* add what geometry alone does not? That is
-[Q1](../test-plan.md#q1-world-model-from-sensation-modulation), which requires a
-sensory-modulation mechanism the bench does not yet have (declared, deferred).
+[Q1](sweep_q1_modulation.md) — since built (per-zone dual-port modulation) and
+[closed by Q1b](sweep_q1b_resolution.md): resolution scales with CAZ density, but
+only *with* modulation.
 
 We resist the temptation to read the resolution-principle consistency as a win:
 this experiment shows a world model exists and that segment count alone does not

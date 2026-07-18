@@ -61,6 +61,11 @@ import mujoco
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from smn_lab.crawler import build_crawler_xml, apply_anisotropic_drag
+# The read-out is the model (smn_lab.self_model); the scoring against ground truth
+# is the experimenter's (smn_lab.metrics). See docs/self-model-and-measurement.md.
+from smn_lab.self_model import transfer
+from smn_lab.metrics import curve_vs_hops, seriation_order, order_accuracy, \
+    neighbour_accuracy
 
 DT = 0.002
 N_SEG = 8                       # a long chain: 7 CAZ joints
@@ -68,12 +73,14 @@ T_WARM, T_REC = 4.0, 60.0       # warm-up then record
 DRAG_LONG, DRAG_TRANS = 0.6, 4.0
 PROPRIO_NOISE = 0.02            # per-sample proprioceptive noise on the joint reading
 
+# --8<-- [start:conditions]
 CONDITIONS = {
     #             stiffness  drive?   label
     "elastic":  dict(stiffness=0.6,  drive=True),
     "rigid":    dict(stiffness=80.0, drive=True),
     "frozen":   dict(stiffness=0.6,  drive=False),
 }
+# --8<-- [end:conditions]
 
 
 def run_one(cond, seed):
@@ -115,70 +122,11 @@ def run_one(cond, seed):
             TAU[r] = tau
             VEL[r] = np.array([float(data.qvel[v]) for v in j_vadr]) \
                      + rng.normal(0.0, PROPRIO_NOISE, nj)
+    # --8<-- [start:commonmode]
     # afferent motion relative to the body: strip the whole-body common mode
     VEL = VEL - VEL.mean(axis=1, keepdims=True)
+    # --8<-- [end:commonmode]
     return TAU, VEL
-
-
-def transfer(TAU, VEL):
-    """Transmission-gain matrix G[i,j] = |corr(efference_i, afferent_motion_j)|.
-    Independent drives make this isolate 'how much j moves because i moved'.
-    Symmetrized for an undirected body graph; self-terms zeroed."""
-    nj = TAU.shape[1]
-    G = np.zeros((nj, nj))
-    Ts = (TAU - TAU.mean(0)) / (TAU.std(0) + 1e-9)
-    Vs = (VEL - VEL.mean(0)) / (VEL.std(0) + 1e-9)
-    n = len(TAU)
-    for i in range(nj):
-        for j in range(nj):
-            G[i, j] = abs(float((Ts[:, i] * Vs[:, j]).mean()))
-    G = 0.5 * (G + G.T)
-    np.fill_diagonal(G, 0.0)
-    return G
-
-
-def curve_vs_hops(C):
-    """Mean co-movement as a function of true hop-distance along the chain."""
-    nj = C.shape[0]
-    hops = {}
-    for i in range(nj):
-        for j in range(i + 1, nj):
-            hops.setdefault(j - i, []).append(C[i, j])
-    hs = sorted(hops)
-    return np.array(hs), np.array([np.mean(hops[h]) for h in hs])
-
-
-def recover_order(C):
-    """Spectral seriation: order zones by the Fiedler vector of the co-movement
-    graph. Returns the recovered ordering (indices)."""
-    nj = C.shape[0]
-    W = C.copy()
-    L = np.diag(W.sum(1)) - W                      # graph Laplacian
-    w, v = np.linalg.eigh(L)
-    fiedler = v[:, 1]                              # 2nd-smallest eigenvector
-    return np.argsort(fiedler)
-
-
-def order_accuracy(order):
-    """How well the recovered order matches the true chain order 0..nj-1, up to
-    reflection: Spearman-like rank agreement (|corr| of recovered rank vs true)."""
-    nj = len(order)
-    rank = np.empty(nj, dtype=float)
-    rank[order] = np.arange(nj)
-    true = np.arange(nj, dtype=float)
-    return abs(np.corrcoef(rank, true)[0, 1])
-
-
-def neighbour_accuracy(C):
-    """Fraction of zones whose single strongest co-mover is a true chain
-    neighbour (|i-j| == 1) -- the purely local 1-hop read."""
-    nj = C.shape[0]
-    ok = 0
-    for i in range(nj):
-        j = int(np.argmax(C[i]))
-        if abs(j - i) == 1:
-            ok += 1
-    return ok / nj
 
 
 def main():
@@ -192,7 +140,7 @@ def main():
             Cs.append(C)
             hs, cv = curve_vs_hops(C)
             curves.append(cv)
-            oacc.append(order_accuracy(recover_order(C)))
+            oacc.append(order_accuracy(seriation_order(C)))
             nacc.append(neighbour_accuracy(C))
         results[cond] = dict(
             C=np.mean(Cs, 0), hs=hs, curve=np.mean(curves, 0),

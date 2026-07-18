@@ -2,118 +2,105 @@
 
 Assumptions in this lab are **layered and not fixed**. There is a **common core**
 (this page) that holds across experiments, plus **per-experiment specifics** that
-add to or override it — because the right assumptions depend on the experimental
-setup. Each [experiment page](experiments/p0_reafference.md) states its own
-deltas; this page is the shared reference.
+add to or override it. Each experiment page states its own deltas; this page is the
+shared reference.
 
-Every result traces to one of three things: **(A)** physics the engine
-integrates, **(B)** a calculation our control code performs, or **(C)** a
-modelling idealization.
+Every result traces to one of three things: **(A)** physics the engine integrates,
+**(B)** a computation our code performs, or **(C)** a modelling idealization.
+
+## The bodies
+
+The bench is no longer one body. The current progression uses three families, each
+page stating which it uses:
+
+- **the segmented crawler** — an axial chain of massed segments with opponent hinge
+  pairs, moved by a messaging-beam wave through an anisotropic drag medium
+  ([C0](experiments/c0_crawler.md), [C1](experiments/c1_touch.md); `smn_lab.crawler`);
+- **spring-tendon lattices** — point-mass segments joined by spring-tendon CAZ links,
+  in the overdamped soft-tissue regime, for the self-model / sheet / tube / nested
+  experiments (`smn_lab.lattice`);
+- **the bilateral manipulator** — a two-limb contact unit for object-directedness
+  ([E3](experiments/p6_haltability_aboutness.md); `smn_lab.manipulator`).
 
 ## Common assumptions (unless an experiment says otherwise)
-- **Planar rigid-body world.** The agent is one rigid body with three DOF
-  (`slide_x`, `slide_y`, `yaw`) and viscous damping; MuJoCo integrates the
-  dynamics (RK4, dt = 5 ms). No out-of-plane motion (z, roll, pitch); no ground
-  friction (frictionless glide, resisted only by joint damping).
-- **Whiskers are range sensors, not bristles.** Each is a zero-thickness, rigid,
-  **straight rangefinder ray** — unbounded but capped at `MAX_RAY` (4 m). It
-  reports **distance to the nearest surface**, not contact or bending along a
-  length. No flex, no tactile surface.
-- **The world** is a walled arena (plus objects) at body height; rays hit walls
-  and objects.
+
+- **MuJoCo integrates the dynamics** at **dt = 2 ms** with the `implicitfast`
+  integrator (not the older RK4 / 5 ms trial default).
+- **Overdamped, non-inertial regime.** Nothing coasts: motion is resisted by an
+  explicit **anisotropic drag** medium (crawler) or by high **joint damping**
+  (lattices). This is the low-Reynolds / soft-tissue regime.
+- **Tissue lattices disable contact.** A lattice is *one tissue*, not colliding
+  parts, so segment–segment contact is switched off and gravity is off. The crawler
+  and manipulator keep the contacts they need (touch skin, object press).
+- **Links are elastic (compliant).** Elastic transmission with attenuation is what
+  makes the self-model recoverable at all (a rigid body moves as one common mode and
+  reveals nothing). Elasticity is a load-bearing commitment.
 - **Reproducible.** All RNGs are seeded; runs are byte-reproducible.
-- **Data is logged every timestep**, whether the agent is moving or not.
 
 ## A. Simulated by MuJoCo (derived)
-Rigid-body planar dynamics (pose/velocity from integrated forces+damping);
-rangefinder distances (raycasts against geoms); proprioception (a `velocimeter`
-+ `gyro` giving true body-frame linear velocity and yaw rate).
+Rigid-body dynamics of the segments; joint and spatial-tendon spring/damper forces;
+contact forces where enabled (the C1 ventral skin, the manipulator's press);
+proprioception (joint velocities, body linear/angular velocity via
+`mj_objectVelocity`).
 
-## B. Computed by our control code (not physics)
-The drive **wrench** (net force+torque from the located drive zones' positions);
-the **dead-reckoned pose** (integrating proprioception); the **world model** (hit
-points placed from estimated pose ⊕ body-schema whisker pose ⊕ measured
-distance); the **scores** (coverage/precision as point-based nearest-neighbour
-fractions, ε = 6 cm, against ground-truth surface samples).
+## B. Computed by our code
+- **The model (the agent's own computation).** The messaging-beam wave
+  (`MessagingBeam`); the pull-only opponent activations (`OpponentBoard`); the
+  **self-model read-out** `self_model.coupling` — recovered *locally*, no central
+  reader (Commitment C3); reafference residuals; localization in the self-frame.
+- **The measurement (the experimenter's).** The scores that read against ground truth
+  the agent cannot access — endpoint/neighbour recovery, decoding skill + shuffle
+  control, the reafference ratio — all in `smn_lab.metrics`, kept separate on
+  purpose (see [model vs. measurement](self-model-and-measurement.md)).
 
 ## C. Idealizations (common)
-- Movement is a **computed wrench on a rigid body** — no simulated limbs,
-  muscle–tendon units, or ground-contact thrust.
-- Whiskers are distal **rays**, not tactile bristles (no flex, no contact).
-- Proprioception is idealized (true velocity, optionally + noise); **the SMN
-  "balance/co-activation generates data at rest" (Register 1) is not modelled**.
-- The occupancy map is a **monotonic accumulator by default**; an optional decay
-  rate turns it into a *living snapshot* — see
-  [Living snapshot](experiments/p2_living_snapshot.md).
-- The agent has **no biological state** by default. The
-  [Basal coupling](experiments/p2_basal_coupling.md) experiment adds an energy
-  reserve, BAP gating by energy, and food in the world — the constructive
-  assumptions for *why* the agent moves at all.
-- The HAP does not by default **read the world model**. The
-  [Map-guided foraging](experiments/p2_map_guided_foraging.md) experiment adds
-  a food-memory living-snapshot layer (populated by consumption events) and a
-  steering term that biases the turn toward live remembered locations — turning
-  the map's decay rate into a direct survival pressure.
-- The visual experiments use **one undifferentiated camera + one flat 8 × 8
-  modulator** as a deliberate floor. In SMN, perceptual resolution is a
-  function of CAZ density and internal capacities, *not* of the raw transducer
-  — and since unmodulated input is dropped, raising the camera's pixel count
-  alone would change nothing. The next visual experiments raise CAZ density on
-  the eye itself and add known asymmetries between eyes; see
-  [P0-visual](experiments/p0_visual.md).
-- The eye **has its own CAZ pair** from
-  [P1-visual](experiments/p1_visual.md) onward. The forward model predicts
-  the next frame from the sum of head and eye yaw displacements, using a
-  per-column `sec²(α)` correction so the warp tracks rotation faithfully
-  across the whole FOV. Saccades are generated by a minimal random-fixation
-  controller.
-- The modulator's per-patch floor calibration is **the architecture's
-  first-order "scene memory"** — see
-  [P1-visual / static-world](experiments/p1v_static_world.md). It detects any
-  departure from the calibration distribution (motion, novel appearance,
-  novel persistent content with edges the floor wasn't calibrated against);
-  it does *not* habituate on its own (a slowly-updating floor would be a
-  natural successor).
+- The overdamped medium is an **explicit force law** (anisotropic drag) or joint
+  damping, not MuJoCo's fluid solver.
+- Lattice **segments are point-mass scaffolding** — a place to mount sensors; the
+  links (CAZ muscles) are what move and what the self-model is read through.
+- The manipulator uses **ideal torque motors**, so co-contraction is inert for
+  stiffness in free space; there, the object supplies the equilibrium (a
+  muscle–tendon impedance model is a declared later refinement).
+- Some bodies are **planar** or have out-of-plane DOFs suppressed; friction is off
+  except where an experiment needs it.
 
-## Per-experiment assumptions (these vary)
-| aspect | P0 reafference | P0-visual | P1-visual | P1 world model | P2 self-localized | sweep |
-|---|---|---|---|---|---|---|
-| body | single CAZ "head" | **same** single CAZ "head" | head + **eye CAZ pair** | mobile, 5 whiskers | mobile, body schema | varies (3/5/9 whiskers; track width) |
-| locomotion | none (head only) | none (head only) | none (head only) | central `xfrc` thrust | **located** opponent drive zones | + `±BAP` toggle |
-| steering | opponent yaw (motors) | opponent yaw (motors) | head + **eye** opponent yaw | opponent yaw (motors) | differential located drive | + routing: flat / hierarchical |
-| transducer | one rangefinder whisker | **camera** at the head's pivot (128 × 128, fov 90°); flat 8 × 8 patch grid | camera at the **eye's** pivot, smoothed (~σ 1.0); flat 8 × 8 patch grid | 5 whisker rangefinders | 5-whisker fan | varies (whisker count) |
-| forward model | binned (heading → range) | **analytical frame-warp** from `ω_z · Δt · focal_px` | **angle-correct** per-column shift `Δθ · focal_px · sec²(α)` from `Δθ_head + Δθ_eye` | n/a | n/a | n/a |
-| world dynamics | static + scheduled exafference object | static + **oscillating** exafference object | static + **oscillating** exafference object | static arena | static arena | static arena |
-| internal model | learned forward model + residual | floor-gated 8 × 8 patch residual | floor-gated 8 × 8 patch residual | occupancy accumulator | occupancy accumulator | + `±HAP` toggle |
+## Per-experiment assumptions
 
-> The P1 → P2 shift is the clearest example that assumptions track the setup: P1
-> builds the map from the simulator's true pose; P2 uses only the agent's own
-> proprioceptive self-localization. Same task, different assumption — and it
-> changes what the experiment can claim.
+### The spine (the current progression)
 
-## D. How the figures are computed
-- The result maps (`p0/p1/p2/sweep`) are **matplotlib plots of computed arrays**
-  (hit cloud, trajectories, ground-truth outlines, metric text). No physics render.
-- `agent_geometry.png` is a **matplotlib schematic** from `MouseSchema`.
-- `scene_render.png` is a **real MuJoCo (EGL) rasterization** with the rangefinder
-  rays drawn by the visualizer.
+| aspect | Organism (C0/C1) | Self (self-model · lattice) | World (Q2 · W1/W2 · Q1) | Object (E3) |
+|---|---|---|---|---|
+| **body** | axial crawler segments | point-mass segments + spring-tendon CAZ links | crawler / elastic chain | bilateral two-limb manipulator |
+| **medium** | anisotropic drag (C0 gravity off; C1 gravity on + touch skin + object) | overdamped, contacts off, gravity off | anisotropic drag | ideal torque motors + object contact |
+| **the agent computes** | messaging-beam wave | `coupling` (self-model) | `coupling` + self-frame localization + reafference | `coupling` (2 zones) + the halt pattern |
+| **the experimenter scores** | net displacement, gait loop-area | endpoint / neighbour recovery | decoding skill (+ shuffle), residual ratio | longest sustained directed halt |
+| **the one variable** | coupling (S0) | elasticity; topology / scale | modulation; segment count | canvas present / halt |
 
-## E. Known divergences / refinement backlog
-1. Tonic / co-activation data at rest (Register 1).
-2. ~~World-model **decay** rate (a living snapshot in dynamic equilibrium).~~ — ✅
-   available now via `OccupancyMap(decay=…)`; see
-   [Living snapshot](experiments/p2_living_snapshot.md).
-2b. ~~A **biological state** that ties cognition to viability (why move?).~~ — ✅
-    available now via energy + BAP gating + food in
-    [Basal coupling](experiments/p2_basal_coupling.md).
-3. Physical, **flexible whiskers** that bend and sense contact along their length.
-4. **Actuated locomotion** (real muscle/tendon + ground contact).
-5. Out-of-plane DOFs (z, roll, pitch); friction; uneven terrain.
-6. Sensor models: rangefinder noise/dropout; proprioceptive bias/drift.
+### Provenance (the P-series — exploratory, superseded)
 
-## F. What *is* faithful to SMN
-Opponency at the zones (in-place rotation needs antagonists); reafference
-self/world from an efference-keyed forward model (P0); located zones + explicit
-body schema; a world model built **in relation to body geometry** from the
-agent's own self-localization; BAP and HAP both **necessary** to build a world
-model (ablations collapse coverage).
+The bench's first exploratory line ran on a *different* body — a **planar single
+"mouse"** (one rigid body, `slide_x`/`slide_y`/`yaw`), **rangefinder whiskers**, and a
+**camera + 8×8 modulator** — and built an **occupancy-map** world model scored by
+coverage/precision. It is kept as [provenance](reproducibility.md), *not* the current
+bench; its assumptions live on its own pages (P0–P3). Read it as proofs-of-concept.
+
+| aspect | P0 / P0-visual | P1 / P2 (world model) |
+|---|---|---|
+| body | single planar "head" (± eye CAZ) | mobile planar body, whiskers |
+| transducer | rangefinder whisker / camera + 8×8 patch | 5-whisker fan |
+| world model | forward-model residual | occupancy accumulator (coverage / precision) |
+
+## D. What *is* faithful to SMN
+Opponency at the zones (in-place rotation needs antagonists); an **elastic** substrate
+that transmits differential motion; a self-model **recovered locally** from movement
+with no central reader (C3); a world model built **in the self's own frame**;
+reafference separating self from world; and a **haltable action pattern** that makes an
+action *about* an object.
+
+## E. Refinement backlog
+1. **FLEX volume-conserving hydrostat** (the aquatic/soft-tissue regime; true
+   "contract-circular → elongate" coupling) — the labelled realism upgrade.
+2. **Hydrostatic CAZ in the visual grammar** (linked linear actuators; deferred).
+3. **Muscle–tendon impedance** for a free-space stiffness equilibrium (E3's deferral).
+4. **Muscle behaviours** on the tube (C. elegans bending, earthworm peristalsis).
+5. Out-of-plane DOFs, friction, uneven terrain; sensor noise / dropout models.

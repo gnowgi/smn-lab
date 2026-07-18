@@ -44,6 +44,9 @@ import mujoco
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from smn_lab.crawler import apply_anisotropic_drag
+# canonical self-model read-out (the model) + arm-swap residual (experimenter's).
+from smn_lab.self_model import coupling, recover_edges
+from smn_lab.metrics import arm_swap_residual
 
 DT = 0.002
 H, W = 0.07, 0.025
@@ -52,11 +55,13 @@ STIFFNESS, JDAMP = 0.3, 0.05
 DRAG_LONG, DRAG_TRANS = 0.6, 4.0
 T_WARM, T_REC = 4.0, 70.0
 
+# --8<-- [start:configs]
 CONFIGS = {
     #              (angle_deg, n_segments) per arm
     "asymmetric": [(0.0, 3), (130.0, 2), (230.0, 4)],   # three different arms -> rigid self
     "symmetric":  [(90.0, 2), (210.0, 3), (330.0, 3)],  # stem + two equal mirror arms
 }
+# --8<-- [end:configs]
 
 
 def build_branched_xml(arms):
@@ -154,40 +159,11 @@ def run(arms):
     return JV, OMEGA, positions, true_edges, joint_order, arm_struct
 
 
-def couple_matrix(JV, OMEGA):
-    J = (JV - JV.mean(0)) / (JV.std(0) + 1e-9)
-    O = (OMEGA - OMEGA.mean(0)) / (OMEGA.std(0) + 1e-9)
-    return (J.T @ O) / len(JV)                      # (nj x n_seg), signed
-
-
-def recover_edges(C, joint_order):
-    rec = []
-    for j in range(len(joint_order)):
-        rec.append((min(int(np.argmax(C[j])), int(np.argmin(C[j]))),
-                    max(int(np.argmax(C[j])), int(np.argmin(C[j])))))
-    return rec
-
-
-def arm_swap_residual(C, joint_order, armA, armB):
-    """||C - swap(C)|| / ||C|| for exchanging armA and armB (aligned from the hub).
-    Near 0 => the two arms are interchangeable in the data (indistinguishable)."""
-    jidx = {jn: i for i, jn in enumerate(joint_order)}
-    seg_perm = np.arange(C.shape[1]); jnt_perm = np.arange(C.shape[0])
-    k = min(len(armA["segs"]), len(armB["segs"]))
-    for i in range(k):                              # swap aligned segments and joints
-        sa, sb = armA["segs"][i], armB["segs"][i]
-        seg_perm[sa], seg_perm[sb] = sb, sa
-        ja, jb = jidx[armA["joints"][i]], jidx[armB["joints"][i]]
-        jnt_perm[ja], jnt_perm[jb] = jb, ja
-    Cp = C[jnt_perm][:, seg_perm]
-    return float(np.linalg.norm(C - Cp) / (np.linalg.norm(C) + 1e-12))
-
-
 def eval_body(name, arms):
     JV, OMEGA, positions, true_edges, joint_order, arm_struct = run(arms)
     n_seg = len(positions)
-    C = couple_matrix(JV, OMEGA)
-    rec = recover_edges(C, joint_order)
+    C = coupling(JV, OMEGA)
+    rec = recover_edges(C)
     true_set = {frozenset(e) for e in true_edges}
     correct = sum(frozenset(e) in true_set for e in rec)
     deg = np.zeros(n_seg, int)

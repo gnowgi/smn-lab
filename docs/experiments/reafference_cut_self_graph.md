@@ -9,18 +9,31 @@ features in self-units. W3 asks the question the whole framework is about: when 
 zone's reading changes, was it the **body** that moved or the **world** that
 changed? — and it answers *per node, on the self-graph*.
 
-## The design
+## Formalism — the cut, in the self-graph frame
 
-Reafference against the self-model. Each zone knows how its own reading changes
-when it moves (a local field gradient `g_k` learned during calibration). The
-**self-referred reading** removes that self-caused part:
+The same reafference cut as [Q2](q2_reafference.md#formalism-the-reafference-cut),
+now expressed in the **self-model's own coordinates**. Each zone \(k\) learns,
+during calibration, how its reading changes with its own displacement — a local gain
+\(g_k\) (least-squares of \(\Delta s_k\) on \(\Delta\text{pos}_k\)). The
+**self-referred reading** subtracts that self-term; its deviation from a calibrated
+baseline is the world-caused change, per node:
 
+\[
+s^{\text{self}}_k = s_k - g_k\cdot(\text{pos}_k - \text{nominal}_k),
+\qquad
+\text{reaf\_dev}_k = s^{\text{self}}_k - \text{base}_k.
+\]
+
+```python
+--8<-- "experiments/reafference_cut_self_graph.py:reaff"
 ```
-s_self_k = s_k − g_k · (pos_k − nominal_k)
-```
 
-Its deviation from the calibrated baseline is the *world-caused* change, and its
-profile over the self-graph nodes says *where* on the body the world changed.
+A **naive** detector uses the raw deviation \(s_k - \text{base}_k\) and cannot tell
+self from world. The reafferent deviation's profile over the self-graph nodes also
+says *where* the world changed (the positive-deviation centroid). This is the cut
+made in the frame the [self-model](self_model_topology.md) built — the payoff of
+building self first, and the same read-out family (a per-zone `zone_xy` localization
+from `smn_lab.worldmodel`).
 
 Two challenges follow one another, with the body sweeping (a systematic bend +
 jitter) **throughout**:
@@ -69,16 +82,16 @@ whole time.
 Together, the four studies **construct** the self/world distinction from the body
 up — self first, world in its frame, with the graph as the only computer.
 
-## What's measured, computed, and plotted
+## What's measured and plotted
 
 **Raw data:** per-zone reading `s_k` and world position while the body sweeps;
-`g_k`, nominal positions, and a baseline learned in calibration. **Computed:**
-self-referred reading `s_self_k = s_k − g_k·(pos_k − nominal_k)`; reafferent
-deviation = `s_self_k − baseline_k`; naive deviation = `s_k − baseline_k`;
-detector = mean |deviation| over zones per step; discriminability = detector during
-steady exafference ÷ during self-motion; localization = positive-deviation centroid
-over self-graph nodes. **Plotted:** the two detectors over time; a node × time
-heatmap of the reafferent deviation.
+`g_k`, nominal positions, and a baseline learned in calibration. **Computed:** the
+self-referred reading and reafferent/naive deviations (as running code in
+[Formalism](#formalism-the-cut-in-the-self-graph-frame) above); detector = mean
+|deviation| over zones per step; discriminability = detector during steady
+exafference ÷ during self-motion; localization = positive-deviation centroid over
+self-graph nodes. **Plotted:** the two detectors over time; a node × time heatmap of
+the reafferent deviation.
 
 ## Run
 

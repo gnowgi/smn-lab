@@ -1,6 +1,6 @@
 # Diagram grammar
 
-Every C-series figure that describes an agent's geometry uses one consistent
+Every agent figure that describes its geometry uses one consistent
 visual grammar, so a reader who learns it once can read all of them. There is no
 single community standard for *morphology + sensors + coupling* as one notation,
 so the grammar borrows the recognizable conventions of the field where they exist
@@ -65,6 +65,14 @@ This is why segments that share a single DOF show only one CAZ: the CAZ is alway
 a pair (the two opposing pulls), and adding another CAZ adds either a new DOF or
 additive force — never a lone actuator.
 
+!!! note "One archetype drawn; a second deferred"
+    The split-circle glyph draws the **skeletal** CAZ — a flexor/extensor opponent
+    pair across a rigid lever. There is a second archetype the grammar does **not**
+    yet draw: the **hydrostatic** CAZ — *linked linear actuators* with no skeleton,
+    whose antagonist is the structure itself (constant volume / turgor), as in a
+    worm, tongue, or gut. It is a known, deliberately deferred extension (not needed
+    for the current results); see the *physics at every layer* design note.
+
 ## Building complex agents — and extending the grammar
 
 The grammar is meant to compose *complex* creatures from these few components.
@@ -86,10 +94,14 @@ experiments demand:
   branch off the axial chain. *A body is a graph of segments; a branch is a segment
   attached to a segment.* The schema is a tree rather than a list; the node types
   are unchanged.
-- **Nesting** — a single *flexible* part is a chain of small rigid sub-segments in
-  series. This is the answer to the natural objection "your segments are rigid, so
-  how can a part bend?": a finger or a tail is flexible **because** it is many rigid
-  links jointed together. Flexibility is nested segmentation, not a new primitive.
+- **Nesting (two senses).** *(i) Flexibility-nesting* — a single *flexible* part is a
+  chain of small rigid sub-segments in series (a finger or a tail bends **because** it
+  is many rigid links jointed together; flexibility is nested segmentation, not a new
+  primitive). *(ii) Scale-recursion nesting* — a different, later idea: a lattice whose
+  nodes are themselves lattices, so the **same self-model read-out recovers the body at
+  every level** (segments → blocks → super-blocks). See the
+  [nested lattice](experiments/nested_lattice_self_model.md). The grammar here draws the
+  *flexibility* sense; the *scale* sense is a property of the read-out, not a new glyph.
 - **Anchor / gripper** — an *actuated* contact (a foot that grips and releases, a
   sucker, setae) for peristalsis, inchworming, and climbing. One more node type,
   alongside the sensor.
@@ -150,7 +162,7 @@ In code this is the `BodySchema` returned by `crawler_schema(...)`; `render_morp
 
 ## The morphological ladder
 
-The grammar makes the [Lesson 1](lesson1.md) ladder legible at a glance — each
+The grammar makes the [construction-of-experience](construction-of-experience.md) ladder legible at a glance — each
 new block (and its CAZ) unlocks the next epistemic transition:
 
 ![The 1/2/3-block morphological ladder: object → self/world → aboutness](figures/morphology_ladder.png)

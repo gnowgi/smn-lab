@@ -6,7 +6,7 @@
 ![Setup — agent morphology and the world](../figures/setup_c1_touch.png)
 
 ## What it shows
-The v1 organism of [Lesson 1](../lesson1.md): the crawler under gravity, with a
+The v1 organism of [The Construction of Experience](../construction-of-experience.md): the crawler under gravity, with a
 ventral touch skin and objects. It demonstrates the **halt→aboutness** precursor
 in its simplest physical form — **objecthood as resistance**: a chemotactic crawl
 meets an object, the ventral touch skin registers it as a force spike above the
@@ -30,6 +30,50 @@ localizer.
 - **HAP** — on contact, a haltable action pattern drops the traveling-wave
   amplitude, so the action halts at the object.
 
+## Formalism — objecthood as a halt
+
+Two model pieces added on top of the [C0 locomotion](c0_crawler.md#formalism-locomotion-from-local-coupling)
+turn "meeting an object" into "the action stops."
+
+**1 · The ventral touch skin (the transducer, now under gravity).** Each segment's
+skin reads its resting weight load \(W = m g\) plus any contact force \(f_k\); a
+contact is a spike above that baseline:
+
+\[
+\text{touch}_k = W + f_k,\qquad \text{contact} = \big(\max_k f_k > \tau_{\text{margin}}\big).
+\]
+
+```python
+--8<-- "experiments/c1_touch.py:touchskin"
+```
+
+**2 · The halt — a touch-keyed HAP.** On contact the agent recruits a *haltable
+action pattern* that gates the BAP wave down to a residual tonus for a fixed
+refractory window, then resumes. The object interrupts the body's own action —
+**objecthood as resistance to modulation**:
+
+\[
+\text{gate} = \begin{cases}\text{HALT\_GATE} & \text{halted}\\ 1 & \text{else}\end{cases},
+\qquad \theta^{\text{cmd}} = \text{gate}\cdot\texttt{beam.command}(dt,\,b).
+\]
+
+```python
+--8<-- "experiments/c1_touch.py:haltparams"
+```
+
+```python
+--8<-- "experiments/c1_touch.py:halt"
+```
+
+!!! note "Where this HAP lives"
+    This halt is written **inline** because it is keyed on *contact force* and is
+    the only contact-halt in the progression. It is the sibling of the framework's
+    whisker-keyed [`HAPExplorer`](../concepts.md) (`smn_lab/control.py`), which
+    halts on *rangefinder clearance* instead. Both are HAPs — an affordance gating
+    the BAP. If a second contact-halt appears, the general HAP (affordance →
+    threshold → gate) should be promoted to `control.py`; until then, promoting one
+    instance would be premature abstraction.
+
 ## Assumptions specific to C1
 (in addition to the [common assumptions](../assumptions.md))
 - The body **glides in its support plane** (a frictionless-support idealization);
@@ -40,17 +84,13 @@ localizer.
   richer HAP/NAP and is a later experiment. Here contact **halts**.
 
 
-## What's measured, computed, and plotted
+## What's measured and plotted
 **Raw data (logged):** head `(x, y)`; per-segment **ventral touch** = resting weight
-load (`segment_mass x g`) + simulated object/wall contact force (MuJoCo touch
-sensor); a contact flag; a halted flag; segment positions; distance to source.
-
-**Computed (the math):**
-- `weight_baseline = segment_mass x g` — the resting load each segment carries.
-- `contact` = (any segment's contact force `> TOUCH_MARGIN`).
-- `touch_peak = max over time of the touch reading` — the spike on meeting the object.
-- `halt_frac` = fraction of the run the HAP held the wave halted; `dist_at_halt` = distance to source when first halted.
-- `net_disp`, `closed_gap` as in C0.
+load + simulated object/wall contact force (MuJoCo touch sensor); a contact flag; a
+halted flag; segment positions; distance to source. **Computed:** `weight_baseline`,
+`contact`, `touch_peak` (the spike on meeting the object), `contact_frac`,
+`net_disp`, `closed_gap` — the touch/contact/halt quantities defined as running code
+in [Formalism](#formalism-objecthood-as-a-halt) above.
 
 **Plotted:** **A** field + object + the path arrested at the object; **B** ventral touch per segment over time, with the resting-load line, the contact threshold, and the halt episode shaded; **C** the beam graph at the peak-contact frame, nodes coloured by touch force.
 
