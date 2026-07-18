@@ -49,6 +49,69 @@ class OpponentBoard:
     # --8<-- [end:opponent_commands]
 
 
+class AlertEnergyBoard:
+    """The haltability operator + board routing of a single CAZ (the alert-energy
+    and board equations of the preprint).
+
+    The board's state variable is the ALERT ENERGY ``E_R`` -- the metabolic cost of
+    holding a recruited co-activation. It accumulates in proportion to the active
+    zone's load while driving, and decays passively::
+
+        dE_R/dt = rho * F_active * 1[g=1]  -  E_R / tau_E
+
+    Two consequences, both testable, distinguish this from classical inhibition:
+
+    - the partner (inactive) zone is tonically engaged at ``a0 + beta*E_R``, so the
+      partner's tone RISES with the active zone's load (Register 1); its steady
+      state is ``a0 + beta*rho*tau_E*F_active`` (linear in load);
+    - when the active zone flips (drive changes sign), the previously-alert zone's
+      drive is amplified by ``(1 + gamma*E_R)`` -- a post-halt resumption advantage
+      (Register 2).
+
+    The matched foil is ``classical=True`` (classical reciprocal inhibition): no
+    alert energy, the partner held flat at ``a0``, no post-flip amplification.
+    """
+
+    def __init__(self, kp=3.0, kd=0.3, cmax=1.5, a0=0.1,
+                 rho=1.0, tau_E=2.0, beta=0.6, gamma=1.0, dt=0.002,
+                 classical=False):
+        self.kp, self.kd, self.cmax, self.a0 = kp, kd, cmax, a0
+        self.rho, self.tau_E, self.beta, self.gamma = rho, tau_E, beta, gamma
+        self.dt = dt
+        self.classical = classical
+        self.E_R = 0.0
+
+    # --8<-- [start:alert_energy]
+    def _update_energy(self, F_active, gated):
+        # dE_R/dt = rho * F_active * 1[g=1]  -  E_R / tau_E
+        build = self.rho * F_active if gated else 0.0
+        self.E_R += self.dt * (build - self.E_R / self.tau_E)
+        return self.E_R
+    # --8<-- [end:alert_energy]
+
+    # --8<-- [start:alert_board]
+    def commands(self, theta, theta_dot, theta_cmd, theta_dot_cmd, gated=True):
+        """Route a desired configuration into pull-only antagonist activations
+        (a_right, a_left), with partner tone and post-flip amplification set by the
+        alert energy. Returns (a_r, a_l, drive, F_active, E_R)."""
+        drive = self.kp * (theta_cmd - theta) + self.kd * (theta_dot_cmd - theta_dot)
+        F_active = min(self.cmax, abs(drive))              # the active zone's force
+        E = self._update_energy(F_active, gated)
+        partner = self.a0 + (0.0 if self.classical else self.beta * E)
+        if not gated:                                      # halt: both at baseline
+            a = float(np.clip(self.a0, 0.0, self.cmax))
+            return a, a, drive, F_active, E
+        if drive >= 0:                                     # right active, left = partner
+            a_r = float(np.clip(drive, 0.0, self.cmax))
+            a_l = float(np.clip(partner, 0.0, self.cmax))
+        else:                                              # left active (post-flip amplified)
+            amp = 1.0 if self.classical else (1.0 + self.gamma * E)
+            a_l = float(np.clip(-drive * amp, 0.0, self.cmax))
+            a_r = float(np.clip(partner, 0.0, self.cmax))
+        return a_r, a_l, drive, F_active, E
+    # --8<-- [end:alert_board]
+
+
 class ReafferencePredictor:
     """Forward model keyed on self-state (yaw angle).
 

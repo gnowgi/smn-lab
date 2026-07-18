@@ -15,10 +15,12 @@ nav:
       - Datasets (generative model): datasets.md
       - "Pre-registration & status": test-plan.md
   # The groups below follow the preprint's section order (arXiv:2605.26856).
-  - "§1 · The atom — the moving opponent body":
+  - "§1 · The modular unit — the moving opponent body":
       - "C0 — it moves (non-inertial axial crawler)": experiments/c0_crawler.md
       - "S0 — locomotion is a network effect (coupling sweep)": experiments/sweep_c0_coupling.md
       - "Antagonistic benefits — the opponent pair earns its keep": experiments/sweep_pred3_antagonistic.md
+      - "R1 — tonic-load coupling (partner tone rises with load)": experiments/sweep_r1_tonic_load.md
+      - "R2 — resumption latency (post-halt reversal is faster)": experiments/sweep_r2_resumption.md
   - "§2 · Generative morphology":
       - "Diagram grammar": diagram-grammar.md
       - "The Construction of Experience": construction-of-experience.md
@@ -36,6 +38,7 @@ nav:
       - "Q1 — modulation builds the world model": experiments/sweep_q1_modulation.md
       - "S1 — more body ≠ more world (segment-count null)": experiments/sweep_geometry_worldmodel.md
       - "Q1b — resolution = CAZ density, not transducer count (hinges to §7)": experiments/sweep_q1b_resolution.md
+      - "R5 — intra-body dual-signal residual (self/world structure)": experiments/sweep_r5_dual_signal.md
   - "§5 · Haltability & object-directedness":
       - "C1 — objecthood as resistance (halt-on-contact)": experiments/c1_touch.md
       - "E1 — objecthood as resistance (manipulator)": experiments/p4_manipulator_objecthood.md
