@@ -106,11 +106,34 @@ The path is organized as an *argument*, not a catalogue.
 | `body.py`, `model.py`, `vision.py`, `worldmodel.py` | the earlier trial line (the planar "mouse" builders, camera, occupancy map). |
 
 ## Quickstart
+
+**Prerequisites.** Python 3.10 or newer (the docs and CI run on 3.12) and `git`,
+on Linux, macOS, or Windows. The only dependencies are MuJoCo, NumPy, and
+Matplotlib, all installed by `pip` in the step below — no separate MuJoCo binary
+or license is required, and the experiments run headless (no display needed).
+
+**1 — get the code.**
+```bash
+git clone https://github.com/gnowgi/smn-lab.git
+cd smn-lab
+```
+
+**2 — create an environment and install the dependencies.**
 ```bash
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-cd experiments && ../.venv/bin/python c0_crawler.py   # the minimal crawler
 ```
+
+**3 — run the minimal crawler.**
+```bash
+cd experiments && ../.venv/bin/python c0_crawler.py
+```
+
+Every experiment is a standalone script in `experiments/`; run any of them the same
+way (`../.venv/bin/python <name>.py`). On Windows, use `.venv\Scripts\pip` and
+`.venv\Scripts\python` in place of the `.venv/bin/...` paths. The optional Streamlit
+[lab interface](lab-interface.md) needs one extra dependency
+(`.venv/bin/pip install -r requirements-ui.txt`).
 
 ## How the pieces fit
 The body is an **axial chain of segments**; each inter-segment joint is a **CAZ** —

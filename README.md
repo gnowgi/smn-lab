@@ -43,10 +43,22 @@ schema generates both the simulation and the figures.
 | world / habitat | a walled arena + virtual scalar fields + objects |
 
 ## Install & run
+
+**Prerequisites:** Python 3.10+ (tested on 3.12) and `git`; Linux, macOS, or
+Windows. MuJoCo, NumPy, and Matplotlib are the only dependencies — `pip` installs
+them below (no separate MuJoCo binary or license needed).
+
 ```bash
+# 1. get the code
+git clone https://github.com/gnowgi/smn-lab.git
+cd smn-lab
+
+# 2. environment + dependencies
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-cd experiments && ../.venv/bin/python c0_crawler.py   # the minimal crawler
+
+# 3. run the minimal crawler
+cd experiments && ../.venv/bin/python c0_crawler.py
 ```
 
 ## The experiments
