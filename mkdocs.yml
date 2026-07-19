@@ -68,6 +68,7 @@ nav:
       - Map-guided foraging (decay as survival): experiments/p2_map_guided_foraging.md
   - Integrations:
       - NetLogo (feasibility report): integrations/netlogo.md
+  - "Contributing experiments (branches & doc versions)": contributing.md
 hooks:
   - docs/hooks.py
 extra_javascript:

@@ -128,6 +128,12 @@ build locally with `pip install -r docs/requirements.txt && mkdocs serve`.
 [`docs/assumptions.md`](docs/assumptions.md) separates what the engine **simulates**,
 what the code **computes**, and what is an **idealization**.
 
+## Contributing experiments
+New experiments live on their own `exp/<topic>` branch and are published as a
+separate Read the Docs *version* (browsable alongside the stable `main` docs via
+the version flyout); each starts with a preregistration page. Conventions and a
+checklist: [`docs/contributing.md`](docs/contributing.md).
+
 ## Citation
 If you use this bench in published work, please cite the SMN paper:
 
