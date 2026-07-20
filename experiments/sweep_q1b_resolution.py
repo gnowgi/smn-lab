@@ -86,6 +86,7 @@ def run_one(params, seed):
     disp = np.zeros((N, 2))
     r_prev = None
     scale = np.ones(N)
+    gain = params.get("gain", 1.0 if mode == "modulated" else 0.0)   # modulation strength mu
     cal_num, cal_den = np.zeros(N), np.zeros(N)
     log = {k: [] for k in ("t", "res", "phase")}
     for i in range(n):
@@ -120,7 +121,7 @@ def run_one(params, seed):
         basis = gx * disp[:, 0] + gy * disp[:, 1]
         if r_prev is not None:
             dr = r - r_prev
-            res = dr - scale * basis if mode == "modulated" else dr.copy()
+            res = dr - gain * scale * basis
             agg = float(np.mean(res))
             if t < T_LEARN:
                 cal_num += dr * basis; cal_den += basis ** 2
