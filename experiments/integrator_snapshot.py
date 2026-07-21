@@ -36,7 +36,11 @@ def manifold_dimensionality(states):
     or plane attractor) gives PR ~ 1-2; an unintegrated scatter gives PR ~ D.
     `states` is a (T, D) top-layer trajectory."""
     X = np.asarray(states, float)
+    if X.ndim == 1:
+        X = X[:, None]
     X = X - X.mean(axis=0, keepdims=True)
+    if X.shape[1] == 1:                                  # a single node = full consensus
+        return 1.0
     lam = np.clip(np.linalg.eigvalsh(np.cov(X, rowvar=False)), 0.0, None)
     return float(lam.sum() ** 2 / (lam ** 2).sum()) if lam.sum() > 0 else 0.0
 
@@ -76,14 +80,21 @@ def aliasing_threshold(f_stroke, fidelity, crit=0.7):
 
 # --8<-- [start:capacity]
 def wm_capacity(retrieval_by_load, crit=0.5):
-    """Order parameter C: working-memory capacity = the largest serial load whose
-    retrieval accuracy stays above `crit`. `retrieval_by_load` is {N_items: acc}.
-    This is a quantity READ OFF a configuration -- NOT a target. Human ~7 is one
-    point on the curve; a configuration at 70 is a valid prediction. The result
-    is the mapping capacity(morphology), reported across the whole lattice
-    (failures included), not any single value."""
-    ok = [n for n, acc in sorted(retrieval_by_load.items()) if acc >= crit]
-    return max(ok) if ok else 0
+    """Order parameter C: working-memory capacity = the recency SPAN -- how many
+    of the most-recent serially-loaded items stay retrievable above `crit` before
+    the first drop. `retrieval_by_load` is {depth: accuracy}, depth 1 = newest;
+    the scan stops at the first sub-criterion depth, so far-back interference
+    false-positives cannot inflate it. This is a quantity READ OFF a
+    configuration -- NOT a target: human ~7 is one point, a config at 70 is a
+    valid prediction; the result is the mapping capacity(morphology), failures
+    included, not any single value."""
+    cap = 0
+    for depth in sorted(retrieval_by_load):
+        if retrieval_by_load[depth] >= crit:
+            cap = depth
+        else:
+            break
+    return cap
 # --8<-- [end:capacity]
 
 
@@ -121,6 +132,8 @@ LATTICE = [
          beam_refresh_hz=40.0, hold_theta_hz=6.0, motor_stroke_hz=5.0, tau_decay_s=6.0),
     dict(name="deep-tree",   layers=(27, 9, 3, 1),
          beam_refresh_hz=40.0, hold_theta_hz=6.0, motor_stroke_hz=5.0, tau_decay_s=1.2),
+    dict(name="big-brain",   layers=(144, 36, 12),   # a high-capacity regime: fast wide beam
+         beam_refresh_hz=200.0, hold_theta_hz=3.0, motor_stroke_hz=5.0, tau_decay_s=1.2),
 ]
 
 
@@ -155,8 +168,8 @@ def _self_test():
 
     print(f"[lattice] {len(LATTICE)} configurations preregistered; the sweep reports "
           "capacity(config), failures included -- not a target.")
-    print("[integrator-snapshot] status: PREREGISTERED -- the layered-network model "
-          "and lattice sweep are not yet wired. See "
+    print("[integrator-snapshot] the Phase-A layered-network model + lattice sweep "
+          "are wired in sweep_integrator_snapshot.py. See "
           "docs/experiments/integrator_snapshot.md.")
 
 

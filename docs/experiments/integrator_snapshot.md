@@ -6,6 +6,10 @@
     matched foils are fixed here *before* the configuration-lattice sweep is run.
     See [Contributing experiments](../contributing.md) for the workflow.
 
+    **Update:** the Phase-A model and lattice sweep are now wired on this branch
+    (`sweep_integrator_snapshot.py`); the [first results](#first-results-phase-a)
+    are below. The page graduates to `main` on review.
+
 Phase I's resolution principle is *spatial*: resolution scales with CAZ density ×
 internal capacity, not raw transducer count ([Q1b](sweep_q1b_resolution.md),
 [exponent](sweep_resolution_exponents.md)). This experiment adds the *temporal*
@@ -123,6 +127,51 @@ success) against capacity across the lattice. Prediction: performance rises with
 capacity up to task demand, then saturates. Flagged as a **planned extension**,
 not part of the core three.
 
+## First results (Phase A) {#first-results-phase-a}
+
+The reduced dynamical-network model (`sweep_integrator_snapshot.py`) — leaky
+integrator beam nodes, a diffusive/consensus $\Pi$, discrete refresh, over the
+coarse-graining hierarchy — is wired, and the lattice sweep runs. First-pass
+numbers on this branch (they graduate to `main` on review):
+
+**A · manifold.** Broadcast coupling pulls the top layer onto a low-dimensional
+held state: participation ratio PR $\approx$ 1.2–1.4 coupled vs $\approx$ 2.2 for
+the decoupled foil (3-node top), with small post-release drift. Dimensionality
+*condenses up the layers* — PR 3.8 → 1.4 across the `[9, 3]` beam, and 2.9 → 1.1 →
+1.0 for the `[9, 3, 1]` deep tree (the renormalization signature; the deep tree
+ends on a single consensus mode — the marginal/line-attractor direction).
+
+**B · Nyquist.** The aliasing threshold lands at the beam Nyquist and *scales with
+refresh*: 19.7 Hz at $f_\text{refresh}=40$ (predicted 20), 42.2 Hz at
+$f_\text{refresh}=80$ (predicted 40) — a clean 2× under a 2× refresh.
+
+**C · capacity = f(morphology).** Capacity is a mapping, **not a number**:
+
+| config | theta/gamma | serial-decay |
+|---|---:|---:|
+| mammal-like (θ 6, γ 40) | 6 | 6 |
+| fast-beam (γ 80) | 9 | 6 |
+| slow-hold (θ 3) | 9 | 6 |
+| fast-motor (stroke 9) | 6 | 9 |
+| long-decay (τ 6 s) | 6 | 21 |
+| big-brain (γ 200, wide) | 45 | 5 |
+
+- The *mammal-like* body — biological theta (~6 Hz) and gamma (~40 Hz) bands —
+  yields $\approx$ 6–7 **with no tuning**, recovering the theta/gamma capacity
+  $\approx$ theta/gamma-ratio (cf. Lisman & Idiart). Seven is a *point on the
+  curve*, not a target.
+- A large, fast beam (*big-brain*) reaches $\approx$ 45 — the high-capacity
+  regime. The timing law alone would give $\approx$ 67; interference caps it (a
+  second, dimensional channel: capacity $\approx \min$(timing law, ceiling
+  $\propto$ beam size)).
+- **Dissociation (preregistered).** Doubling the *beam* refresh moves theta/gamma
+  capacity (7 → 11) and leaves serial-decay unchanged (4 → 4); doubling the
+  *motor* stroke-rate moves serial-decay (4 → 13) and leaves theta/gamma
+  unchanged (7 → 7). Each mechanism responds only to its own locus.
+
+Neither falsifier fired: capacity varies lawfully with morphology and separates
+by locus (no flat map; no knob-independent number).
+
 ## Order parameters, in code
 
 The estimators are the single source of truth, read from the script at build
@@ -160,11 +209,14 @@ different morphological knob:
 ## Run
 
 ```bash
-cd experiments && ../.venv/bin/python integrator_snapshot.py
+cd experiments
+../.venv/bin/python integrator_snapshot.py        # synthetic self-test of the estimators
+../.venv/bin/python sweep_integrator_snapshot.py  # Phase-A model + lattice sweep (results above)
 ```
 
-Running it now executes a synthetic **self-test** of the three estimators (a
-known dimensionality, aliasing threshold, and capacity recovered) — not yet a
-bench measurement. Wiring the layered-network model and the lattice sweep is the
-next step; when the map passes, this page graduates to `main` with its result and
-plots.
+The estimator self-test recovers a known dimensionality, aliasing threshold, and
+capacity. The sweep runs the reduced dynamical-network model over the
+configuration lattice and writes `integrator_snapshot_results.json`. **Phase B**
+— a smaller layered body embodied in MuJoCo, so the strokes are real opponent-pair
+perturbations — is next; when the embodied map confirms the network map, this page
+graduates to `main` with its plots.
