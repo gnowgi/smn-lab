@@ -120,14 +120,30 @@ single value.
     a familiar number. A curve with a predicted slope and named breakpoints is
     the result; a single lucky value is not.
 
-## Secondary — does more capacity buy performance?
+## Secondary — does more capacity buy performance? (PASS)
 
-A further, separable hypothesis: greater working memory performs *more
-efficiently*. Operationalized as a delayed-response / multi-site task whose
-demand exceeds one item; measure performance (success, latency, or energy per
-success) against capacity across the lattice. Prediction: performance rises with
-capacity up to task demand, then saturates. Flagged as a **planned extension**,
-not part of the core three.
+A separable hypothesis: greater working memory performs *better* — but only up to
+what the task demands. Operationalized (`sweep_capacity_performance.py`) as a
+serial multi-item recall task on the *same* beam memory used for the capacity
+order parameter: load `D` items, probe, score the fraction recalled.
+
+![Capacity buys task performance, and saturates at the task's demand](../figures/integrator_snapshot_capacity_perf.png)
+
+The prediction holds: capacity is **irrelevant when the task needs one item** (all
+configs recall it; $\rho(\text{capacity},P)=0$ at $D=1$) and **decisive when the
+task is demanding** ($\rho=+0.90$ at $D=8$), with the benefit **saturating near
+each config's capacity** — a high-capacity beam holds $P=1$ to higher demand;
+below the smallest capacity every config ties at ceiling. So WM is a performance
+bottleneck *exactly* when demand exceeds capacity, not otherwise.
+
+!!! note "Provenance & honesty"
+    The full build record — starting point, every change, parameters and the
+    reasoning, and an **auxiliary-principles audit** (what set magnitudes vs. what
+    is a genuine result; no new SMN principle was needed to pass) — is in
+    `experiments/integrator_snapshot_DEVLOG.md`. Two caveats recorded there: with
+    immediate recall the result *operationalizes* rather than derives the
+    hypothesis (its non-trivial content is the demand interaction), and delayed
+    maintenance would need an active theta-refresh not built here.
 
 ## First results (Phase A) {#first-results-phase-a}
 
