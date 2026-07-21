@@ -6,9 +6,11 @@
     matched foils are fixed here *before* the configuration-lattice sweep is run.
     See [Contributing experiments](../contributing.md) for the workflow.
 
-    **Update:** the Phase-A model and lattice sweep are now wired on this branch
-    (`sweep_integrator_snapshot.py`); the [first results](#first-results-phase-a)
-    are below. The page graduates to `main` on review.
+    **Update:** both phases are now wired on this branch — the Phase-A model +
+    lattice sweep (`sweep_integrator_snapshot.py`, [first results](#first-results-phase-a))
+    and the [Phase-B embodied MuJoCo instance](#phase-b-embodied)
+    (`integrator_snapshot_embodied.py`, verdict **PASS**). The page graduates to
+    `main` on review.
 
 Phase I's resolution principle is *spatial*: resolution scales with CAZ density ×
 internal capacity, not raw transducer count ([Q1b](sweep_q1b_resolution.md),
@@ -172,6 +174,37 @@ $f_\text{refresh}=80$ (predicted 40) — a clean 2× under a 2× refresh.
 Neither falsifier fired: capacity varies lawfully with morphology and separates
 by locus (no flat map; no knob-independent number).
 
+## Phase B — embodied (MuJoCo) {#phase-b-embodied}
+
+Phase A drove an abstract network; Phase B (`integrator_snapshot_embodied.py`)
+puts the motor CAZ in a **physical axial opponent chain** (`smn_lab.crawler`,
+pinned base, pull-only antagonist pairs) so the physics does the work the network
+model imposed.
+
+![Embodied Phase B — the physical stroke ceiling, the held manifold from real proprioception, and the Nyquist margin](../figures/integrator_snapshot_embodied.png)
+
+**B1 · the stroke ceiling emerges.** Driving the coordinated traveling-wave gait
+faster and faster, the *achieved* bend amplitude rolls off past a mechanical
+bandwidth — the body cannot be stroked arbitrarily fast — and both the ceiling
+frequency and the achievable bend **fall as segment mass rises** (light ≈ 0.85 rad
+to $f_c \approx 8$ Hz; heavy ≈ 0.35 rad, rolling off by ≈ 5 Hz). H1 grounded in
+real dynamics, not an imposed parameter.
+
+**A · the manifold, from real proprioception.** Low dimensionality is *not* free:
+an independently-flailing body genuinely spans many dimensions and a faithful beam
+must keep them (PR ≈ 4.5). The held **low-D manifold appears when the broadcast
+coordinates the body into a traveling wave** (PR ≈ 1.3) — the beam holds the gait
+manifold; the uncoordinated foil does not.
+
+**B · Nyquist margin.** The physical stroke ceiling is small ($f_c \approx 5$ Hz);
+the held-snapshot fidelity collapses only when the beam refresh drops below
+$2 f_c$, and a 40–80 Hz gamma beam clears that by 4–8×. **The body cannot stroke
+fast enough to alias the canvas** — the physical stroke ceiling is exactly what
+the beam must, and does, out-refresh.
+
+Verdict: **PASS**. The network map survives embodiment — the stroke ceiling, the
+held manifold, and the Nyquist margin are all recovered on a physical body.
+
 ## Order parameters, in code
 
 The estimators are the single source of truth, read from the script at build
@@ -203,20 +236,23 @@ different morphological knob:
    three order parameters and the capacity map fast and analyzably. This is where
    the "closure $\neq$ stability; show the beam *integrates*" and the
    renormalization-across-nested-scales points are settled.
-2. **Phase B — embodied instance**: a smaller layered body in MuJoCo, so the
-   strokes are real opponent-pair perturbations and the grounding is physical.
+2. **Phase B — embodied instance** *(done, this branch)*: a physical axial
+   opponent chain in MuJoCo, so the strokes are real opponent-pair perturbations
+   and the stroke ceiling emerges from mass and damping rather than an imposed
+   parameter. See [Phase B](#phase-b-embodied).
 
 ## Run
 
 ```bash
 cd experiments
-../.venv/bin/python integrator_snapshot.py        # synthetic self-test of the estimators
-../.venv/bin/python sweep_integrator_snapshot.py  # Phase-A model + lattice sweep (results above)
+../.venv/bin/python integrator_snapshot.py           # self-test of the estimators
+../.venv/bin/python sweep_integrator_snapshot.py     # Phase-A network model + lattice sweep
+../.venv/bin/python integrator_snapshot_embodied.py  # Phase-B embodied MuJoCo (figure + verdict)
 ```
 
 The estimator self-test recovers a known dimensionality, aliasing threshold, and
-capacity. The sweep runs the reduced dynamical-network model over the
-configuration lattice and writes `integrator_snapshot_results.json`. **Phase B**
-— a smaller layered body embodied in MuJoCo, so the strokes are real opponent-pair
-perturbations — is next; when the embodied map confirms the network map, this page
-graduates to `main` with its plots.
+capacity. The Phase-A sweep runs the reduced dynamical-network model over the
+configuration lattice and writes `integrator_snapshot_results.json`. The Phase-B
+script runs the embodied chain and writes
+`figures/integrator_snapshot_embodied.png`. The network map is confirmed on a
+physical body; the page graduates to `main` on review.
