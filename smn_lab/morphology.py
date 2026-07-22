@@ -392,9 +392,12 @@ def render_two_network(ax, schema: BodySchema, regions=None, seg_w: float = 2.4,
     sensory bundle and the motor efference MEET and the modulation filter alpha
     (C4) acts (only modulated data enters); and the IN -- the one integrating
     CANVAS, whose regions are CONSTRUCTED, not given. The DFN's filtered output
-    enters the canvas; the canvas drives the actuators, closing the loop. An EYE is
-    an orbit unit (several extraocular CAZs) with its own bundle to the DFN: vision
-    is the paradigm sensorimotor contingency, not a passive sensor."""
+    integrates into the canvas, which every board reads back (network closure).
+    There is NO central command: CAZs regulate EACH OTHER through the DFN (actuator
+    signals actuator through the messaging network), so no arrow runs from the
+    canvas to the actuators (C3). An EYE is an orbit unit (several extraocular CAZs)
+    with its own bundle to the DFN: vision is the paradigm sensorimotor
+    contingency, not a passive sensor."""
     hw, hh = seg_w / 2, seg_h / 2
     _, centers, caz_x = _layout(schema, seg_w, seg_h, gap)
     _blocks(ax, schema, centers, hw, hh)
@@ -449,15 +452,11 @@ def render_two_network(ax, schema: BodySchema, regions=None, seg_w: float = 2.4,
         ax.add_patch(FancyArrowPatch((jx, -hh - 0.12), (jx, dfn_y1 + 0.02),
                      arrowstyle="<|-|>", mutation_scale=10, lw=1.6, color="#2a3742",
                      zorder=3))
-    # DFN filtered output -> IN canvas
+    # DFN <-> IN: filtered output integrates; every board reads the canvas (closure).
+    # (No canvas -> actuator arrow: coordination is peer-to-peer, not commanded.)
     for x in np.linspace(cx0 + (cx1 - cx0) * 0.28, cx0 + (cx1 - cx0) * 0.72, 3):
-        ax.add_patch(FancyArrowPatch((x, dfn_y0), (x, cy1 - 0.02), arrowstyle="-|>",
-                     mutation_scale=11, lw=1.7, color="#a06a4a", zorder=4))
-    # IN canvas -> actuators (loop closes)
-    lx = cx0 + 0.28
-    ax.add_patch(FancyArrowPatch((lx, cy1), (lx, -hh - 0.1), arrowstyle="-|>",
-                 mutation_scale=9, lw=1.2, color="#3a5a7a", alpha=0.6,
-                 connectionstyle="arc3,rad=-0.3", zorder=2))
+        ax.add_patch(FancyArrowPatch((x, dfn_y0), (x, cy1 - 0.02), arrowstyle="<|-|>",
+                     mutation_scale=10, lw=1.6, color="#a06a4a", zorder=4))
 
     if show_labels:
         ax.text(cx0, hh + 0.55, "mechanical network", fontsize=7.5, ha="left",
@@ -466,8 +465,10 @@ def render_two_network(ax, schema: BodySchema, regions=None, seg_w: float = 2.4,
                 va="center", ha="left", color="#a06a4a")
         ax.text(cx1 + 0.14, (cy0 + cy1) / 2, "IN\nthe canvas\n(integrate)", fontsize=6.6,
                 va="center", ha="left", color="#3a5a7a")
-        ax.text(lx - 0.12, (cy1 - hh) / 2, "IN →\nmotor\n(loop)", fontsize=5.8,
-                ha="right", va="center", color="#3a5a7a")
+        ax.text((cx0 + cx1) / 2, cy0 - 0.28,
+                "CAZs regulate each other through the DFN — no central command "
+                "drives the actuators (C3)", ha="center", va="top", fontsize=6.4,
+                color="#556")
     _lr_labels(ax, centers[0], hw, hh)
     ax.set_aspect("equal")
     ax.set_xlim(cx0 - 1.0, cx1 + 1.6)
