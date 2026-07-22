@@ -386,14 +386,15 @@ def _draw_orbit(ax, x, y, color, canvas_y):
 
 def render_two_network(ax, schema: BodySchema, regions=None, seg_w: float = 2.4,
                        seg_h: float = 1.3, gap: float = 0.8, show_labels: bool = True):
-    """Both networks of an agent, from its schema. MECHANICAL body above (segment
-    blocks, dual-interface CAZ, single-interface transducers); the ONE broadcasting
-    CANVAS below. Every CAZ writes to AND reads from the canvas (closure). Single-
-    interface transducers reach the canvas through their OWN colour-coded channels,
-    converging into a bundle that passes a modulation gate (alpha) -- only modulated
-    data enters. An EYE is drawn as an orbit unit (several extraocular CAZs) with
-    its own bundle: vision is the paradigm sensorimotor contingency, not a passive
-    sensor. Canvas regions are CONSTRUCTED, not given."""
+    """Both networks of an agent, from its schema, as THREE functional layers:
+    the MECHANICAL body (segment blocks, dual-interface CAZ, single-interface
+    transducers); the DFN -- the differentiating + filtering network where the
+    sensory bundle and the motor efference MEET and the modulation filter alpha
+    (C4) acts (only modulated data enters); and the IN -- the one integrating
+    CANVAS, whose regions are CONSTRUCTED, not given. The DFN's filtered output
+    enters the canvas; the canvas drives the actuators, closing the loop. An EYE is
+    an orbit unit (several extraocular CAZs) with its own bundle to the DFN: vision
+    is the paradigm sensorimotor contingency, not a passive sensor."""
     hw, hh = seg_w / 2, seg_h / 2
     _, centers, caz_x = _layout(schema, seg_w, seg_h, gap)
     _blocks(ax, schema, centers, hw, hh)
@@ -419,41 +420,57 @@ def render_two_network(ax, schema: BodySchema, regions=None, seg_w: float = 2.4,
     orbit_x = centers[0] + hw + 1.0
     cx0 = min(centers) - hw - 0.3
     cx1 = (orbit_x + 0.7) if eye_mods else (centers[0] + hw + 0.3)
-    cy1 = -hh - 1.8
-    cy0 = cy1 - 1.7
+    gx = (min(centers) + centers[0]) / 2
+
+    # DFN band -- differentiate + filter (alpha); sensory + motor messages meet here
+    dfn_y1 = -hh - 1.05
+    dfn_y0 = dfn_y1 - 0.72
+    dfn_mid = (dfn_y0 + dfn_y1) / 2
+    ax.add_patch(Rectangle((cx0, dfn_y0), cx1 - cx0, dfn_y1 - dfn_y0,
+                 facecolor="#fbeee6", edgecolor="#a06a4a", lw=1.2, zorder=1))
+    ax.add_patch(Circle((gx, dfn_mid), 0.17, facecolor="white", edgecolor="#a02",
+                 lw=1.6, zorder=5))
+    ax.text(gx, dfn_mid, r"$\alpha$", ha="center", va="center", fontsize=8.5,
+            color="#a02", zorder=6)
+
+    # IN canvas below the DFN
+    cy1 = dfn_y0 - 0.95
+    cy0 = cy1 - 1.55
     render_canvas(ax, cx0, cx1, cy0, cy1, regions=regions, label=False)
 
-    for jx in caz_pts:                                  # closure: write + read
-        ax.add_patch(FancyArrowPatch((jx, -hh - 0.12), (jx, cy1 - 0.02),
-                     arrowstyle="<|-|>", mutation_scale=10, lw=1.6, color="#2a3742",
-                     zorder=3))
-
-    # single-interface transducers: colour-coded channels converge -> alpha gate -> canvas
-    gx = (min(centers) + centers[0]) / 2
-    gy = cy1 + 0.55
+    # sensory bundle -> DFN (colour-coded); eyes' orbit bundle -> DFN
     for (sx, sy, m) in simple:
-        ax.plot([sx, gx], [sy, gy + 0.14], color=MODALITY_COLORS.get(m, "#555"),
+        ax.plot([sx, gx], [sy, dfn_y1 + 0.04], color=MODALITY_COLORS.get(m, "#555"),
                 lw=1.1, alpha=0.85, zorder=2)
-    if simple:
-        ax.add_patch(Rectangle((gx - 0.3, gy - 0.13), 0.6, 0.28, facecolor="white",
-                     edgecolor="#a02", lw=1.5, zorder=5))
-        ax.text(gx, gy, r"$\alpha$", ha="center", va="center", fontsize=9,
-                color="#a02", zorder=6)
-        ax.add_patch(FancyArrowPatch((gx, gy - 0.13), (gx, cy1 - 0.02),
-                     arrowstyle="-|>", mutation_scale=12, lw=1.9, color="#a02", zorder=4))
-        if show_labels:
-            ax.text(gx + 0.42, gy, "modulation gate\n(only modulated\ndata enters)",
-                    fontsize=6.3, va="center", ha="left", color="#a02")
-
-    for i, m in enumerate(eye_mods):                    # eyes as orbit units + bundle
-        _draw_orbit(ax, orbit_x, -1.7 * i, MODALITY_COLORS.get(m, "#2166ac"), cy1)
+    for i, m in enumerate(eye_mods):
+        _draw_orbit(ax, orbit_x, -1.7 * i, MODALITY_COLORS.get(m, "#2166ac"), dfn_y1)
+    # motor efference: each CAZ -> DFN
+    for jx in caz_pts:
+        ax.add_patch(FancyArrowPatch((jx, -hh - 0.1), (jx, dfn_y1 + 0.02),
+                     arrowstyle="-|>", mutation_scale=8, lw=1.0, color="#2a3742",
+                     alpha=0.7, zorder=2))
+    # DFN filtered output -> IN canvas
+    for x in np.linspace(cx0 + (cx1 - cx0) * 0.28, cx0 + (cx1 - cx0) * 0.72, 3):
+        ax.add_patch(FancyArrowPatch((x, dfn_y0), (x, cy1 - 0.02), arrowstyle="-|>",
+                     mutation_scale=11, lw=1.7, color="#a06a4a", zorder=4))
+    # IN canvas -> actuators (loop closes)
+    lx = cx0 + 0.28
+    ax.add_patch(FancyArrowPatch((lx, cy1), (lx, -hh - 0.1), arrowstyle="-|>",
+                 mutation_scale=9, lw=1.2, color="#3a5a7a", alpha=0.6,
+                 connectionstyle="arc3,rad=-0.3", zorder=2))
 
     if show_labels:
         ax.text(cx0, hh + 0.55, "mechanical network", fontsize=7.5, ha="left",
                 color="#2a3742", style="italic")
+        ax.text(cx1 + 0.14, dfn_mid, "DFN\ndifferentiate\n+ filter (C4·α)", fontsize=6.6,
+                va="center", ha="left", color="#a06a4a")
+        ax.text(cx1 + 0.14, (cy0 + cy1) / 2, "IN\nthe canvas\n(integrate)", fontsize=6.6,
+                va="center", ha="left", color="#3a5a7a")
+        ax.text(lx - 0.12, (cy1 - hh) / 2, "IN →\nmotor\n(loop)", fontsize=5.8,
+                ha="right", va="center", color="#3a5a7a")
     _lr_labels(ax, centers[0], hw, hh)
     ax.set_aspect("equal")
-    ax.set_xlim(cx0 - 0.6, cx1 + 0.6)
+    ax.set_xlim(cx0 - 1.0, cx1 + 1.6)
     ax.set_ylim(cy0 - 0.5, hh + 1.1)
     ax.axis("off")
 

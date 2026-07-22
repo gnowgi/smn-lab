@@ -33,17 +33,30 @@ agent is made of, generated from the schema by `render_two_network(ax, schema)`:
 
 ![The two networks — the mechanical body and the single broadcasting canvas](figures/two_network_grammar.png)
 
-- The **mechanical network** — segments (nodes), muscles/hinge (edges), the
+The figure is **three functional layers**:
+
+- The **mechanical network** (top) — segments (nodes), muscles/hinge (edges), the
   dual-interface CAZ, and the single-interface transducers (the major source of
-  data) — sits above. Every CAZ **writes to and reads from** the canvas (network
-  closure — the double-headed arrow).
-- **Single-interface transducers reach the canvas through their own
-  colour-coded channels**, converging into a bundle that passes a **modulation
-  gate (α)** — *only modulated data enters*, raw data is dropped. (They do not ride
-  the motor actuator: sensors are their own graph reaching the neural canvas.)
+  data).
+- The **DFN — the differentiating + filtering network** (middle band). This is
+  where the **sensory bundle and the motor efference MEET**, and where the
+  modulation filter **α (C4)** acts: *only modulated data enters* — a stream is
+  admitted only if it is a predicted consequence of the board's own action, which
+  is why α needs the efference and lives here, not on the raw sensory bundle. The
+  DFN is the differentiating role (the modulation map + α); it is **not** the
+  canvas.
+- The **IN — the integrating network** (bottom): the one broadcasting **canvas**.
+  The DFN's *filtered output enters the canvas*; the canvas integrates it into the
+  held snapshot and **drives the actuators**, closing the sensorimotor loop.
+
+Two glyph notes:
+
+- **Colour-coded channels, no riding the actuator.** Single-interface transducers
+  reach the DFN through their own colour-coded channels (bundled), not through the
+  CAZ half-circle — sensors are their own graph.
 - **The eye is an orbit unit, not a bare sensor.** A visual transducer is drawn on
   an **orbit** (a small segment) carrying several **extraocular CAZ pairs**, with
-  its own bundle to the canvas — because vision is the paradigm **sensorimotor
+  its own bundle to the DFN — because vision is the paradigm **sensorimotor
   contingency**: its data is constituted by the eye's own movement, not passively
   received.
 
