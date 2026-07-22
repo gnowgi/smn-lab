@@ -444,11 +444,11 @@ def render_two_network(ax, schema: BodySchema, regions=None, seg_w: float = 2.4,
                 lw=1.1, alpha=0.85, zorder=2)
     for i, m in enumerate(eye_mods):
         _draw_orbit(ax, orbit_x, -1.7 * i, MODALITY_COLORS.get(m, "#2166ac"), dfn_y1)
-    # motor efference: each CAZ -> DFN
+    # efferent + afferent: each CAZ <-> DFN (the sensorimotor exchange)
     for jx in caz_pts:
-        ax.add_patch(FancyArrowPatch((jx, -hh - 0.1), (jx, dfn_y1 + 0.02),
-                     arrowstyle="-|>", mutation_scale=8, lw=1.0, color="#2a3742",
-                     alpha=0.7, zorder=2))
+        ax.add_patch(FancyArrowPatch((jx, -hh - 0.12), (jx, dfn_y1 + 0.02),
+                     arrowstyle="<|-|>", mutation_scale=10, lw=1.6, color="#2a3742",
+                     zorder=3))
     # DFN filtered output -> IN canvas
     for x in np.linspace(cx0 + (cx1 - cx0) * 0.28, cx0 + (cx1 - cx0) * 0.72, 3):
         ax.add_patch(FancyArrowPatch((x, dfn_y0), (x, cy1 - 0.02), arrowstyle="-|>",
