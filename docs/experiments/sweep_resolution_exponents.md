@@ -16,6 +16,17 @@ density, $R \sim \rho_{\text{CAZ}}^{\,a}$, with predicted exponent $a = \tfrac12
 Modulation is the multiplicative **gate** (gain $\mu\in[0,1]$): $\mu=0 \to R\approx1$
 (foil), $\mu=1 \to R \sim \sqrt{\rho}$ — a gate, not a second power law.
 
+## The two networks
+
+The [two networks](../diagram-grammar.md#the-two-networks-body-and-canvas) of this
+agent — the mechanical body above, and the one broadcasting **canvas** below that
+every CAZ writes to and reads from (network closure); single-interface transducers
+reach it only through a CAZ's modulation (*only modulated data enters*). The canvas
+is undivided — regions are **constructed** by broadcasting only as anatomy grows,
+not drawn in advance.
+
+![The two networks of this agent — mechanical body and one broadcasting canvas](../figures/two_network_sweep_resolution_exponents.png)
+
 ## Pre-registration
 - **Order parameter:** $R$ (world/self ratio).
 - **Density fit:** $\log R = a\log\rho + c$, fitted per seed at full modulation.

@@ -422,6 +422,27 @@ def render_two_network(ax, schema: BodySchema, regions=None, seg_w: float = 2.4,
     ax.axis("off")
 
 
+def render_two_network_graph(ax, positions, edges, *, head=0, regions=None):
+    """Both networks for a NON-axial body (branched, sheet, tube, appendicular):
+    the mechanical body graph above (segment blocks + a CAZ glyph on each edge +
+    the beam), and the ONE broadcasting canvas below. A broadcast arrow runs from
+    each CAZ (edge midpoint) down to the canvas -- write + read = closure."""
+    P = _norm_positions(positions, edges)
+    _draw_graph_body(ax, positions, edges, head=head)
+    xs = [p[0] for p in P.values()]; ys = [p[1] for p in P.values()]
+    x0, x1 = min(xs) - 0.6, max(xs) + 0.6
+    cy1 = min(ys) - 1.1
+    cy0 = cy1 - 1.3
+    render_canvas(ax, x0, x1, cy0, cy1, regions=regions)
+    for (a, b) in edges:                                # CAZ at each edge midpoint
+        mx, my = (P[a][0] + P[b][0]) / 2, (P[a][1] + P[b][1]) / 2
+        ax.add_patch(FancyArrowPatch((mx, my - 0.18), (mx, cy1 - 0.02),
+                     arrowstyle="<|-|>", mutation_scale=8, lw=1.3, color="#2a3742",
+                     zorder=3))
+    ax.set_xlim(x0 - 0.4, x1 + 0.4); ax.set_ylim(cy0 - 0.4, max(ys) + 0.6)
+    ax.set_aspect("equal"); ax.axis("off")
+
+
 # ----------------------------------------- graph views (any body, not just axial)
 # The chain renderers above lay segments out in a line. These generalize the same
 # vocabulary -- segment blocks, the dual-interface CAZ glyph, the light-blue beam --

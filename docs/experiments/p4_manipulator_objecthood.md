@@ -23,6 +23,17 @@ construction, with no learning and no stored template**. This is honestly a
 *difference register*, not yet full objecthood (one zone composes nothing) — but
 it is the atom the rest of the series builds on.
 
+## The two networks
+
+The [two networks](../diagram-grammar.md#the-two-networks-body-and-canvas) of this
+agent — the mechanical body above, and the one broadcasting **canvas** below that
+every CAZ writes to and reads from (network closure); single-interface transducers
+reach it only through a CAZ's modulation (*only modulated data enters*). The canvas
+is undivided — regions are **constructed** by broadcasting only as anatomy grows,
+not drawn in advance.
+
+![The two networks of this agent — mechanical body and one broadcasting canvas](../figures/two_network_p4_manipulator_objecthood.png)
+
 ## Setup
 
 One pull-only antagonist limb (the **dual interface**: intended effort,

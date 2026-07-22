@@ -13,6 +13,17 @@ $R^2 \to 1$. For a **decoupled** control (the same transducer reading an exogeno
 stimulus), $R^2 \to 0$. The signature is **structural** (a fit quality), not a
 magnitude difference — diagnostic, and not confounded by noise level.
 
+## The two networks
+
+The [two networks](../diagram-grammar.md#the-two-networks-body-and-canvas) of this
+agent — the mechanical body above, and the one broadcasting **canvas** below that
+every CAZ writes to and reads from (network closure); single-interface transducers
+reach it only through a CAZ's modulation (*only modulated data enters*). The canvas
+is undivided — regions are **constructed** by broadcasting only as anatomy grows,
+not drawn in advance.
+
+![The two networks of this agent — mechanical body and one broadcasting canvas](../figures/two_network_sweep_r5_dual_signal.png)
+
 ## Pre-registration
 - **Hypothesis:** in self-contact the residual is fully explained by the partner-as-stimulus form (R² → 1); decoupled, it is not (R² → 0).
 - **Order parameter:** R² of the residual against the partner-as-stimulus regressor.

@@ -10,6 +10,17 @@ $$a_{\text{partner}} = a_0 + \beta\,E_R,\qquad E_R^{*}=\rho\,\tau_E\,F_{\text{ac
 Classical reciprocal inhibition predicts the opposite: the partner is held at
 baseline, **independent of load** (slope 0).
 
+## The two networks
+
+The [two networks](../diagram-grammar.md#the-two-networks-body-and-canvas) of this
+agent — the mechanical body above, and the one broadcasting **canvas** below that
+every CAZ writes to and reads from (network closure); single-interface transducers
+reach it only through a CAZ's modulation (*only modulated data enters*). The canvas
+is undivided — regions are **constructed** by broadcasting only as anatomy grows,
+not drawn in advance.
+
+![The two networks of this agent — mechanical body and one broadcasting canvas](../figures/two_network_sweep_r1_tonic_load.png)
+
 ## Pre-registration
 - **Hypothesis:** partner tone rises linearly with the active zone's steady-state force; slope = `beta*rho*tau_E > 0`.
 - **Order parameter:** the fitted slope of `a_partner` vs `F_active`.

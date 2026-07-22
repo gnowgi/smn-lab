@@ -12,6 +12,17 @@ adaptation **process**: after the world changes, the world-model re-fits and the
 rolling-RMS reafference residual decays back toward the noise floor. R4 measures
 that decay.
 
+## The two networks
+
+The [two networks](../diagram-grammar.md#the-two-networks-body-and-canvas) of this
+agent — the mechanical body above, and the one broadcasting **canvas** below that
+every CAZ writes to and reads from (network closure); single-interface transducers
+reach it only through a CAZ's modulation (*only modulated data enters*). The canvas
+is undivided — regions are **constructed** by broadcasting only as anatomy grows,
+not drawn in advance.
+
+![The two networks of this agent — mechanical body and one broadcasting canvas](../figures/two_network_sweep_r4_adaptation.png)
+
 ## Preregistration
 
 - **Hypothesis.** After a step change in the world (a field remap or an object
