@@ -1,5 +1,16 @@
 # W2 — world-geometry, computed in the self-frame
 
+## The two networks
+
+The [two networks](../diagram-grammar.md#the-two-networks-body-and-canvas) of this
+agent — the mechanical body above, and the one broadcasting **canvas** below that
+every CAZ writes to and reads from (network closure); single-interface transducers
+reach it only through a CAZ's modulation (*only modulated data enters*). The canvas
+is undivided — regions are **constructed** by broadcasting only as anatomy grows,
+not drawn in advance.
+
+![The two networks of this agent — mechanical body and one broadcasting canvas](../figures/two_network_world_geometry_self_frame.png)
+
 ## Why this experiment
 
 [W1](world_in_self_graph.md) placed a single world feature as a position on the

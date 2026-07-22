@@ -20,6 +20,17 @@ scaling the world model.**
 It also answers the obvious objection — *where is the network?* The body **is** the
 network of zones, and the world it can construct grows with it.
 
+## The two networks
+
+The [two networks](../diagram-grammar.md#the-two-networks-body-and-canvas) of this
+agent — the mechanical body above, and the one broadcasting **canvas** below that
+every CAZ writes to and reads from (network closure); single-interface transducers
+reach it only through a CAZ's modulation (*only modulated data enters*). The canvas
+is undivided — regions are **constructed** by broadcasting only as anatomy grows,
+not drawn in advance.
+
+![The two networks of this agent — mechanical body and one broadcasting canvas](../figures/two_network_p7_scaling_network.png)
+
 ## Setup
 
 A row of *K* pull-only antagonist **press pads** (zones) presses on *K* facets of

@@ -8,6 +8,17 @@ object in that self-frame.** The claim: object-directedness is generated not by 
 one-time halt but by a haltable action **pattern** — a *recurrent, recognisable* halt
 — and the [capacity to halt](haltability.md) it builds on needs the layered canvas.
 
+## The two networks
+
+The [two networks](../diagram-grammar.md#the-two-networks-body-and-canvas) of this
+agent — the mechanical body above, and the one broadcasting **canvas** below that
+every CAZ writes to and reads from (network closure); single-interface transducers
+reach it only through a CAZ's modulation (*only modulated data enters*). The canvas
+is undivided — regions are **constructed** by broadcasting only as anatomy grows,
+not drawn in advance.
+
+![The two networks of this agent — mechanical body and one broadcasting canvas](../figures/two_network_p6_haltability_aboutness.png)
+
 ## Formalism — self-model first, then the pattern in its frame
 
 **① The self-model, first.** In free space the agent drives its two limbs with

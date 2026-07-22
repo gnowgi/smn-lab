@@ -26,6 +26,50 @@ The grammar gives the same body **two views**, sharing one vocabulary:
 
 ![The SMN diagram grammar — morphology view, network view, and the CAZ/DOF key](figures/diagram_grammar.png)
 
+## The two networks — body and canvas
+
+Beyond the two *views* above, a fuller figure shows the two *networks* an SMN
+agent is made of, generated from the schema by `render_two_network(ax, schema)`:
+
+![The two networks — the mechanical body and the single broadcasting canvas](figures/two_network_grammar.png)
+
+The figure is **three functional layers**:
+
+- The **mechanical network** (top) — segments (nodes), muscles/hinge (edges), the
+  dual-interface CAZ, and the single-interface transducers (the major source of
+  data).
+- The **DFN — the differentiating + filtering network** (middle band). This is
+  where the **sensory bundle and the motor efference MEET**, and where the
+  modulation filter **α (C4)** acts: *only modulated data enters* — a stream is
+  admitted only if it is a predicted consequence of the board's own action, which
+  is why α needs the efference and lives here, not on the raw sensory bundle. The
+  DFN is the differentiating role (the modulation map + α); it is **not** the
+  canvas.
+- The **IN — the integrating network** (bottom): the one broadcasting **canvas**.
+  The DFN's *filtered output enters the canvas*; the canvas integrates it into the
+  held snapshot and **drives the actuators**, closing the sensorimotor loop.
+
+Two glyph notes:
+
+- **Colour-coded channels, no riding the actuator.** Single-interface transducers
+  reach the DFN through their own colour-coded channels (bundled), not through the
+  CAZ half-circle — sensors are their own graph.
+- **The eye is an orbit unit, not a bare sensor.** A visual transducer is drawn on
+  an **orbit** (a small segment) carrying several **extraocular CAZ pairs**, with
+  its own bundle to the DFN — because vision is the paradigm **sensorimotor
+  contingency**: its data is constituted by the eye's own movement, not passively
+  received.
+
+**Regions on the canvas are constructed, not given — and they are drawn as an
+emergent digraph, not stipulated bands.** A small, unbranched agent has **one
+undivided canvas**. As the body grows, the canvas's **layers emerge** from the
+dependency structure of the messaging graph: a directed digraph whose strata are
+*derived* (longest dependency path from a small, interconnected visceral core),
+node size = degree/weight, colour = emergent stratum. The **number of layers is
+never stipulated** — it emerges (right panel; `render_emergent_canvas`). This is
+the constructive commitment made literal, and the phenomenon tested in the
+canvas-regions study.
+
 ## The glyphs
 
 | Element | Glyph | Notes |
