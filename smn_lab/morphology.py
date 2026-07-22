@@ -461,6 +461,8 @@ def render_two_network(ax, schema: BodySchema, regions=None, seg_w: float = 2.4,
     if show_labels:
         ax.text(cx0, hh + 0.55, "mechanical network", fontsize=7.5, ha="left",
                 color="#2a3742", style="italic")
+        ax.text(cx0, dfn_y1 + 0.22, "messaging network  (DFN + IN)", fontsize=7.5,
+                ha="left", va="bottom", color="#3a5a7a", style="italic")
         ax.text(cx1 + 0.14, dfn_mid, "DFN\ndifferentiate\n+ filter (C4·α)", fontsize=6.6,
                 va="center", ha="left", color="#a06a4a")
         ax.text(cx1 + 0.14, (cy0 + cy1) / 2, "IN\nthe canvas\n(integrate)", fontsize=6.6,

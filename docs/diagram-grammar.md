@@ -27,30 +27,52 @@ The grammar gives the same body **two views**, sharing one vocabulary:
 
 ![The SMN diagram grammar — morphology view, the two-network view, and the CAZ/DOF key](figures/diagram_grammar.png)
 
-## The two networks — body and canvas
+## The two networks — mechanical and messaging
 
 Beyond the two *views* above, a fuller figure shows the two *networks* an SMN
 agent is made of, generated from the schema by `render_two_network(ax, schema)`:
 
 ![The two networks — the mechanical body and the single broadcasting canvas](figures/two_network_grammar.png)
 
-The figure is **three functional layers**:
+### Which nodes, which edges?
 
-- The **mechanical network** (top) — segments (nodes), muscles/hinge (edges), the
-  dual-interface CAZ, and the single-interface transducers (the major source of
-  data).
-- The **DFN — the differentiating + filtering network** (middle band). This is
-  where the **sensory bundle and the motor efference MEET**, and where the
-  modulation filter **α (C4)** acts: *only modulated data enters* — a stream is
-  admitted only if it is a predicted consequence of the board's own action, which
-  is why α needs the efference and lives here, not on the raw sensory bundle. The
-  DFN is the differentiating role (the modulation map + α); it is **not** the
-  canvas.
-- The **IN — the integrating network** (bottom): the one broadcasting **canvas**.
-  The DFN's *filtered output enters the canvas*; the canvas integrates it into the
-  held snapshot, which every board reads back (network closure). It does **not**
-  drive the actuators: the CAZs regulate one another through the DFN —
-  coordination is peer-to-peer, not central command (C3).
+The agent is one SMN, but "network" is answered at three levels — spell out the
+nodes and edges of each and the ambiguity dissolves:
+
+| level (criterion) | nodes | edges | count |
+| --- | --- | --- | --- |
+| **substrate** (what the tissue is) | actuators (motor tissue), sensors, integrators (neurons/boards) | couplings (synapses) | **one** signal graph, 3 node-kinds |
+| **state** (what has its own dynamics) | *mechanical:* segments · *messaging:* CAZ boards (+ sensors as sources) | *mechanical:* actuators (a joint's opponent pair) · *messaging:* afferents + broadcast (Π) | **two** networks |
+| **function** (what the messaging net computes) | — | — | **two** operators: DFN, IN |
+
+The **CAZ** is the shared vertex: it is an actuator **edge** of the mechanical
+network *and* a board **node** of the messaging network. That double role is the
+point, not a slip — a muscle is at once a *thing* (an actuator node of the signal
+graph) and a *connection between two segments* (an edge of the mechanical network),
+so the mechanical network is the **dual**, on its actuator sub-part, of the signal
+graph. Whether you say **two** networks or **three** graphs is only where you put
+the sensors: fold them into the messaging network as afferent sources → two;
+separate them → a *graph of three graphs* (kinematic, sensory, messaging). We lead
+with **two**, because each of the two has its own state and the sensory graph has
+none of its own.
+
+### The figure: the mechanical network above, the messaging network (DFN + IN) below
+
+- The **mechanical network** (top) — segments (nodes), actuators (edges, a joint's
+  opponent pair = one CAZ = one DOF), the dual-interface CAZ, and the
+  single-interface transducers (the major source of data).
+- The **messaging network** (below) is drawn as its **two functional
+  sub-networks**, distinguished by function not location:
+    - the **DFN — differentiating + filtering** (middle band): where the **sensory
+      bundle and the motor efference MEET**, and where the modulation filter **α
+      (C4)** acts — *only modulated data enters* (a stream is admitted only if it is
+      a predicted consequence of the board's own action, which is why α needs the
+      efference and lives here, not on the raw sensory bundle);
+    - the **IN — integrating** (bottom): the one broadcasting **canvas**. The DFN's
+      *filtered output enters the canvas*; the canvas integrates it into the held
+      snapshot, which every board reads back (network closure). It does **not**
+      drive the actuators: the CAZs regulate one another through the DFN —
+      coordination is peer-to-peer, not central command (C3).
 
 Two glyph notes:
 
