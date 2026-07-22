@@ -35,19 +35,27 @@ agent is made of, generated from the schema by `render_two_network(ax, schema)`:
 
 - The **mechanical network** — segments (nodes), muscles/hinge (edges), the
   dual-interface CAZ, and the single-interface transducers (the major source of
-  data) — sits above.
-- The **messaging network** is **one broadcasting canvas** below: a
-  high-frequency substrate (γ refresh · θ hold). Every CAZ **writes to and reads
-  from** it (network closure — the double-headed arrow); a single-interface
-  transducer reaches it **only through a CAZ's modulation** — *only modulated data
-  enters*, raw data is dropped.
+  data) — sits above. Every CAZ **writes to and reads from** the canvas (network
+  closure — the double-headed arrow).
+- **Single-interface transducers reach the canvas through their own
+  colour-coded channels**, converging into a bundle that passes a **modulation
+  gate (α)** — *only modulated data enters*, raw data is dropped. (They do not ride
+  the motor actuator: sensors are their own graph reaching the neural canvas.)
+- **The eye is an orbit unit, not a bare sensor.** A visual transducer is drawn on
+  an **orbit** (a small segment) carrying several **extraocular CAZ pairs**, with
+  its own bundle to the canvas — because vision is the paradigm **sensorimotor
+  contingency**: its data is constituted by the eye's own movement, not passively
+  received.
 
-**Regions on the canvas are constructed, not given.** A small, unbranched agent
-has **one undivided canvas** (left). Functional regions (L0 visceral, L1 axial, L2
-appendicular) are **self-organized** by continued broadcasting as anatomy grows
-(right) — a prediction (tested in the canvas-regions study), not a partition drawn
-in advance. Pass `regions=` to `render_two_network` only once they have
-self-organized; the default is the undivided canvas.
+**Regions on the canvas are constructed, not given — and they are drawn as an
+emergent digraph, not stipulated bands.** A small, unbranched agent has **one
+undivided canvas**. As the body grows, the canvas's **layers emerge** from the
+dependency structure of the messaging graph: a directed digraph whose strata are
+*derived* (longest dependency path from a small, interconnected visceral core),
+node size = degree/weight, colour = emergent stratum. The **number of layers is
+never stipulated** — it emerges (right panel; `render_emergent_canvas`). This is
+the constructive commitment made literal, and the phenomenon tested in the
+canvas-regions study.
 
 ## The glyphs
 

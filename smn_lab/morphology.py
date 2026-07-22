@@ -365,60 +365,96 @@ def render_canvas(ax, x0, x1, y0, y1, regions=None, label=True):
                 ha="center", va="bottom", fontsize=7.6, style="italic", color="#2a3742")
 
 
+def _draw_orbit(ax, x, y, color, canvas_y):
+    """An EYE is not a bare single-interface transducer -- it is the paradigm
+    sensorimotor-contingency unit: mounted on an ORBIT (a small segment) carrying
+    several extraocular CAZ pairs that move it. Draw the orbit + its CAZs + the
+    eye, and a BUNDLE of lines (one per extraocular pair) reaching the canvas."""
+    ow, oh = 0.5, 0.8
+    ax.add_patch(FancyBboxPatch((x - ow, y - oh), 2 * ow, 2 * oh,
+                 boxstyle="round,pad=0.0,rounding_size=0.12", facecolor="#eef3fa",
+                 edgecolor="#3a4a5e", lw=1.2, zorder=3))
+    for k, dof in enumerate(("lateral", "dorsoventral", "roll")):    # extraocular pairs
+        caz_glyph(ax, x - ow + 0.02, y - oh + 0.34 + 0.62 * k, 0.15, dof=dof, z=6)
+    _eye(ax, x + 0.16, y, 0.26, color)
+    for dx in (-0.24, 0.0, 0.24):                                    # the bundle
+        ax.plot([x + dx, x + dx], [y - oh - 0.04, canvas_y - 0.02], color=color,
+                lw=1.1, alpha=0.75, zorder=2)
+    ax.text(x, y + oh + 0.12, "orbit\n(extraocular CAZs)", fontsize=6.2, ha="center",
+            va="bottom", color="#556")
+
+
 def render_two_network(ax, schema: BodySchema, regions=None, seg_w: float = 2.4,
                        seg_h: float = 1.3, gap: float = 0.8, show_labels: bool = True):
-    """Both networks of an agent, generated from its schema: the MECHANICAL body
-    (segment blocks, the dual-interface CAZ, the single-interface transducers)
-    above, and the ONE broadcasting CANVAS below. Every CAZ writes to AND reads
-    from the canvas (network closure, the double arrow); a single-interface
-    transducer reaches the canvas only through a CAZ's modulation (only modulated
-    data enters). Canvas regions are CONSTRUCTED, not given -- pass ``regions``
-    only once they have self-organized."""
+    """Both networks of an agent, from its schema. MECHANICAL body above (segment
+    blocks, dual-interface CAZ, single-interface transducers); the ONE broadcasting
+    CANVAS below. Every CAZ writes to AND reads from the canvas (closure). Single-
+    interface transducers reach the canvas through their OWN colour-coded channels,
+    converging into a bundle that passes a modulation gate (alpha) -- only modulated
+    data enters. An EYE is drawn as an orbit unit (several extraocular CAZs) with
+    its own bundle: vision is the paradigm sensorimotor contingency, not a passive
+    sensor. Canvas regions are CONSTRUCTED, not given."""
     hw, hh = seg_w / 2, seg_h / 2
     _, centers, caz_x = _layout(schema, seg_w, seg_h, gap)
-
     _blocks(ax, schema, centers, hw, hh)
     if show_labels:
         for cx, seg in zip(centers, schema.segments):
             ax.text(cx, hh - 0.16, seg.name, ha="center", va="center",
                     fontsize=8, color="#33414f", zorder=2)
+
     sensors = _sensor_sites(schema, centers, hw, hh)
-    for (x, y, m, kind) in sensors:
-        if kind == "localizer":
-            (_eye if _DISTAL.get(m) == "eye" else _ear)(ax, x, y, 0.34,
-                                                        MODALITY_COLORS.get(m, "#555"))
-        else:
-            sensor_node(ax, x, y, 0.13, m)
+    simple = [(x, y, m) for (x, y, m, k) in sensors
+              if not (k == "localizer" and _DISTAL.get(m) == "eye")]
+    eye_mods = []
+    for (x, y, m, k) in sensors:
+        if k == "localizer" and _DISTAL.get(m) == "eye" and m not in eye_mods:
+            eye_mods.append(m)
+    for (x, y, m) in simple:
+        sensor_node(ax, x, y, 0.13, m)
     caz_pts = []
     for j, jx in enumerate(caz_x):
         for (x, y, dof) in _caz_sites(_joint(schema, j), jx, CAZ_R):
-            caz_glyph(ax, x, y, CAZ_R, dof=dof)
-            caz_pts.append(x)
+            caz_glyph(ax, x, y, CAZ_R, dof=dof); caz_pts.append(x)
 
-    cx0, cx1 = min(centers) - hw - 0.3, centers[0] + hw + 0.3
-    cy1 = -hh - 1.5
+    orbit_x = centers[0] + hw + 1.0
+    cx0 = min(centers) - hw - 0.3
+    cx1 = (orbit_x + 0.7) if eye_mods else (centers[0] + hw + 0.3)
+    cy1 = -hh - 1.8
     cy0 = cy1 - 1.7
-    render_canvas(ax, cx0, cx1, cy0, cy1, regions=regions)
+    render_canvas(ax, cx0, cx1, cy0, cy1, regions=regions, label=False)
 
     for jx in caz_pts:                                  # closure: write + read
         ax.add_patch(FancyArrowPatch((jx, -hh - 0.12), (jx, cy1 - 0.02),
                      arrowstyle="<|-|>", mutation_scale=10, lw=1.6, color="#2a3742",
                      zorder=3))
-    for (sx, sy, m, kind) in sensors:                   # transducer -> CAZ (modulation)
-        jx = min(caz_x, key=lambda c: abs(c - sx)) if caz_x else sx
-        ax.plot([sx, jx], [sy, 0.0], color=NETWORK_COLOR, lw=1.0, alpha=0.8, zorder=2)
+
+    # single-interface transducers: colour-coded channels converge -> alpha gate -> canvas
+    gx = (min(centers) + centers[0]) / 2
+    gy = cy1 + 0.55
+    for (sx, sy, m) in simple:
+        ax.plot([sx, gx], [sy, gy + 0.14], color=MODALITY_COLORS.get(m, "#555"),
+                lw=1.1, alpha=0.85, zorder=2)
+    if simple:
+        ax.add_patch(Rectangle((gx - 0.3, gy - 0.13), 0.6, 0.28, facecolor="white",
+                     edgecolor="#a02", lw=1.5, zorder=5))
+        ax.text(gx, gy, r"$\alpha$", ha="center", va="center", fontsize=9,
+                color="#a02", zorder=6)
+        ax.add_patch(FancyArrowPatch((gx, gy - 0.13), (gx, cy1 - 0.02),
+                     arrowstyle="-|>", mutation_scale=12, lw=1.9, color="#a02", zorder=4))
+        if show_labels:
+            ax.text(gx + 0.42, gy, "modulation gate\n(only modulated\ndata enters)",
+                    fontsize=6.3, va="center", ha="left", color="#a02")
+
+    for i, m in enumerate(eye_mods):                    # eyes as orbit units + bundle
+        _draw_orbit(ax, orbit_x, -1.7 * i, MODALITY_COLORS.get(m, "#2166ac"), cy1)
 
     if show_labels:
-        rx = centers[0] + hw + 0.45
-        ax.text(rx, 0.0, "mechanical\nnetwork", fontsize=7.5, va="center", ha="left",
+        ax.text(cx0, hh + 0.55, "mechanical network", fontsize=7.5, ha="left",
                 color="#2a3742", style="italic")
-        ax.text(rx, (cy0 + cy1) / 2, "only modulated\ndata enters\nthe canvas",
-                fontsize=7, va="center", ha="left", color="#a02")
-        ax.text((cx0 + centers[0]) / 2, cy1 - 0.02, " ", fontsize=1)  # spacer
     _lr_labels(ax, centers[0], hw, hh)
     ax.set_aspect("equal")
-    ax.set_xlim(cx0 - 0.5, centers[0] + hw + 2.7)
-    ax.set_ylim(cy0 - 0.5, hh + 0.9)
+    ax.set_xlim(cx0 - 0.6, cx1 + 0.6)
+    ax.set_ylim(cy0 - 0.5, hh + 1.1)
     ax.axis("off")
 
 
@@ -441,6 +477,54 @@ def render_two_network_graph(ax, positions, edges, *, head=0, regions=None):
                      zorder=3))
     ax.set_xlim(x0 - 0.4, x1 + 0.4); ax.set_ylim(cy0 - 0.4, max(ys) + 0.6)
     ax.set_aspect("equal"); ax.axis("off")
+
+
+def render_emergent_canvas(ax, nodes, edges, x0, x1, y0, y1, core=None, label=True):
+    """The canvas as an EMERGENT dependency digraph, drawn into the box
+    [x0,x1] x [y0,y1]. `edges` are directed (u -> v : v depends on u). The layers
+    are NOT stipulated: each node's stratum is its longest dependency path from the
+    core (nodes with no incoming edge), so the NUMBER of strata emerges from the
+    graph. Node size = degree (weight); node colour = emergent stratum. This is the
+    constructive canvas -- layers derived from the messaging graph, not drawn."""
+    incoming = {n: 0 for n in nodes}
+    for (u, v) in edges:
+        incoming[v] = incoming.get(v, 0) + 1
+    src = core or [n for n in nodes if incoming.get(n, 0) == 0]
+    depth = {n: 0 for n in src}
+    for _ in range(len(nodes)):                          # relax longest paths
+        for (u, v) in edges:
+            depth[v] = max(depth.get(v, 0), depth.get(u, 0) + 1)
+    for n in nodes:
+        depth.setdefault(n, 0)
+    deg = {n: 0 for n in nodes}
+    for (u, v) in edges:
+        deg[u] += 1; deg[v] += 1
+    levels = sorted(set(depth.values()))
+    yof = {lv: (y1 - (y1 - y0) * (i / max(1, len(levels) - 1)))
+           for i, lv in enumerate(levels)}
+    pos = {}
+    for lv in levels:
+        row = [n for n in nodes if depth[n] == lv]
+        xs = (np.linspace(x0 + 0.6, x1 - 0.6, len(row)) if len(row) > 1
+              else [(x0 + x1) / 2])
+        for n, x in zip(row, xs):
+            pos[n] = (x, yof[lv])
+    cmap = plt.cm.viridis(np.linspace(0.15, 0.85, max(1, len(levels))))
+    r0 = min(0.22, (x1 - x0) / (3.0 * max(len(nodes), 1)) + 0.09)
+    for (u, v) in edges:
+        ax.add_patch(FancyArrowPatch(pos[u], pos[v], arrowstyle="-|>", mutation_scale=8,
+                     color="#9fb0bd", lw=1.0, shrinkA=7, shrinkB=7,
+                     connectionstyle="arc3,rad=0.06", zorder=2))
+    for n in nodes:
+        x, y = pos[n]
+        ax.add_patch(Circle((x, y), r0 + 0.02 * deg[n],
+                     facecolor=cmap[levels.index(depth[n])], edgecolor="#33414f",
+                     lw=1.1, zorder=3))
+    if label:
+        ax.text((x0 + x1) / 2, y1 + 0.2,
+                f"the canvas — an EMERGENT dependency digraph "
+                f"({len(levels)} strata emerged, not stipulated)",
+                ha="center", va="bottom", fontsize=7.6, style="italic", color="#2a3742")
 
 
 # ----------------------------------------- graph views (any body, not just axial)
