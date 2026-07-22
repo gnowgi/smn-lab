@@ -26,6 +26,29 @@ The grammar gives the same body **two views**, sharing one vocabulary:
 
 ![The SMN diagram grammar — morphology view, network view, and the CAZ/DOF key](figures/diagram_grammar.png)
 
+## The two networks — body and canvas
+
+Beyond the two *views* above, a fuller figure shows the two *networks* an SMN
+agent is made of, generated from the schema by `render_two_network(ax, schema)`:
+
+![The two networks — the mechanical body and the single broadcasting canvas](figures/two_network_grammar.png)
+
+- The **mechanical network** — segments (nodes), muscles/hinge (edges), the
+  dual-interface CAZ, and the single-interface transducers (the major source of
+  data) — sits above.
+- The **messaging network** is **one broadcasting canvas** below: a
+  high-frequency substrate (γ refresh · θ hold). Every CAZ **writes to and reads
+  from** it (network closure — the double-headed arrow); a single-interface
+  transducer reaches it **only through a CAZ's modulation** — *only modulated data
+  enters*, raw data is dropped.
+
+**Regions on the canvas are constructed, not given.** A small, unbranched agent
+has **one undivided canvas** (left). Functional regions (L0 visceral, L1 axial, L2
+appendicular) are **self-organized** by continued broadcasting as anatomy grows
+(right) — a prediction (tested in the canvas-regions study), not a partition drawn
+in advance. Pass `regions=` to `render_two_network` only once they have
+self-organized; the default is the undivided canvas.
+
 ## The glyphs
 
 | Element | Glyph | Notes |

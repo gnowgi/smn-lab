@@ -38,7 +38,8 @@ from dataclasses import dataclass, field
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyBboxPatch, Circle, Ellipse, Wedge, RegularPolygon
+from matplotlib.patches import (FancyBboxPatch, Circle, Ellipse, Wedge,
+                                RegularPolygon, Rectangle, FancyArrowPatch)
 
 # Fixed modality palette -- the same hue means the same modality in every figure.
 MODALITY_COLORS = {
@@ -332,6 +333,93 @@ def render_network(ax, schema: BodySchema, seg_w: float = 2.4,
             caz_glyph(ax, x, y, CAZ_R, dof=dof)
 
     _finish(ax, centers, hw, hh, compass)
+
+
+CANVAS_FC = "#e7eef6"
+
+
+def render_canvas(ax, x0, x1, y0, y1, regions=None, label=True):
+    """The broadcasting substrate as a band. By default ONE undivided canvas -- a
+    simple agent has no regions. `regions` is drawn only when regions have been
+    CONSTRUCTED (e.g. read off a self-organized canvas); each is
+    ``(name, x_lo, x_hi[, facecolor])``. Regions are never pre-given here."""
+    ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, facecolor=CANVAS_FC,
+                 edgecolor="#9fb0bd", lw=1.2, zorder=1))
+    if regions and all(isinstance(r, str) for r in regions):   # names -> even partition
+        e = np.linspace(x0, x1, len(regions) + 1)
+        regions = [(regions[i], e[i], e[i + 1]) for i in range(len(regions))]
+    if regions:
+        for r in regions:
+            name, rx0, rx1 = r[0], r[1], r[2]
+            fc = r[3] if len(r) > 3 else "#d6e6f6"
+            ax.add_patch(Rectangle((rx0, y0), rx1 - rx0, y1 - y0, facecolor=fc,
+                         edgecolor="#9fb0bd", lw=1.0, alpha=0.9, zorder=1))
+            ax.text((rx0 + rx1) / 2, (y0 + y1) / 2, name, ha="center", va="center",
+                    fontsize=9, color="#33414f", fontweight="bold", zorder=2)
+    else:
+        ax.text((x0 + x1) / 2, (y0 + y1) / 2, "one undivided canvas", ha="center",
+                va="center", fontsize=10, color="#8496a6", style="italic", alpha=0.85)
+    if label:
+        ax.text((x0 + x1) / 2, y1 + 0.16,
+                "the canvas — one broadcasting substrate (γ refresh · θ hold)",
+                ha="center", va="bottom", fontsize=7.6, style="italic", color="#2a3742")
+
+
+def render_two_network(ax, schema: BodySchema, regions=None, seg_w: float = 2.4,
+                       seg_h: float = 1.3, gap: float = 0.8, show_labels: bool = True):
+    """Both networks of an agent, generated from its schema: the MECHANICAL body
+    (segment blocks, the dual-interface CAZ, the single-interface transducers)
+    above, and the ONE broadcasting CANVAS below. Every CAZ writes to AND reads
+    from the canvas (network closure, the double arrow); a single-interface
+    transducer reaches the canvas only through a CAZ's modulation (only modulated
+    data enters). Canvas regions are CONSTRUCTED, not given -- pass ``regions``
+    only once they have self-organized."""
+    hw, hh = seg_w / 2, seg_h / 2
+    _, centers, caz_x = _layout(schema, seg_w, seg_h, gap)
+
+    _blocks(ax, schema, centers, hw, hh)
+    if show_labels:
+        for cx, seg in zip(centers, schema.segments):
+            ax.text(cx, hh - 0.16, seg.name, ha="center", va="center",
+                    fontsize=8, color="#33414f", zorder=2)
+    sensors = _sensor_sites(schema, centers, hw, hh)
+    for (x, y, m, kind) in sensors:
+        if kind == "localizer":
+            (_eye if _DISTAL.get(m) == "eye" else _ear)(ax, x, y, 0.34,
+                                                        MODALITY_COLORS.get(m, "#555"))
+        else:
+            sensor_node(ax, x, y, 0.13, m)
+    caz_pts = []
+    for j, jx in enumerate(caz_x):
+        for (x, y, dof) in _caz_sites(_joint(schema, j), jx, CAZ_R):
+            caz_glyph(ax, x, y, CAZ_R, dof=dof)
+            caz_pts.append(x)
+
+    cx0, cx1 = min(centers) - hw - 0.3, centers[0] + hw + 0.3
+    cy1 = -hh - 1.5
+    cy0 = cy1 - 1.7
+    render_canvas(ax, cx0, cx1, cy0, cy1, regions=regions)
+
+    for jx in caz_pts:                                  # closure: write + read
+        ax.add_patch(FancyArrowPatch((jx, -hh - 0.12), (jx, cy1 - 0.02),
+                     arrowstyle="<|-|>", mutation_scale=10, lw=1.6, color="#2a3742",
+                     zorder=3))
+    for (sx, sy, m, kind) in sensors:                   # transducer -> CAZ (modulation)
+        jx = min(caz_x, key=lambda c: abs(c - sx)) if caz_x else sx
+        ax.plot([sx, jx], [sy, 0.0], color=NETWORK_COLOR, lw=1.0, alpha=0.8, zorder=2)
+
+    if show_labels:
+        rx = centers[0] + hw + 0.45
+        ax.text(rx, 0.0, "mechanical\nnetwork", fontsize=7.5, va="center", ha="left",
+                color="#2a3742", style="italic")
+        ax.text(rx, (cy0 + cy1) / 2, "only modulated\ndata enters\nthe canvas",
+                fontsize=7, va="center", ha="left", color="#a02")
+        ax.text((cx0 + centers[0]) / 2, cy1 - 0.02, " ", fontsize=1)  # spacer
+    _lr_labels(ax, centers[0], hw, hh)
+    ax.set_aspect("equal")
+    ax.set_xlim(cx0 - 0.5, centers[0] + hw + 2.7)
+    ax.set_ylim(cy0 - 0.5, hh + 0.9)
+    ax.axis("off")
 
 
 # ----------------------------------------- graph views (any body, not just axial)
