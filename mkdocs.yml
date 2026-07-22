@@ -51,6 +51,7 @@ nav:
       - "P3 — cross-modal discrimination (deferred; the object seam)": experiments/p3_crossmodal_discrimination.md
   - "§7 · Taxonomy — more body, not more transducers":
       - "Phase II — overview": phase2.md
+      - "Canvas regions — the canvas constructs its own regions [preregistered]": experiments/canvas_regions.md
       - "Haltability — the pivot that layering enables": experiments/haltability.md
       - "World model scales with the network (E4)": experiments/p7_scaling_network.md
       - "Objecthood as a coupling-density transition (E4b)": experiments/p8_objecthood_transition.md
