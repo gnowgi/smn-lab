@@ -19,12 +19,13 @@ The grammar gives the same body **two views**, sharing one vocabulary:
 - **Morphology view** — *where things are mounted*: the head-to-tail chain of
   segment blocks, with **sensors mounted inside each block** and a CAZ glyph at
   each inter-segment joint.
-- **Network view** — *who couples to whom*: the same layout with light-blue
-  coupling lines — each sensor to its CAZ, and CAZ to CAZ along the body (the
-  messaging beam). The body is drawn faintly underneath, because the network is
-  grounded in body geometry, not abstracted away from it.
+- **Two-network view** — *the mechanical body and the messaging canvas*: the same
+  body drawn as two coupled networks — the mechanical network above, the one
+  broadcasting canvas (IN) below, joined through the DFN. This is the paper's
+  Figure 2; it is expanded in [The two networks](#the-two-networks--body-and-canvas)
+  below.
 
-![The SMN diagram grammar — morphology view, network view, and the CAZ/DOF key](figures/diagram_grammar.png)
+![The SMN diagram grammar — morphology view, the two-network view, and the CAZ/DOF key](figures/diagram_grammar.png)
 
 ## The two networks — body and canvas
 
@@ -47,7 +48,9 @@ The figure is **three functional layers**:
   canvas.
 - The **IN — the integrating network** (bottom): the one broadcasting **canvas**.
   The DFN's *filtered output enters the canvas*; the canvas integrates it into the
-  held snapshot and **drives the actuators**, closing the sensorimotor loop.
+  held snapshot, which every board reads back (network closure). It does **not**
+  drive the actuators: the CAZs regulate one another through the DFN —
+  coordination is peer-to-peer, not central command (C3).
 
 Two glyph notes:
 
