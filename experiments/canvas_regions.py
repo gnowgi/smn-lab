@@ -1,25 +1,29 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 G. Nagarjuna and Durgaprasad Karnam
 """Canvas regions -- does the broadcasting canvas CONSTRUCT its own functional
-regions? STARTER / PREREGISTRATION.
-
-Status: PREREGISTERED, implementation in progress (branch exp/canvas-regions).
+structure? ORDER PARAMETERS (the single source of truth).
 
 The broadcasting substrate (the canvas) is ONE undivided field. The framework's
-claim is that functional regions are NOT pre-given (not a description) but
-CONSTRUCTED -- they self-organize from the functional relations of the modules
-that keep broadcasting to the canvas (cortical-map formation). This is a
-PREDICTION of a construction, and its best test: build a body of modules
-broadcasting to one undivided plastic canvas and ask whether regions emerge.
+claim is that its functional structure is NOT pre-given (not a description) but
+CONSTRUCTED from the functional relations of the modules that keep broadcasting.
+This experiment realizes that as an EMERGENT DEPENDENCY DIGRAPH -- the same object
+the diagram grammar draws (`smn_lab.morphology.render_emergent_canvas`): modules
+broadcast, co-activity builds couplings, and structure emerges from the graph's
+topology. Two things emerge that a smoothing map cannot tell apart:
 
-This file holds the ORDER PARAMETERS (the single source of truth):
-  - canvas_segregation: how spatially clustered the canvas's functional labels are,
-    normalized so 0 = unstructured (chance) and 1 = fully segregated regions;
-  - n_regions: the number of contiguous label territories that have formed.
+  - REGIONS (breadth): communities of mutually-coupled modules -- the functional
+    territories. A simple agent = ONE undivided community (one undivided canvas);
+    a complex body partitions itself. Read by `graph_communities` + counted.
+  - LAYERS / STRATA (depth): the dependency levels (the L0/L1/L2 ladder), derived
+    as the longest dependency path over the graph -- NOT stipulated. Read by
+    `emergent_strata`, using the SAME rule as the grammar's emergent canvas.
 
-The plastic canvas (a self-organizing map) + the module-functionality body + the
-two foils (no-plasticity, scrambled-functionality) + the morphology sweep are
-wired next; see docs/experiments/canvas_regions.md.
+The PRIMARY order parameter is `community_class_match` (NMI of emergent
+communities against the functional classes). Unlike a smoothness/segregation
+score it is NOT inflated by generic self-organization: a graph that organizes on
+class-FREE couplings scores ~0. That is why the graph formulation needs no
+post-hoc criterion correction where the earlier self-organizing-map did (see the
+dev-log).
 
 Run:  ../.venv/bin/python canvas_regions.py
 """
@@ -27,78 +31,127 @@ from __future__ import annotations
 import numpy as np
 
 
-# --8<-- [start:segregation]
-def canvas_segregation(labels):
-    """Order parameter: the spatial segregation of the canvas's functional labels.
+# --8<-- [start:strata]
+def emergent_strata(nodes, edges, core=None):
+    """LAYERS that emerge from a directed dependency graph -- the number of strata,
+    derived, never stipulated. This is the SAME rule the grammar's
+    `render_emergent_canvas` uses: each node's depth is its longest dependency path
+    from the source set (nodes with no incoming edge, or the given `core`); the
+    number of strata is 1 + max depth. Relaxation is capped at len(nodes) passes
+    (cycle-safe). A single coupled blob with no dependency ordering => 1 stratum
+    (one undivided canvas); a viscera->axial->appendicular->dexterous ladder => its
+    depth."""
+    nodes = list(nodes)
+    incoming = {n: 0 for n in nodes}
+    for (u, v) in edges:
+        incoming[v] = incoming.get(v, 0) + 1
+    src = core or [n for n in nodes if incoming.get(n, 0) == 0]
+    depth = {n: 0 for n in nodes}
+    for n in src:
+        depth[n] = 0
+    for _ in range(max(1, len(nodes))):                  # relax longest paths
+        for (u, v) in edges:
+            depth[v] = max(depth.get(v, 0), depth.get(u, 0) + 1)
+    return 1 + (max(depth.values()) if depth else 0)
+# --8<-- [end:strata]
 
-    `labels` is a 2-D integer array -- each canvas unit tagged by the module-class
-    it responds to after broadcasting. Returns
-        (s - chance) / (1 - chance),
-    where s = fraction of 4-neighbour unit-pairs sharing a label and
-    chance = sum_c p_c^2 (the same-label probability for a random arrangement with
-    the same class proportions). 0 = unstructured (regions not constructed);
-    1 = fully segregated contiguous regions. A single-class canvas returns 1 (one
-    undivided region -- the simple agent)."""
-    labels = np.asarray(labels)
-    same = int(np.sum(labels[:, :-1] == labels[:, 1:]) +
-               np.sum(labels[:-1, :] == labels[1:, :]))
-    tot = labels[:, :-1].size + labels[:-1, :].size
-    s = same / tot
-    p = np.unique(labels, return_counts=True)[1] / labels.size
-    chance = float(np.sum(p ** 2))
-    return 1.0 if chance >= 1.0 else float((s - chance) / (1.0 - chance))
-# --8<-- [end:segregation]
+
+# --8<-- [start:communities]
+def graph_communities(W, thresh):
+    """REGIONS -- the connected components (4-connected in the graph sense: reachable
+    through kept couplings) of the canvas graph after keeping only couplings above
+    `thresh`. Undirected for the purpose of a region: a territory is a set of
+    mutually-coupled modules. Returns (labels, count). One coupled blob => 1 region
+    (one undivided canvas)."""
+    W = np.asarray(W, float)
+    n = W.shape[0]
+    A = (0.5 * (W + W.T)) > thresh
+    lab = -np.ones(n, int)
+    c = 0
+    for s in range(n):
+        if lab[s] >= 0:
+            continue
+        stack = [s]
+        lab[s] = c
+        while stack:
+            u = stack.pop()
+            for v in np.nonzero(A[u])[0]:
+                if lab[v] < 0:
+                    lab[v] = c
+                    stack.append(int(v))
+        c += 1
+    return lab, c
+# --8<-- [end:communities]
 
 
-# --8<-- [start:regions]
-def n_regions(labels):
-    """Secondary order parameter: the number of contiguous, same-label territories
-    the canvas has partitioned itself into (4-connected components). For a
-    well-segregated canvas this equals the number of functional classes; a simple
-    (single-class) agent gives 1 -- one undivided canvas."""
-    labels = np.asarray(labels)
-    H, W = labels.shape
-    seen = np.zeros((H, W), bool)
-    count = 0
-    for i in range(H):
-        for j in range(W):
-            if seen[i, j]:
-                continue
-            count += 1
-            lab = labels[i, j]
-            stack = [(i, j)]; seen[i, j] = True
-            while stack:
-                y, x = stack.pop()
-                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    ny, nx = y + dy, x + dx
-                    if 0 <= ny < H and 0 <= nx < W and not seen[ny, nx] \
-                            and labels[ny, nx] == lab:
-                        seen[ny, nx] = True; stack.append((ny, nx))
-    return count
-# --8<-- [end:regions]
+# --8<-- [start:match]
+def community_class_match(comm, cls):
+    """PRIMARY order parameter: normalized mutual information (NMI) between the
+    emergent communities and the modules' functional classes, in [0, 1]. 1 =
+    communities recover the functional classes exactly (regions ARE the functional
+    territories); ~0 = communities independent of class (the foils). Crucially,
+    unlike a segregation/smoothness score this is NOT inflated by generic graph
+    structure -- a canvas that self-organizes on class-free couplings scores ~0, so
+    the discriminator is built into the order parameter itself."""
+    comm = np.asarray(comm)
+    cls = np.asarray(cls)
+    n = len(cls)
+
+    def _entropy(x):
+        _, cnt = np.unique(x, return_counts=True)
+        p = cnt / n
+        return float(-np.sum(p * np.log(p + 1e-12)))
+
+    if _entropy(cls) <= 1e-9:            # a single functional class -- trivially matched
+        return 1.0                       # (the "one undivided canvas" is checked by n_regions)
+
+    mi = 0.0
+    for a in np.unique(comm):
+        pa = np.mean(comm == a)
+        for b in np.unique(cls):
+            pab = np.mean((comm == a) & (cls == b))
+            if pab > 0:
+                pb = np.mean(cls == b)
+                mi += pab * np.log(pab / (pa * pb) + 1e-12)
+    denom = 0.5 * (_entropy(comm) + _entropy(cls))
+    return 0.0 if denom <= 0 else float(max(0.0, min(1.0, mi / denom)))
+# --8<-- [end:match]
 
 
 def _self_test():
-    """Synthetic self-test of the order parameters (NOT a canvas run): confirm they
-    read a known segregated map, a random map, and a single-class map correctly."""
+    """Synthetic self-test of the order parameters (NOT a canvas run): confirm each
+    reads a known structure correctly."""
+    # strata: a viscera->axial->appendicular chain of communities => 3 strata;
+    # a branch (two appendages sharing a parent) does NOT deepen it.
+    chain_nodes = ["V", "A", "P"]
+    chain_edges = [("V", "A"), ("A", "P")]
+    print(f"[chain V->A->P]        emergent_strata="
+          f"{emergent_strata(chain_nodes, chain_edges)} (expect 3)")
+    branch_nodes = ["V", "A", "PL", "PR"]
+    branch_edges = [("V", "A"), ("A", "PL"), ("A", "PR")]
+    print(f"[branch (PL,PR share)] emergent_strata="
+          f"{emergent_strata(branch_nodes, branch_edges)} (expect 3 -- breadth, not depth)")
+    print(f"[single blob]          emergent_strata="
+          f"{emergent_strata(['x'], [])} (expect 1 -- one undivided canvas)")
+
+    # communities + match: three clean class-blocks vs a random coupling.
     rng = np.random.default_rng(0)
-    H = W = 24
+    cls = np.array([0] * 6 + [1] * 6 + [2] * 6)
+    W = np.zeros((18, 18))
+    for i in range(18):
+        for j in range(18):
+            W[i, j] = (0.9 if cls[i] == cls[j] else 0.05) + 0.02 * rng.standard_normal()
+    lab, k = graph_communities(W, thresh=0.4)
+    print(f"[3 class-blocks]  n_regions={k} (expect 3)  "
+          f"community_class_match={community_class_match(lab, cls):.2f} (expect ~1)")
 
-    seg = np.zeros((H, W), int); seg[:, W // 2:] = 1              # two clean blocks
-    print(f"[segregated 2-block]  segregation={canvas_segregation(seg):.2f} "
-          f"(expect ~1)   n_regions={n_regions(seg)} (expect 2)")
+    Wr = 0.3 + 0.05 * rng.standard_normal((18, 18))      # class-free couplings
+    labr, kr = graph_communities(Wr, thresh=0.32)
+    print(f"[class-free graph] community_class_match="
+          f"{community_class_match(labr, cls):.2f} (expect ~0 -- NOT inflated)")
 
-    rand = rng.integers(0, 2, (H, W))                            # unstructured
-    print(f"[random / unstructured] segregation={canvas_segregation(rand):.2f} "
-          f"(expect ~0)")
-
-    one = np.zeros((H, W), int)                                  # simple agent
-    print(f"[single class / simple agent] segregation={canvas_segregation(one):.2f} "
-          f"(expect 1)   n_regions={n_regions(one)} (expect 1 -- one undivided canvas)")
-
-    print("[canvas-regions] status: PREREGISTERED -- the self-organizing canvas, the "
-          "module-functionality body, the two foils, and the morphology sweep are not "
-          "yet wired. See docs/experiments/canvas_regions.md.")
+    print("[canvas-regions] order parameters ready. The construction model, the two "
+          "foils, and the morphology sweep are wired in sweep_canvas_regions.py.")
 
 
 if __name__ == "__main__":

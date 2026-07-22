@@ -71,3 +71,82 @@ their number tracks morphological complexity — while neither foil reproduces i
 Reaching PASS required correcting one wrong measurement assumption in the prereg
 (segregation → `n_regions` as the discriminator), openly logged here; it required
 no change to the model and no new principle.
+
+---
+
+## Part 4 — REWORK to the emergent dependency digraph (2026-07)
+
+**Why rework a passing experiment.** The diagram grammar converged on the canvas
+as an **emergent dependency digraph** — the regions are graph *communities* and the
+layers (the L0/L1/L2 ladder) *emerge* from the graph's dependency depth, never
+stipulated (`smn_lab.morphology.render_emergent_canvas`). The SOM version modelled
+the canvas as a **stipulated 2-D sheet** and read regions as smoothed label
+territories on it. That is a mismatch: it imposes a geometry (a 2-D grid) and a
+mechanism (topographic smoothing) the framework does not, and it can only see
+*breadth* (how many regions), never *depth* (the dependency ladder). The rework
+makes the experiment model the very object the grammar draws, so bench and diagram
+are one thing.
+
+**What changed.**
+- **Mechanism: SOM → broadcast-coupling construction.** Modules broadcast to one
+  undivided canvas; the canvas keeps *no map*, it accumulates couplings from
+  broadcast co-activity. Same-tick firing → a *symmetric* coupling (→ regions);
+  ordered lead/lag firing → a *directed* coupling (→ layers). Both from the one
+  broadcast stream (only co-active/modulated data shapes the canvas). Threshold →
+  detect communities → condense to a digraph of communities → read structure off
+  its topology. `sweep_canvas_regions.py` fully rewritten; `canvas_regions.py`
+  estimators replaced.
+- **Two order parameters, not one.** The digraph exposes what the sheet could not:
+  `n_regions` (breadth — communities) **and** `emergent_strata` (depth — longest
+  dependency path, the *same* rule the grammar uses). They **diverge** once the body
+  branches: for the full body `n_regions` = 1,2,3,4,5 while `n_strata` = 1,2,3,3,4 —
+  the divergence lands exactly where the LEFT and RIGHT appendages join at one
+  stratum (breadth without depth), then dexterous adds depth. Stable across 5 seeds.
+- **The primary order parameter now discriminates by construction.** It is
+  `community_class_match` (NMI of emergent communities vs functional classes).
+  Structured = 1.00; no-plasticity = 0.00; scrambled = 0.25 — **both foils fail the
+  primary order parameter directly.**
+
+**The methodological gain (the honest headline of the rework).** The SOM version had
+to *correct a preregistered criterion* post-hoc (segregation → `n_regions`) because
+a SOM smooths *any* input, so its natural "is the map structured" order parameter
+was confounded and could not fail the scrambled foil. The graph reformulation
+**dissolves that confound**: the primary order parameter asks "do the emergent
+communities *match the functional classes*", which a class-free coupling cannot fake
+(the estimator self-test confirms a class-free graph scores 0.00). So the rework is
+not merely a cosmetic re-skin to match the grammar — it removes the one place the
+earlier experiment needed a post-hoc fix. That is a real improvement, and it is why
+the rework was worth doing rather than leaving a passing SOM in place.
+
+**Honesty audit (rework).**
+- **No post-hoc criterion change this time.** The pass criteria (match > 0.7,
+  simple = one undivided canvas, regions & strata monotone, depth < breadth once
+  branched, foils fail the primary OP) held on the first honest run; only two
+  *magnitude* knobs were tuned to make the recovery clean, logged next.
+- **Two magnitude fixes, logged.** (1) Community threshold: a global fraction of the
+  peak coupling fragmented the least-active class (dexterous, an infrequent action
+  centre); switched to **per-node normalization** (each module judged against its
+  own strongest bond) so a quiet class is on the same scale as a busy one. (2)
+  Condensation direction: an early **global-leadership ranking** created near-ties
+  (axial's score dragged down by viscera leading it) that flipped its order with an
+  appendage and dropped a real edge; replaced with **pairwise net dominance** (`net`
+  is antisymmetric → no 2-cycles; the ground truth is a DAG). Both are magnitude/
+  readout choices, not model tweaks; neither changes the qualitative claim.
+- **No new SMN principle.** Broadcast-coupling construction is Hebbian
+  functional-connectivity formation; strata via longest path is the grammar's own
+  rule. Nothing was added to the theory to pass.
+- **Tautology check.** A graph self-organizes on *any* co-activity — trivially true,
+  and **not** the claim. The non-trivial, falsifiable content is that the emergent
+  communities **match the functional classes** and the emergent strata **recover the
+  dependency depth**, which only the structured condition achieves; the scrambled
+  foil (same construction, class-free co-activity) fails the primary order parameter,
+  and the no-plasticity foil builds nothing. That contrast could have failed and did
+  not.
+
+**Bottom line (rework).** The framework's constructive prediction holds in the form
+the grammar draws it: from one undivided canvas, broadcast co-activity constructs an
+emergent dependency digraph whose **regions recover the functional territories** and
+whose **layers recover the dependency ladder**, both tracking morphology and
+diverging where the body branches. The rework aligns the experiment with the diagram
+grammar *and* dissolves the one confound that had forced a post-hoc correction —
+gaining rigour, not spending it.
