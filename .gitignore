@@ -15,3 +15,6 @@ site/
 # MuJoCo crash log
 MUJOCO_LOG.TXT
 **/MUJOCO_LOG.TXT
+
+# generated sweep output
+experiments/integrator_snapshot_results.json

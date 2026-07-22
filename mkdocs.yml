@@ -52,6 +52,7 @@ nav:
   - "§7 · Taxonomy — more body, not more transducers":
       - "Phase II — overview": phase2.md
       - "Canvas regions — the canvas constructs its own structure (regions + layers)": experiments/canvas_regions.md
+      - "Integrator & snapshot — the beam holds the canvas (WM capacity, PASS)": experiments/integrator_snapshot.md
       - "Haltability — the pivot that layering enables": experiments/haltability.md
       - "World model scales with the network (E4)": experiments/p7_scaling_network.md
       - "Objecthood as a coupling-density transition (E4b)": experiments/p8_objecthood_transition.md
