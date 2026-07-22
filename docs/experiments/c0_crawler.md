@@ -21,6 +21,15 @@ gradient is all this experiment needs.
 
 ![C0 agent — the A3 crawler with bilateral chemical sensing, in the diagram grammar](../figures/c0_agent.png)
 
+The [two networks](../diagram-grammar.md#the-two-networks-body-and-canvas) of the
+same agent — the mechanical body above, and the one broadcasting **canvas** below
+that every CAZ writes to and reads from (network closure), with the bilateral
+chemical sensors reaching it only through a CAZ's modulation. C0 is simple and
+unbranched, so the canvas is **undivided** — there are no regions to construct
+yet.
+
+![The two networks of C0 — mechanical body and one undivided broadcasting canvas](../figures/two_network_c0.png)
+
 ## Setup
 - **Body** — `build_crawler_xml(n_seg=3)`: an axial chain of massed blocks, each
   inter-segment hinge driven by a **pull-only opponent pair**.
