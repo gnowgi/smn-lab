@@ -81,6 +81,49 @@ the reafferent deviation **localizes** the world change to self-graph node **5.3
 band at the correct node once the world changes — while the body is moving the
 whole time.
 
+## Audit — replicate + null + localization specificity (2026-07-24)
+
+The scrutiny pass. As first committed this experiment was **single-seed**
+(`default_rng(0)`) — against the repo's own ground rule (*replicated seeds with
+reported spread, not single runs*). The audit replicates across 10 seeds and adds
+the two nulls a skeptic asks for. `run()` now takes `(seed, exaf_on, b_node)`; the
+default reproduces the committed single-seed numbers byte-identically.
+
+1. **Working null (no-event):** run with `exaf_on=False`, so source B never fades
+   in and the "exafference" window is pure self-motion. If the reafferent
+   discriminability is world-caused it must collapse toward 1, and the localizer
+   must stop pointing at node 6.
+2. **Localization specificity:** move the world change to node 2 (`b_node=2`) and
+   check the reafferent centroid follows — i.e. it reads *where* the world changed
+   rather than a fixed bias toward high node indices.
+
+![W3 audit — discriminability collapses to ~1 in the no-event null; the localizer
+tracks the world change from node 6 to node 2](../figures/reafference_cut_self_graph_audit.png)
+
+| metric (10 seeds) | baseline (B at node 6) | no-event null (no B) | localization swap (B at node 2) |
+|---|---|---|---|
+| reafferent discriminability | **20.5 ± 2.5** | **1.1 ± 0.1** | 23.7 ± 2.4 |
+| naive discriminability | 8.3 ± 1.6 | 0.9 ± 0.2 | 9.5 ± 1.9 |
+| reafferent > naive | 10 / 10 seeds | — | 10 / 10 seeds |
+| localized node (true) | 5.4 (6) | 3.4 (—) | **2.2 (2)** |
+
+**Survives.** The single-seed headline replicates (reafferent discriminability
+20.5 ± 2.5 across 10 seeds, reafferent > naive in every seed). In the no-event null
+the reafferent discriminability collapses from 20.5 to **1.1** and the localizer
+drifts off node 6 — so the separation is genuinely world-caused, not a
+self-motion/windowing artifact. And the localizer **tracks the world**: moving the
+source to node 2 moves the read-out to 2.2. Two honest caveats the audit records:
+(i) the naive detector reaches 8.3× here (the exafference is a *strong* source, so
+the reafferent's real advantage is its **silence under self-motion** — 0.010 vs the
+naive's 0.021 false-alarm floor — plus ~2.5× better discriminability, not naive
+sitting at 1, as the code docstring loosely said); (ii) localization slightly
+**undershoots for the near-tail node 6** (reads 5.4 — an edge effect as the source's
+Gaussian is clipped by the body end) while it is accurate mid-body (2.2 for node 2).
+Reproduction: [`audit_w3_self_graph.py`](https://github.com/gnowgi/smn-lab/blob/main/experiments/audit_w3_self_graph.py).
+
+Row moves 🟡 (not yet audited) → ✅ (consistency-checked) for the operational
+self/world cut, with the two caveats above on the record.
+
 ## What this establishes
 
 - The self/world distinction the architecture claims as **structural** is, on the

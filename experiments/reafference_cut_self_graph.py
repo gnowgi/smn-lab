@@ -29,7 +29,9 @@ jitter) throughout:
 
 Read-outs:
   discriminability -- (detector during exafference) / (detector during self-motion).
-                      reafferent >> 1 (separates self from world); naive ~ 1 (cannot).
+                      reafferent >> 1 (separates self from world). The naive detector
+                      is also > 1 for a strong exafference source; the reafferent's
+                      real edge is its silence under self-motion (see the audit).
   localization     -- reafferent deviation peak node vs the true exafference node.
 
 Run:  ../.venv/bin/python reafference_cut_self_graph.py
@@ -64,8 +66,8 @@ def node_x(k):
     return -SEGLEN * k
 
 
-def run():
-    rng = np.random.default_rng(0)
+def run(seed=0, exaf_on=True, b_node=B_NODE):
+    rng = np.random.default_rng(seed)
     xml = build_crawler_xml(n_seg=N_SEG, joint_stiffness=0.22, joint_damping=0.04,
                             bend_limit_deg=45.0)
     model = mujoco.MjModel.from_xml_string(xml)
@@ -83,7 +85,7 @@ def run():
     fieldA = ScalarField([(node_x(A_NODE), SRC_Y, SRC_AMP, SRC_SIG)])
 
     def b_amp(t):                                    # exafference source fades in
-        if t < T_CAL + T_SELF:
+        if t < T_CAL + T_SELF or not exaf_on:        # exaf_on=False -> no-event null
             return 0.0
         f = (t - (T_CAL + T_SELF)) / T_EXAF
         return SRC_AMP * min(1.0, f / 0.4)           # ramp over the first 40% then hold
@@ -100,7 +102,7 @@ def run():
     for i in range(n_steps):
         t = i * DT
         field = ScalarField([(node_x(A_NODE), SRC_Y, SRC_AMP, SRC_SIG),
-                             (node_x(B_NODE), SRC_Y, b_amp(t), SRC_SIG)])
+                             (node_x(b_node), SRC_Y, b_amp(t), SRC_SIG)])
         # systematic self-motion: a slow common bend + OU jitter
         sweep = SWEEP_AMP * np.sin(2 * np.pi * SWEEP_HZ * t)
         tau += (-tau / tau_tc) * DT + tau_sig * np.sqrt(DT) * rng.standard_normal(nj)
@@ -141,7 +143,7 @@ def run():
         # localize the world change on the self-graph (positive-deviation centroid)
         w = np.clip(reaf_dev, 0.0, None)
         rnode = float((w * node_idx).sum() / w.sum()) if w.sum() > 1e-6 else float("nan")
-        true_node = A_NODE if phase == 1 else B_NODE
+        true_node = A_NODE if phase == 1 else b_node
 
         log["t"].append(t); log["phase"].append(phase)
         log["reaf"].append(float(np.mean(np.abs(reaf_dev))))
