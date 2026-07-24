@@ -129,6 +129,46 @@ consequence. So Q2's limitation directly motivates the
 reafference**. P0 remains the clean canonical demonstration of the principle;
 the crawler shows it is real but needs distributed modulation to be clean.
 
+## Audit — the working null (2026-07-24)
+
+The scrutiny pass this page had not yet had. The order parameter compares each
+agent's *own* exafference/self-test ratio, so a skeptic asks: is the reafferent's
+elevated ratio actually caused by the moving source, or is the "exafference"
+window simply different (windowing, calibration drift, non-stationarity) in a way
+that would inflate the ratio even with nothing happening? The matched foil rules
+out "no forward model", but not "no world event".
+
+**The null:** re-run with the moving-source amplitude set to **zero**, so the
+exafference window contains no world-caused change. If the reafferent/foil
+separation is genuinely world-caused, both ratios must collapse toward 1.
+
+![Q2 audit — with the source removed, both ratios collapse to ~1; the baseline
+separation is world-caused](../figures/q2_reafference_audit.png)
+
+| quantity (10 seeds) | baseline (source moves) | no-event null (amp = 0) |
+|---|---|---|
+| reafferent ratio | 2.20 ± 0.28 | **1.02 ± 0.22** |
+| foil ratio | 1.58 ± 0.33 | 0.92 ± 0.15 |
+| reafferent − foil gap | **+0.62** | +0.10 |
+| reafferent > foil | **10 / 10 seeds** | 6 / 10 seeds |
+| self-test cancellation | 37 % | 37 % (unchanged) |
+
+**Survives.** With the source removed the reafferent ratio drops to 1.02 and the
+reafferent/foil gap shrinks from +0.62 to +0.10 — so **≈ 84 % of the separation is
+world-caused**, and the elevated ratio is not a windowing artifact. The
+separation is also **per-seed robust** (reafferent > foil in every seed of the
+baseline), and the 37 % self-test cancellation is identical with and without the
+event, confirming it is a stable property of the self-motion prediction rather
+than something the event induces. One honest refinement the null adds: a small
+**+0.10 residual offset** persists with no event (reafferent ratio sits at 1.02,
+foil at 0.92), so ~16 % of the raw gap is a structural bias, not world signal — it
+does not overturn the effect but is now on the record. The reproduction script is
+[`audit_q2_reafference.py`](https://github.com/gnowgi/smn-lab/blob/main/experiments/audit_q2_reafference.py).
+
+This audit confirms the page's existing **"partially supported — real but modest"**
+claim rather than changing it; the row moves from 🟡 (not yet audited) to ✅
+(consistency-checked) **for that modest claim** — not for clean reafference, which
+the page already says the crawler does not achieve without distributed modulation.
 
 ## What's measured and plotted
 **Raw data (per run = one seed):** each step, the agent's own (proprioceptive,
