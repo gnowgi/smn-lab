@@ -59,7 +59,7 @@ audit reversed it. That is the point of the process, and the reason most pages s
 ### §4 · The world-model & self / world / other
 | status | experiment | note |
 |---|---|---|
-| 🟡 | [Q2 — the reafference cut](experiments/q2_reafference.md) | Not yet audited. |
+| ✅ | [Q2 — the reafference cut](experiments/q2_reafference.md) | **Audited (2026-07-24).** Survives a no-event working null: with the moving source removed both ratios collapse to ~1 (reafferent 2.20→1.02), so ≈84% of the reafferent/foil separation is world-caused; reafferent>foil in 10/10 seeds. ✅ is for the page's *modest* "partially supported" claim (37% cancellation, ratio 2.2 vs foil 1.58), **not** clean reafference — which needs distributed per-zone modulation. |
 | 🟡 | [W3 — the cut in the self-graph](experiments/reafference_cut_self_graph.md) | Not yet audited. |
 | 🟡 | [W1 — a world feature in the self-graph](experiments/world_in_self_graph.md) | Not yet audited. |
 | 🟡 | [W2 — world-geometry in the self-frame](experiments/world_geometry_self_frame.md) | Not yet audited. |
