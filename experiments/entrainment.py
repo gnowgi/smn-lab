@@ -1,48 +1,48 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 G. Nagarjuna and Durgaprasad Karnam
-"""Proprioceptive entrainment -- closing the body -> rhythm loop.
+"""Proprioceptive entrainment -- the mechanism, and an open problem.
 
-A scientific-accuracy review pointed out that in the base bench the messaging
-beam is *causally sealed off* from the body: `MessagingBeam.command()` advanced
-`self.phase` from omega + neighbour coupling alone, so if the crawler hits a wall
-or lags under load, the oscillator never knows -- a controller commanding a body,
-not a body-and-controller in mutual entrainment. Real undulators close that loop:
-lamprey edge cells and C. elegans stretch-receptor coupling feed the mechanics
-back into the rhythm. That gap sits exactly where the SMN thesis ("the body is the
-computer") is strongest.
+A scientific-accuracy review pointed out that in the base bench the messaging beam
+is causally sealed off from the body: `MessagingBeam.command()` advanced phase from
+omega + neighbour coupling alone, so a wall or a load never reached the rhythm -- a
+controller commanding a body, not a body-and-controller in mutual entrainment. Real
+undulators close that loop (lamprey edge cells; C. elegans stretch-receptor coupling,
+Wen et al. 2012, Neuron 76:750), which is exactly where the SMN thesis "the body is
+the computer" is strongest.
 
-The opt-in entrainment term (`MessagingBeam(entrain>0)`) pulls each oscillator
-toward the phase its own segment is *actually* bent to:
-    psi = arctan2(theta, theta_dot/omega)      # realized gait phase
-    dphi += entrain * (r/(r+eps)) * sin(psi - phase),  r = |bend|
-so the pull is identically zero under perfect tracking (no error -> no pull) and
-fades as the body stops (a still body carries no phase, like a silent stretch
-receptor).
+Closing the loop honestly took THREE review rounds; this page reports the endpoint,
+including two withdrawn claims.
 
-  ** Correction (this file supersedes the first version). ** A review caught two
-  bugs in the first term: (1) the arctan2 arguments were swapped, so the pull was
-  cos(2*phase) -- a spurious 2*omega drive that did NOT vanish under perfect
-  tracking; (2) the pull was ungated, so during a gated halt the beam was arrested
-  only because arctan2(0,0)=0 pulled the phase to a fixed 0 -- an edge case, not
-  the mechanism. Both are fixed here (argument order + magnitude gate). The old
-  "arrest during a gated halt" figure was carried by bug (2) and is withdrawn;
-  the corrected term's real effect is shown below.
+  Round 1 -- added an opt-in entrainment term. **Bugs (round 2):** the arctan2
+    arguments were swapped (the pull was cos(2*phase), a spurious 2w drive that did
+    not vanish under perfect tracking) and the pull was ungated (a still body was
+    yanked via arctan2(0,0)=0). The "arrest during a gated halt" figure was that
+    edge case -- WITHDRAWN.
+  Round 2 fix -- corrected argument order + magnitude gate. **But (round 3):** the
+    term entrained each oscillator to its OWN joint, i.e. to a servo-delayed copy of
+    its own output, so sin(psi-phase) = sin(-delta) was a constant brake. The
+    "coupling drags freq to arrest" curve was pure frequency DETUNING, not the body
+    shaping the rhythm -- WITHDRAWN.
+  Round 3 fix (this file) -- the biologically faithful **inter-segmental** topology:
+    each oscillator is entrained to its ANTERIOR neighbour's realized phase (the head
+    is the free pacemaker). `entrain_mode="inter"` (default) vs the `"self"` ablation.
 
 Panels (figures/entrainment.png):
-  (A) Mechanism check. The pull under perfect tracking, vs gait phase: the old
-      (swapped) term is a full-amplitude cos(2*phase); the corrected term is
-      identically zero. A well-formed stretch term must not pull when the body is
-      doing exactly what it was told.
-  (B) The body enters the rhythm. Free-run realized undulation frequency vs the
-      entrainment gain: with the loop closed the oscillator locks to the actually-
-      lagging PD-driven body, so the realized rhythm falls below the commanded
-      0.9 Hz and, as coupling rises, is dragged all the way to arrest. The rhythm
-      is no longer the intrinsic omega -- the body shapes it.
-  (C) An honest negative (unchanged by the fix). Realized frequency vs medium drag
-      stays flat: the anisotropic drag resists body translation, not joint
-      articulation, so there is no articulation load for the medium to modulate.
-      The C. elegans water<->agar frequency law needs a joint-loading model (drag
-      torque on the bend, or a load-limited actuator), not just the feedback path.
+  (A) Mechanism check / regression invariant. Under perfect tracking the corrected
+      pull is identically zero; the first (swapped-argument) term was a full-amplitude
+      cos(2*phase). This invariant is now enforced in tests/test_entrainment.py (CI).
+  (B) Why topology matters. Free-run frequency vs gain, on a 5-segment body: the
+      "self" ablation is a runaway self-brake (dragged toward arrest = detuning);
+      the correct inter-segmental form is far more stable (the free pacemaker keeps
+      the rhythm alive). Neither is a demonstration that the *body* shapes the rhythm.
+  (C) The open problem (honest negative). Free-run frequency vs medium drag is FLAT
+      under BOTH topologies. Closing the loop does not, by itself, make the rhythm
+      track the medium: the anisotropic drag loads body translation, not joint
+      articulation, so the entrainment sees a spatially-uniform servo lag with no
+      medium gradient. A positive result -- medium-dependent frequency, the C. elegans
+      water<->agar law -- needs a **joint-loading model** (drag torque on the bend, or
+      a load-limited actuator). That is the declared next step; until it lands, the
+      loop is closed with the correct mechanism but its payoff is not yet demonstrable.
 
 Run:  ../.venv/bin/python entrainment.py        (from this directory)
 """
@@ -60,37 +60,35 @@ from smn_lab.control import OpponentBoard, MessagingBeam
 
 # ---- parameters -----------------------------------------------------------
 DT = 0.002
-N_SEG = 3
-FREQ = 0.9                       # commanded beam frequency (the circuit constant)
+N_SEG = 5                        # longer body: inter-segmental coupling is substantive
+FREQ = 0.9
 AMP = 0.8
 DRAG_LONG = 0.5
 DRAG_TRANS = 7.0
 FREQ_RUN = 30.0
-GAINS = [0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 6.0, 8.0]   # entrainment gains, panel B
-GAIN_TRACE = 2.0                 # the "closed loop" exemplar in the text/print
-DRAGS = [3.0, 7.0, 14.0, 25.0]   # medium-resistance sweep, panel C
-GAIN_C = 2.0                     # gain used for the drag sweep
+GAINS = [0.0, 1.0, 2.0, 4.0, 6.0]
+DRAGS = [3.0, 5.0, 7.0, 10.0, 14.0, 20.0]
+GAIN_C = 2.0
 W = 2 * np.pi * FREQ
 
 
-def _build():
-    model = mujoco.MjModel.from_xml_string(build_crawler_xml(n_seg=N_SEG))
+def _build(n_seg):
+    model = mujoco.MjModel.from_xml_string(build_crawler_xml(n_seg=n_seg))
     data = mujoco.MjData(model)
     ids = dict(
-        seg=[model.body(f"seg{k}").id for k in range(N_SEG)],
-        jq=[model.jnt_qposadr[model.joint(f"j{k}").id] for k in range(1, N_SEG)],
-        jv=[model.jnt_dofadr[model.joint(f"j{k}").id] for k in range(1, N_SEG)],
-        ap=[model.actuator(f"m_j{k}_p").id for k in range(1, N_SEG)],
-        an=[model.actuator(f"m_j{k}_n").id for k in range(1, N_SEG)],
+        seg=[model.body(f"seg{k}").id for k in range(n_seg)],
+        jq=[model.jnt_qposadr[model.joint(f"j{k}").id] for k in range(1, n_seg)],
+        jv=[model.jnt_dofadr[model.joint(f"j{k}").id] for k in range(1, n_seg)],
+        ap=[model.actuator(f"m_j{k}_p").id for k in range(1, n_seg)],
+        an=[model.actuator(f"m_j{k}_n").id for k in range(1, n_seg)],
     )
     return model, data, ids
 
 
-def realized_freq(entrain, c_trans=DRAG_TRANS):
-    """Dominant frequency of the actual head-joint angle in a free crawl."""
-    model, data, ids = _build()
-    beam = MessagingBeam(n_joints=N_SEG - 1, amp=AMP, freq=FREQ,
-                         turn_gain=0.0, entrain=entrain)
+def realized_freq(entrain, mode="inter", c_trans=DRAG_TRANS):
+    model, data, ids = _build(N_SEG)
+    beam = MessagingBeam(n_joints=N_SEG - 1, amp=AMP, freq=FREQ, turn_gain=0.0,
+                         entrain=entrain, entrain_mode=mode)
     boards = [OpponentBoard(kp=4.0, kd=0.4, cmax=2.5) for _ in ids["jq"]]
     mujoco.mj_forward(model, data)
     n = int(FREQ_RUN / DT)
@@ -108,7 +106,7 @@ def realized_freq(entrain, c_trans=DRAG_TRANS):
         mujoco.mj_step(model, data)
         if i % 4 == 0:
             th0.append(float(data.qpos[ids["jq"][0]]))
-    x = np.asarray(th0)[len(th0) // 4:]            # drop the transient
+    x = np.asarray(th0)[len(th0) // 4:]
     x = x - x.mean()
     if np.allclose(x, 0):
         return 0.0
@@ -119,11 +117,9 @@ def realized_freq(entrain, c_trans=DRAG_TRANS):
 
 
 def perfect_tracking_pull(phi):
-    """The entrainment pull under perfect tracking (th = amp*sin(phi),
-    thd/w = amp*cos(phi)), for the swapped (old) and corrected argument order."""
     th = AMP * np.sin(phi)
     thd_w = AMP * np.cos(phi)
-    old = np.sin(np.arctan2(thd_w, th) - phi)      # as first coded: == cos(2 phi)
+    old = np.sin(np.arctan2(thd_w, th) - phi)          # swapped args: == cos(2 phi)
     r = np.hypot(th, thd_w)
     new = (r / (r + 1e-3)) * np.sin(np.arctan2(th, thd_w) - phi)   # corrected: == 0
     return old, new
@@ -137,54 +133,58 @@ def main():
     phi = np.linspace(0, 2 * np.pi, 200)
     old_pull, new_pull = perfect_tracking_pull(phi)
 
-    freqs = [realized_freq(g) for g in GAINS]        # panel B
-    f_drag = [realized_freq(GAIN_C, c) for c in DRAGS]   # panel C
+    f_self = [realized_freq(g, "self") for g in GAINS]
+    f_inter = [realized_freq(g, "inter") for g in GAINS]
+    c_self = [realized_freq(GAIN_C, "self", c) for c in DRAGS]
+    c_inter = [realized_freq(GAIN_C, "inter", c) for c in DRAGS]
 
-    print("\n=== Proprioceptive entrainment (corrected term) ===")
-    print(f"  perfect-tracking pull: max|old|={np.max(np.abs(old_pull)):.3f} "
-          f"(spurious 2w drive)   max|corrected|={np.max(np.abs(new_pull)):.2e} (~0)")
-    print(f"  free-run realized freq vs gain (commanded {FREQ} Hz):")
-    for g, f in zip(GAINS, freqs):
-        print(f"     eps={g:4.1f}  ->  {f:.3f} Hz")
-    print(f"  freq vs drag (eps={GAIN_C}): {[round(v,3) for v in f_drag]}  (flat)")
-    dragged = freqs[0] - min(freqs)
-    verdict = ("LOOP CLOSED (correctly): the body shapes the rhythm -- closing the "
-               f"loop drags the realized frequency from {freqs[0]:.2f} Hz down to "
-               f"{min(freqs):.2f} Hz (arrest) as coupling rises, because the "
-               "oscillator locks to the actually-lagging body."
-               if dragged > 0.3 else "WEAK -- check the term.")
-    print("  verdict:", verdict)
+    print("\n=== Proprioceptive entrainment (round-3: inter-segmental) ===")
+    print(f"  perfect-tracking pull: max|swapped|={np.max(np.abs(old_pull)):.3f}  "
+          f"max|corrected|={np.max(np.abs(new_pull)):.2e}")
+    print("  free-run freq vs gain (Hz):")
+    for g, a, b in zip(GAINS, f_self, f_inter):
+        print(f"     eps={g:4.1f}   self={a:.3f}   inter={b:.3f}")
+    print(f"  freq vs drag (eps={GAIN_C}):")
+    print(f"     self : {[round(v,3) for v in c_self]}")
+    print(f"     inter: {[round(v,3) for v in c_inter]}")
+    flat = (max(c_inter) - min(c_inter)) < 0.06
+    print("  verdict:", (
+        "MECHANISM CORRECT, PAYOFF DEFERRED: inter-segmental topology is stable and "
+        "vanishes under perfect tracking (CI-tested), but freq is flat vs drag under "
+        "both topologies -- medium adaptation needs the articulation-load step."
+        if flat else "inter shows a drag dependence -- investigate."))
 
     # ---- figure ----
     fig, (axA, axB, axC) = plt.subplots(1, 3, figsize=(15, 4.6))
 
     axA.axhline(0, color="#999", lw=0.8)
     axA.plot(phi, old_pull, color="#b00000", lw=1.8,
-             label=r"first (buggy) term $=\cos 2\varphi$")
-    axA.plot(phi, new_pull, color="#1538a0", lw=2.2,
-             label="corrected term $\\equiv 0$")
+             label=r"round-1 (buggy) $=\cos 2\varphi$")
+    axA.plot(phi, new_pull, color="#1538a0", lw=2.4,
+             label="corrected $\\equiv 0$ (CI-tested)")
     axA.set_xlabel(r"gait phase $\varphi$ (rad)")
-    axA.set_ylabel("entrainment pull under perfect tracking")
-    axA.set_title("A — mechanism check: no error should mean no pull", fontsize=10)
+    axA.set_ylabel("pull under perfect tracking")
+    axA.set_title("A — invariant: no error → no pull", fontsize=10)
     axA.legend(loc="lower right", fontsize=7)
 
-    axB.axhline(FREQ, ls=":", color="#333", lw=1.0, label="commanded freq (0.9 Hz)")
-    axB.plot(GAINS, freqs, "-o", color="#1538a0")
+    axB.axhline(FREQ, ls=":", color="#333", lw=1.0, label="commanded (0.9 Hz)")
+    axB.plot(GAINS, f_self, "-o", color="#b00000",
+             label="self (ablation): runaway brake")
+    axB.plot(GAINS, f_inter, "-s", color="#1538a0",
+             label="inter-segmental (correct)")
     axB.set_xlabel("entrainment gain  $\\varepsilon$")
     axB.set_ylabel("free-run realized freq (Hz)")
     axB.set_ylim(0, FREQ * 1.15)
-    axB.set_title("B — the body enters the rhythm: coupling drags freq to arrest",
-                  fontsize=10)
-    axB.legend(loc="upper right", fontsize=7)
+    axB.set_title("B — why topology matters (5-segment body)", fontsize=10)
+    axB.legend(loc="lower left", fontsize=7)
 
-    axC.plot(DRAGS, f_drag, "-s", color="#1538a0",
-             label=f"closed loop (ε={GAIN_C:.0f})")
-    axC.axhline(FREQ, ls=":", color="#333", lw=1.0, label="commanded freq")
+    axC.plot(DRAGS, c_self, "-o", color="#b00000", label="self (ε=2)")
+    axC.plot(DRAGS, c_inter, "-s", color="#1538a0", label="inter (ε=2)")
+    axC.axhline(FREQ, ls=":", color="#333", lw=1.0, label="commanded")
     axC.set_ylim(0, FREQ * 1.15)
     axC.set_xlabel("transverse drag (medium resistance)")
-    axC.set_ylabel("realized undulation freq (Hz)")
-    axC.set_title("C — honest negative: freq does NOT adapt to the medium",
-                  fontsize=10)
+    axC.set_ylabel("free-run realized freq (Hz)")
+    axC.set_title("C — open problem: flat until articulation load", fontsize=10)
     axC.legend(loc="lower left", fontsize=7)
 
     fig.tight_layout()

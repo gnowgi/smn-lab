@@ -33,6 +33,34 @@ thesis ("the body is the computer") is strongest.
   so the *C. elegans* water↔agar frequency law needs a **joint-loading model**
   (declared next step), not just the feedback path.
 
+### Correction (third review round) — the term was self-entrainment, not entrainment
+
+A third review checked the *corrected* term's dynamics and found it still wasn't
+entrainment. Each oscillator was entrained to its **own** joint — which is just the
+beam's own servo-delayed output — so `sin(ψ−φ) = sin(−δ)` (δ = servo lag) was a
+**constant brake**. The round-2 headline, "closing the loop drags the frequency to
+arrest," was therefore pure frequency **detuning**, carrying no information about the
+body's load or the medium. **Withdrawn.**
+
+- **Fix — inter-segmental topology.** `MessagingBeam` gained `entrain_mode`
+  (`"inter"` default, `"self"` ablation). The correct form entrains each oscillator to
+  its **anterior neighbour's** realized phase (offset by the head→tail lag), so the
+  wave propagates *through the body* — faithful to Wen et al. 2012. The head is the
+  free pacemaker. Both forms vanish under perfect tracking.
+- **Regression test in CI.** `tests/test_entrainment.py` (pure-numpy, no MuJoCo) +
+  `.github/workflows/tests.yml` now assert the invariant a docs page once violated:
+  *under perfect tracking the pull is identically zero.* This would have caught the
+  round-1 `cos(2φ)` bug.
+- **The experiment is downgraded to "mechanism + open problem."** On a 5-segment body:
+  the `"self"` ablation runs away toward arrest (detuning); inter-segmental is stable.
+  But free-run frequency is **flat vs medium drag under both topologies** — closing the
+  loop does not make the rhythm track the medium. That needs a **joint-loading model**
+  (drag torque on the bend / load-limited actuator); the drag here loads translation,
+  not articulation. A first crude attempt was numerically unstable and is not shipped.
+- **Net honesty ledger:** two withdrawn claims (halt-arrest; freq-to-arrest), one
+  correct mechanism, one CI invariant, and a clearly scoped open problem. **S0 is
+  NOT strengthened by a bench result yet** — only the mechanism is in place.
+
 ### Correction (second review round) — two bugs in the first entrainment term
 
 A follow-up scientific-accuracy review checked the term itself, not just the page,

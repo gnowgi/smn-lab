@@ -1,109 +1,86 @@
-# Proprioceptive entrainment — closing the body → rhythm loop
+# Proprioceptive entrainment — the mechanism, and an open problem
 
-!!! info "Status: response to a scientific-accuracy review; strengthens S0"
-    Raised by an external review: in the base bench the messaging beam is causally
-    sealed off from the body. This experiment closes the loop and tests whether the
-    body can now perturb the rhythm. **A second review round caught two bugs in the
-    first term — both are fixed here; see "A correction that corrected itself" below.**
-    See the [release notes](../release-notes.md).
+!!! info "Status: closed the loop; the payoff is deferred (three review rounds)"
+    An external scientific-accuracy review pushed this from a claimed *result* to an
+    honest *mechanism + open problem* over three rounds — two headline claims were
+    **withdrawn** along the way. The endpoint: the loop is closed with the
+    biologically correct topology and a CI-guarded invariant, but a positive
+    demonstration that the body shapes the rhythm needs a further step. See the
+    [release notes](../release-notes.md).
 
 ## The gap this closes
 
 Proprioception is *present* in the base bench — the [servo board](../concepts.md)
-reads its own joint angle every step, the [self-model read-out](self_model_topology.md)
-is built from joint velocities, and [dead reckoning](q2_reafference.md) integrates
-sensed body-frame velocity. What was missing is proprioception reaching the **rhythm**.
-`MessagingBeam.command()` advanced `self.phase` from `omega` and neighbour coupling
-alone; no body state entered. So the beam could not slow under load and could not
-re-phase to an obstruction — it was a **controller commanding a body**, not a
-**body-and-controller in mutual entrainment**.
+reads its own joint angle, the [self-model](self_model_topology.md) is built from
+joint velocities, [dead reckoning](q2_reafference.md) integrates sensed velocity. What
+was missing is proprioception reaching the **rhythm**. `MessagingBeam.command()`
+advanced `self.phase` from `omega` + neighbour coupling alone — a **controller
+commanding a body**, not a **body-and-controller in mutual entrainment**. Lamprey
+edge cells and *C. elegans* stretch-receptor coupling feed mechanics back into the
+oscillators (Wen et al. 2012, *Neuron* 76:750) — the layer where the SMN thesis *the
+body is the computer* is strongest.
 
-Real undulators do not work this way. Lamprey **edge cells** and *C. elegans*
-**stretch-receptor coupling** feed the mechanics back into the oscillators — so much
-so that the "oscillator" is largely mechanosensory (Wen et al. 2012, *Neuron* 76:750).
-That is exactly the layer where the SMN thesis — *the body is the computer* — should
-be strongest.
+## How it took three rounds (each correction kept)
 
-## What was added (opt-in, nothing else changes)
+| round | added / claimed | what review found | outcome |
+|---|---|---|---|
+| 1 | opt-in `entrain` term; "arrest during a gated halt" | (a) `arctan2` args swapped → pull was `cos(2φ)`, nonzero under perfect tracking; (b) ungated pull → the halt "arrest" was the `arctan2(0,0)=0` edge case | both **withdrawn** |
+| 2 | fixed arg order + magnitude gate; "coupling drags freq to arrest" | the term entrained each oscillator to its **own** servo-delayed joint → `sin(ψ−φ)=sin(−δ)`, a constant brake; the curve was pure frequency **detuning** | **withdrawn** |
+| 3 | **inter-segmental** topology (this page) | — | current |
 
-`MessagingBeam` gained an `entrain` gain (default `0.0`) and `command()` accepts the
-sensed `theta`, `theta_dot`. When `entrain > 0`, each oscillator is pulled toward the
-**phase its own segment is really bent to**:
-
-```python
-psi = np.arctan2(th, thd / self.w)      # realized gait phase (th is the sine arg)
-r   = np.hypot(th, thd / self.w)        # bend magnitude — the receptor drive
-self.ent = (r / (r + 1e-3)) * np.sin(psi - self.phase)
-dphi += self.entrain * self.ent
-```
-
-Two properties make this a *stretch* term rather than an arbitrary drive: (i) under
-perfect tracking `th = amp·sin(phase)`, `thd/ω = amp·cos(phase)`, so `psi = phase` and
-the pull is **identically zero** — no error, no pull; (ii) the `r/(r+ε)` gate makes a
-**still body exert no pull** (a silent stretch receptor), so the phase estimate and
-the pull both fade as the body stops. With `entrain = 0` or no `theta`, the beam is
-bit-for-bit the sealed open-loop generator, so **every existing experiment reproduces
-exactly**.
+The round-3 term is the biologically faithful one: each oscillator is entrained to its
+**anterior neighbour's** realized phase, offset by the intended head→tail lag, so the
+wave propagates *through the body*; the head is the free pacemaker (no anterior
+neighbour → no pull). `entrain_mode="inter"` is the default; `"self"` is kept only as
+the ablation that shows why. Both vanish under perfect tracking; `entrain=0` is still
+bit-for-bit the open loop (**all prior experiments reproduce exactly**).
 
 ## Result
 
-![Proprioceptive entrainment (corrected): (A) the pull vanishes under perfect tracking, unlike the first buggy term; (B) closing the loop drags the realized frequency down to arrest as coupling rises; (C) frequency does not adapt to the medium](../figures/entrainment.png)
+![Entrainment (round 3): (A) the corrected pull vanishes under perfect tracking, unlike the round-1 cos 2φ; (B) on a 5-segment body the self ablation is a runaway brake while inter-segmental is stable; (C) frequency is flat vs drag under both — the open problem](../figures/entrainment.png)
 
-**A — mechanism check (no error → no pull).** The corrected pull is **identically
-zero** under perfect tracking (blue). The first version (red) was a full-amplitude
-`cos(2φ)` — a spurious `2ω` drive that fired even when the body did exactly what it
-was told. A stretch term that pulls under zero error is not modelling stretch.
+**A — the invariant (no error → no pull).** Under perfect tracking the corrected pull
+is `≡ 0` (blue); the round-1 term was a full-amplitude `cos(2φ)` (red). This is now a
+**regression test** (`tests/test_entrainment.py`, run in CI) — the check that would
+have caught the original bug before it reached a page.
 
-**B — the body enters the rhythm.** With the loop closed, the realized undulation
-frequency falls below the commanded `0.9 Hz` and, as the gain rises, is **dragged all
-the way to arrest** (`0.89 → 0.75 → 0.53 → 0.27 → 0.04 Hz`). The reason is physical
-and correct: the PD-driven body **lags** its command, so `psi` trails `phase`, the
-pull is negative, and the oscillator locks to the body it is actually moving. The
-rhythm is no longer the intrinsic `ω` — the body shapes it. (This bites *more* than a
-first-order toy body predicts, because the real servo carries a real, consistent lag.)
+**B — why topology matters** (5-segment body). The `"self"` ablation is a **runaway
+self-brake**: entraining an oscillator to a delayed copy of its own output can only
+retard, so gain drags the frequency toward arrest — that is detuning, not the body
+speaking. The correct **inter-segmental** form is far more stable: the free pacemaker
+keeps the rhythm alive and the interior joints wait on their anterior neighbours.
 
-**C — an honest negative (unchanged by the fix).** Realized frequency vs medium drag
-stays **flat**. In this bench the anisotropic drag resists body **translation**, not
-joint **articulation**, and the servo imposes the bend timing, so there is no
-articulation load for the medium to modulate. Reproducing the *C. elegans* water↔agar
-frequency law needs a **joint-loading model** (drag torque on the bend, or a
-load-limited muscle) — a declared next step, not something the feedback path delivers.
-
-!!! note "A correction that corrected itself"
-    The **first** version of this experiment reported an "arrest during a gated halt"
-    and a baseline-frequency offset. A second review round showed both rested on two
-    bugs in the entrainment term:
-
-    1. **Swapped `arctan2` arguments.** `arctan2(thd/ω, th)` makes `psi = π/2 − φ`, so
-       the pull was `cos(2φ)` — a `2ω` drive that does **not** vanish under perfect
-       tracking (verified: the pull was exactly `cos 2φ` to machine precision). Fixed
-       by using `arctan2(th, thd/ω)`.
-    2. **No magnitude gate.** The pull was applied at full strength even when the body
-       was still, where `arctan2(0,0)=0` yanks the phase to a fixed `0`. The old
-       "halt arrest" was that edge case — the phase was pulled toward zero, not toward
-       the body's phase — not the mechanism. Fixed by the `r/(r+ε)` gate.
-
-    With both fixed, the gated-halt arrest **disappears** (a slack body correctly
-    exerts no pull), and a pinned-at-a-bend obstruction does **not** cleanly arrest
-    either (a fixed bend gives `ψ=±π/2`, which speeds the oscillator as much as it
-    slows it). So those framings are **withdrawn**; the corrected, robust result is
-    panel B. Logged in the [release notes](../release-notes.md) as the same honesty
-    the review asked for — the term is now right, and the result is smaller and true.
+**C — the open problem (honest negative).** Free-run frequency vs medium drag is
+**flat under both topologies**. Closing the loop does **not**, by itself, make the
+rhythm track the medium. In this bench the anisotropic drag loads body **translation**,
+not joint **articulation**, so the entrainment sees a spatially-uniform servo lag with
+no medium gradient to read. (An apparent drag-dependence on a 3-segment body was a
+2-joint edge artifact; it vanishes here.) A positive result — medium-dependent
+frequency, the *C. elegans* water↔agar law — needs a **joint-loading model**: a drag
+torque on the bend itself, or a load-limited actuator. That is the **declared next
+step**; a first crude attempt was numerically unstable and is not shipped.
 
 ## What it shows, and does not
 
-- **Shows:** the body now shapes the rhythm — closing the loop couples the oscillator
-  to the actually-lagging body and drags the realized frequency down to arrest. S0's
-  "locomotion is a network effect" now includes the body, not just the software layer.
-- **Does not show:** medium-dependent frequency adaptation (panel C), arrest by a
-  discrete obstruction (withdrawn above), and it is not wired into the default
-  experiments (they stay open-loop for reproducibility). The term is a minimal
-  edge-cell surrogate, not a validated stretch-receptor model.
+- **Shows:** the loop is now closed with the **correct mechanism** — inter-segmental
+  proprioceptive coupling, faithful to Wen et al., zero under perfect tracking, and
+  CI-guarded. The `"self"` ablation makes explicit why naive self-entrainment (the
+  withdrawn round-2 claim) is only detuning.
+- **Does not show:** that the body shapes the rhythm. There is **no positive
+  demonstration** yet — free-run frequency is dominated by a uniform servo lag and is
+  flat vs the medium under both topologies. The payoff awaits the articulation-load
+  step. The S0 "locomotion is a network effect" claim is therefore **not** yet
+  strengthened by a bench result here; only the mechanism is in place.
+
+!!! note "Why this is logged as a result at all"
+    A correct-but-not-yet-decisive mechanism, with two withdrawn claims and a CI test,
+    is a more useful artifact than a tidy figure that turned out to measure an
+    `arctan2` edge case or a servo lag. The page maps exactly what remains: land the
+    articulation load, then ask panel C again.
 
 ## Run
 
 ```bash
-cd experiments && ../.venv/bin/python entrainment.py
+cd experiments && ../.venv/bin/python entrainment.py     # ~2 min, writes figures/entrainment.png
+python ../tests/test_entrainment.py                       # the invariants (no MuJoCo)
 ```
-
-Writes `figures/entrainment.png`. Runtime ~1 min on a laptop CPU.

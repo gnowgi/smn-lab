@@ -438,7 +438,8 @@ class MessagingBeam:
 
     def __init__(self, n_joints: int, amp: float = 0.6, freq: float = 0.8,
                  phase_lag: float = 1.2, coupling: float = 4.0,
-                 turn_gain: float = 0.8, entrain: float = 0.0):
+                 turn_gain: float = 0.8, entrain: float = 0.0,
+                 entrain_mode: str = "inter"):
         self.n = int(n_joints)
         self.amp = amp
         self.w = 2 * np.pi * freq
@@ -446,6 +447,7 @@ class MessagingBeam:
         self.coupling = coupling
         self.turn_gain = turn_gain
         self.entrain = entrain              # proprioceptive-entrainment gain (0 = open loop)
+        self.entrain_mode = entrain_mode    # "inter" (correct) | "self" (ablation only)
         self.phase = -phase_lag * np.arange(self.n, dtype=float)
         self.msg = np.zeros(self.n)
         self.ent = np.zeros(self.n)         # last proprioceptive pull per joint
@@ -459,12 +461,25 @@ class MessagingBeam:
 
         Proprioceptive entrainment (the stretch-receptor / lamprey-edge-cell loop):
         when ``entrain > 0`` and the actually-sensed joint state ``theta`` (and,
-        optionally, ``theta_dot``) is passed, each oscillator is pulled toward the
-        phase its own segment is *really* bent to, so mechanics feed back into the
-        rhythm -- the body can slow, re-phase, or arrest the wave. With
-        ``entrain == 0`` or ``theta is None`` the phase evolves from omega + neighbor
-        coupling alone (the sealed open-loop default), so prior results reproduce
-        exactly. See docs/experiments/entrainment.
+        optionally, ``theta_dot``) is passed, mechanics feed back into the rhythm.
+        ``entrain_mode`` selects the coupling topology:
+
+        - ``"inter"`` (default, correct) -- the biologically faithful form
+          (Wen et al. 2012): each oscillator is entrained to its **anterior
+          neighbour's** realized phase, offset by the intended head->tail lag, so the
+          wave propagates *through the body*. The head is the free pacemaker (no
+          anterior neighbour -> no pull).
+        - ``"self"`` (ablation only) -- each oscillator entrains to its **own** joint.
+          Because the joint is just the beam's own servo-delayed output, this reduces
+          to a constant self-brake ``sin(-delta)`` (delta = servo lag): it can only
+          detune the frequency, never carry a medium dependence. Kept solely as the
+          control that shows why ``"inter"`` is needed. Do not use it as a model.
+
+        Both forms are **identically zero under perfect tracking** (no error, no
+        pull) and gated by the bend magnitude ``r`` (a still body, like a silent
+        stretch receptor, exerts no pull). With ``entrain == 0`` or ``theta is None``
+        the phase evolves from omega + neighbour coupling alone (the sealed open-loop
+        default), so prior results reproduce exactly. See docs/experiments/entrainment.
         """
         dphi = np.full(self.n, self.w)
         for i in range(self.n):
@@ -476,19 +491,24 @@ class MessagingBeam:
             self.msg[i] = m
             dphi[i] += self.coupling * m
         if self.entrain > 0.0 and theta is not None:
-            # Phase of the realized bend: the command is amp*sin(phase), so under
-            # perfect tracking th = amp*sin(phase), thd/w = amp*cos(phase). The gait
-            # phase is therefore arctan2(th, thd/w) -- with th as the sine (y) argument,
-            # so the pull sin(psi - phase) is identically zero when the body does
-            # exactly what it was told (no error -> no pull). Gate the pull by the bend
-            # magnitude r: a still body carries no phase information (arctan2(0,0) is
-            # degenerate) and, like a real stretch receptor, should exert no pull.
+            # Realized gait phase per joint: the command is amp*sin(phase), so under
+            # perfect tracking th = amp*sin(phase), thd/w = amp*cos(phase), hence
+            # psi = arctan2(th, thd/w) = phase. r is the bend magnitude (receptor drive).
             th = np.asarray(theta, dtype=float)
             thd = (np.zeros(self.n) if theta_dot is None
                    else np.asarray(theta_dot, dtype=float))
             psi = np.arctan2(th, thd / self.w)          # body's realized gait phase
             r = np.hypot(th, thd / self.w)              # bend magnitude (receptor drive)
-            self.ent = (r / (r + 1e-3)) * np.sin(psi - self.phase)
+            gate = r / (r + 1e-3)
+            self.ent = np.zeros(self.n)
+            if self.entrain_mode == "self":
+                # ablation: entrain to one's OWN (servo-delayed) joint -> constant brake.
+                self.ent = gate * np.sin(psi - self.phase)
+            elif self.n > 1:
+                # inter-segmental: pull each joint toward its anterior neighbour's
+                # realized phase (offset by the head->tail lag); head is the pacemaker.
+                self.ent[1:] = gate[1:] * np.sin((psi[:-1] - self.phase_lag)
+                                                 - self.phase[1:])
             dphi += self.entrain * self.ent
         self.phase = self.phase + dphi * dt
         return self.amp * np.sin(self.phase) + self.turn_gain * bias
