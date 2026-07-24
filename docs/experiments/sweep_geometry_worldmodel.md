@@ -65,34 +65,46 @@ choices for a fair test, recorded here.
 
 **Two findings, reported against the pre-registration:**
 
-- **A real, body-relative world model exists — confirmed.** Decoding skill is ~0.4
-  at every body size, far above the shuffle control (~0). The agent's internal
-  state genuinely differentiates its position in the world; held-out and
-  shuffle-controlled, this is not an artifact. This is an affirmative answer to
-  *"can the agent construct a world model from embodied sensing?"*
-- **It does NOT scale with segment count — the pre-registered prediction was
-  wrong.** Skill is flat across `n_seg` (within seed noise), even though larger
-  bodies have **more** sensors **and** explored **more** area (panel B). We update
-  our understanding: *more body does not, by itself, mean more world.*
+- **World-information is decodable in the self-frame — confirmed.** A held-out kNN
+  decoder recovers position from the agent's field readings at skill ~0.4 at every
+  body size, far above the shuffle control (~0). **What this shows and does not
+  show:** the agent's sensory state carries enough information to *locate* it in the
+  world (decodability); it is **not** yet a persistent, composable world-*model*.
+  Information present in a signal is not the agent holding a model of it — the
+  representational, map-like construct is deferred to Phase-II / M2. We keep to the
+  weaker, warranted claim (the decoding-vs-representation distinction).
+- **It does NOT scale with segment count — the pre-committed prediction was wrong.**
+  Skill is flat across `n_seg` (within seed noise), even though larger bodies have
+  more sensors and explored more area (panel B). *More body does not, by itself, mean
+  more decodable world.*
 
 ## Interpretation — and a correction
 
-We pre-registered that the world model would scale with the body's sensory
-geometry. It did not. Honestly, this **corrects a naive expectation of our own**:
-adding transducers (segments) alone did not enrich the world model.
+We pre-committed that world-information would scale with the body's sensory
+geometry. It did not — correcting a naive expectation of our own. But the null has
+**two candidate explanations, and we have not yet separated them**:
 
-Notably, this null is *consistent with the SMN resolution principle* — that
-resolution is CAZ density × internal capacity, **not** raw transducer count, so
-ungated extra sensors should not add resolution. The geometry experiment therefore
-does not settle the world-model question by itself; it **redirects** it to the
-real test: does *modulation* add what geometry alone does not? That is
-[Q1](sweep_q1_modulation.md) — since built (per-zone dual-port modulation) and
-[closed by Q1b](sweep_q1b_resolution.md): resolution scales with CAZ density, but
-only *with* modulation.
+1. **The SMN resolution principle** — resolution is CAZ density × internal capacity,
+   **not** raw transducer count, so ungated extra sensors should not add resolution.
+2. **A mundane field-geometry confound** — the differentiation field's spatial scale
+   (`sigma ~ 0.8-0.9 m`) is far larger than the body (~0.2 m), so every segment reads
+   a nearly identical value and extra segments add almost no *independent*
+   information, whatever the theory says.
 
-We resist the temptation to read the resolution-principle consistency as a win:
-this experiment shows a world model exists and that segment count alone does not
-scale it. Whether modulation does is still untested.
+Both make the *same* flat prediction here, so this experiment does not distinguish
+them. The clean test is a **body-scale field** (`sigma ~ body length`), where
+segments genuinely see different values: if skill still does not rise with `n_seg`,
+(1) is supported; if it does, the earlier null was the (2) artifact. That control —
+the [field-scale experiment](sweep_geometry_worldmodel_fieldscale.md) — **has now
+been run**: under a *decodable* body-scale field, skill still does not rise with
+`n_seg` (slope −0.029, indistinguishable from the large-`sigma` −0.023). So the null
+is **not** the field-geometry artifact, and we now read it as *consistent with* the
+resolution principle (1) — while keeping the decodability-not-a-model caveat above.
+
+The resolution question is separately pursued through *modulation* — does modulation
+add what geometry alone does not? That is [Q1](sweep_q1_modulation.md) (per-zone
+modulation) and [Q1b](sweep_q1b_resolution.md): resolution scales with CAZ density,
+but only *with* modulation.
 
 **Caveat.** Eight seeds with wide spread: "flat" means no trend detectable at this
 power, not a proven exact-zero. A larger ensemble could reveal a weak effect.

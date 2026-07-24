@@ -7,10 +7,23 @@ so the architecture's predicted contrasts can be reproduced from real sensorimot
 engagement — and the things the theory says matter (coupling topology, modulation,
 body geometry) can be varied as experimental variables and measured.
 
-Every experiment is **pre-registered** (hypothesis, order parameter, matched foil,
-pass/fail fixed before running; see the [test plan](test-plan.md)) and exports tidy,
-self-describing [datasets](datasets.md). The bench is meant as a *generative model*
-others can verify and mine, not a fixed set of results.
+**What the bench is — and isn't.** It is an *existence proof* that the SMN
+architecture is buildable and coherent: that these controllers, driving a real
+physical body, produce the contrasts the theory predicts. It is *not* evidence that
+this is how biology works. The cognitive vocabulary throughout — *self-model*,
+*aboutness*, *objecthood* — names specific operational quantities (a
+correlation-recovered body graph, a dwell time, a decoding score), and where a
+quantity carries less than its cognitive name suggests, the experiment page says so.
+Some "predictions" are also **analytic consequences of the model's own equations**
+(a consistency check of the implementation) rather than contingent findings; those
+are marked as such, and kept distinct from results that could have come out
+otherwise.
+
+Every experiment is **pre-committed** — hypothesis, order parameter, matched foil,
+and pass/fail fixed *in the repo* before running (self-administered, not a
+third-party registry; see the [test plan](test-plan.md)) — and exports tidy,
+self-describing [datasets](datasets.md). The bench is a *generative model* others
+can verify and mine, not a fixed set of results.
 
 Architecture reference: Nagarjuna, G. & D. Karnam. *The Sensation Modulating
 Network.* [arXiv:2605.26856](https://arxiv.org/abs/2605.26856).

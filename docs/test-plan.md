@@ -8,6 +8,14 @@ records outcomes against the predictions, including nulls. We test the SMN
 architecture *as scientists, not as its advocates*; where an honest test needs a
 mechanism the bench does not yet have, we say so rather than quietly adding one.
 
+Two honesty caveats on the word *pre-registration*: (1) it is **self-administered**
+— a commitment recorded in this repository before running, not a third-party
+registration; for Phase-II we intend genuine OSF Registrations. (2) A few listed
+"predictions" are **analytic consequences of the model's own equations** (e.g. R1's
+tonic-load slope) — a consistency check of the implementation, not a contingent
+finding — and are marked as such so they are not read as independent evidence for
+the mechanism.
+
 ## Ground rules
 
 1. **Pre-register.** Hypothesis, order parameter, foil, and pass/fail are stated

@@ -14,7 +14,7 @@ The point of this module is Phase I·①: the *same* self-model read-out
 — a path (chain), a ladder (sheet), a cylinder (tube). One function, any body.
 
 Segments are **overdamped** (``seg_damp``): soft tissue lives in the same
-low-Reynolds regime as the crawler's medium, and in that regime a driven link's
+overdamped, anisotropic-resistive regime as the crawler's medium, and in that regime a driven link's
 force appears only at its two endpoints — which is exactly what makes the graph
 locally recoverable however dense the lattice.
 """

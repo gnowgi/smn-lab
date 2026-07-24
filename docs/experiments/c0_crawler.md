@@ -44,7 +44,7 @@ yet.
 
 ## Assumptions specific to C0
 (in addition to the [common assumptions](../assumptions.md))
-- v0 is the **overdamped-swimmer idealization**: gravity off, the drag *is* the
+- v0 is the **overdamped anisotropic-resistive idealization**: gravity off, the drag *is* the
   medium. Gravity, a ventral touch skin, and objects are added in
   [C1](c1_touch.md).
 - The anisotropic drag is an explicit Python force law, not MuJoCo's fluid solver.

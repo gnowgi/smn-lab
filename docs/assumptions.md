@@ -28,7 +28,13 @@ page stating which it uses:
   integrator (not the older RK4 / 5 ms trial default).
 - **Overdamped, non-inertial regime.** Nothing coasts: motion is resisted by an
   explicit **anisotropic drag** medium (crawler) or by high **joint damping**
-  (lattices). This is the low-Reynolds / soft-tissue regime.
+  (lattices). This is an overdamped, *anisotropic-resistive* regime — **not** an
+  aquatic low-Reynolds fluid. The drag ratio is `c_trans/c_long = 14`, far above the
+  perpendicular/parallel ratio (~2) that ideal Stokes resistive-force theory allows
+  for a slender body, so it models a **strong-anisotropy resistive/frictional
+  medium** (a snake on ground), chosen so undulation yields clear forward thrust. The
+  mechanism — anisotropy converting a bending wave into net thrust — is standard and
+  correct; only an *aquatic* label would overreach.
 - **Tissue lattices disable contact.** A lattice is *one tissue*, not colliding
   parts, so segment–segment contact is switched off and gravity is off. The crawler
   and manipulator keep the contacts they need (touch skin, object press).
@@ -98,7 +104,7 @@ reafference separating self from world; and a **haltable action pattern** that m
 action *about* an object.
 
 ## E. Refinement backlog
-1. **FLEX volume-conserving hydrostat** (the aquatic/soft-tissue regime; true
+1. **FLEX volume-conserving hydrostat** (a soft-tissue hydrostat regime; true
    "contract-circular → elongate" coupling) — the labelled realism upgrade.
 2. **Hydrostatic CAZ in the visual grammar** (linked linear actuators; deferred).
 3. **Muscle–tendon impedance** for a free-space stiffness equilibrium (E3's deferral).

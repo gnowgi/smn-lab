@@ -32,7 +32,7 @@ The **segments are scaffolding** — point masses that hold sensors. Every **lin
 one CAZ**: a spring-tendon muscle with its own linear actuator (longitudinal links
 = longitudinal muscle; lateral links = circular muscle). Each link is driven
 independently, and the tissue is **overdamped** — the regime of real soft tissue
-(low Reynolds, like the crawler's medium). In that regime a driven link's force
+(overdamped and anisotropic-resistive, like the crawler's medium). In that regime a driven link's force
 shows up **only at its two endpoint segments**, so each link can discover the two
 segments it couples by a purely local correlation — no zone ever reads the whole
 body (**C3**).

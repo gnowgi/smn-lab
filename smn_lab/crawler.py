@@ -16,7 +16,9 @@ a traveling wave of bends into net forward thrust (the *C. elegans* recipe).
 Keeping the drag law in plain Python is deliberate -- collaborators can read,
 verify, and replace it.
 
-v0 is a planar swimmer (gravity off; the drag *is* the medium). Gravity, a
+v0 is a planar undulatory crawler in an anisotropic resistive medium (gravity off;
+the drag *is* the medium -- its ratio models a resistive/frictional substrate, not a
+low-Reynolds fluid; see docs/assumptions). Gravity, a
 ventral touch skin reading contact force, and walls/objects are the v1 increment.
 """
 from __future__ import annotations
@@ -42,7 +44,7 @@ def build_crawler_xml(n_seg: int = 3, h: float = 0.07, w: float = 0.025,
     Each inter-segment hinge j{k} is actuated by a pull-only opponent pair
     (m_j{k}_p, m_j{k}_n).
 
-    v0 (defaults): planar swimmer -- the head has slide_x/slide_y/yaw joints,
+    v0 (defaults): planar undulatory crawler -- the head has slide_x/slide_y/yaw joints,
     gravity off, the anisotropic drag is the medium.
 
     v1 (``gravity_on=with_floor=touch=True``): gravity is present; the body

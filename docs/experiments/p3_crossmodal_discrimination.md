@@ -116,6 +116,15 @@ foil (same test set):
 - **Binding.** Individuable categories = `2^(modalities coupled)`: 2 → 4 → 8.
   Adding whiskers (touch density) keeps it at 2 — a touch-only agent cannot read
   colour no matter how many whiskers it grows. **Sensors are not modalities.**
+
+!!! note "Reproducibility of the touch-only count"
+    A re-run of the current code reproduces the **2** touch-only classes reported
+    here. An earlier critical review (`formal_review.md`) recorded **3** at this
+    step; that was not reproduced, so the exact touch-only count is **sensitive to
+    the touch-noise / feature-threshold calibration** (`NOISE`, `BOUNDARIES`,
+    `FLOORS`) and should be read as calibration-dependent, not a hard invariant. The
+    qualitative claim that carries the weight — a touch-only agent gains no new
+    *individuable modality* from more whiskers — is robust to that count.
 - **The subsumption foil (measured).** Give the same body, the same three
   sensors, and the same reactive approach to a `SubsumptionArbiter` — fixed
   priority *suppression* instead of modulation — and it individuates only **2**

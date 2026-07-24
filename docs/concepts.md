@@ -25,8 +25,8 @@ now a family of bodies: the segmented **crawler** (C0/C1), spring-tendon
   torque). Steering, turning, and *halting* require it.
 - **The substrate is elastic and overdamped.** The self-model is recoverable only
   because links transmit motion elastically with attenuation (rigid → whole-body
-  common mode → nothing to read), in the overdamped soft-tissue / low-Reynolds
-  regime. Elasticity is a load-bearing commitment, not decoration.
+  common mode → nothing to read), in the overdamped, anisotropic-resistive
+  (soft-tissue) regime. Elasticity is a load-bearing commitment, not decoration.
 - **Model vs. measurement.** What the *agent* computes (the self-model read-out,
   local, no central reader — Commitment C3) is kept in `smn_lab.self_model`; what
   the *experimenter* computes to score it against ground truth is kept in

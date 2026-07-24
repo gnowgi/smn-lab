@@ -36,11 +36,22 @@ The alert energy and its routing are read from `smn_lab/control.py`:
 ## Result
 ![R1 — partner tone rises linearly with active load under the SMN, flat under classical inhibition](../figures/sweep_r1_tonic_load.png)
 
+!!! note "Epistemic status: analytic / consistency check, not a contingent finding"
+    R1 is **guaranteed by construction**: `AlertEnergyBoard` *sets* the resting
+    partner to `a0 + beta*E_R`, whose steady state is `E_R* = rho*tau_E*F`, so the
+    slope `beta*rho*tau_E` follows algebraically. This experiment therefore
+    **verifies that the integrator reproduces the closed-form steady state** — a unit
+    test of the ODE, and of the SMN's *departure from classical inhibition* (whose
+    foil has no such state and is flat). It is **not** evidence about opponent
+    physiology; that would need a biological measurement. We keep it in a different
+    epistemic category from results that could have come out otherwise (the S1 null,
+    the Q2 downgrade).
+
 An opponent CAZ (one MuJoCo hinge, two pull-only motors) holds a configuration
-against a swept external load. **SMN slope 0.744**, against the predicted
-`beta*rho*tau_E = 0.750` — the linear tonic-load coupling *emerges* from the
-closed-loop dynamics. The **classical-inhibition foil is flat (−0.00)**. The
-architecture's sharpest departure from classical inhibition, realised.
+against a swept external load. **SMN slope 0.744**, matching the closed-form
+`beta*rho*tau_E = 0.750` — the integrator reproduces the predicted tonic-load
+coupling. The **classical-inhibition foil is flat (−0.00)**, as it must be: it has
+no alert-energy state to carry load into resting tone.
 
 ## Run
 ```bash
