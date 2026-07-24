@@ -1,0 +1,22 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  entrainment-invariants:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install numpy
+        run: pip install numpy
+      # Pure-numpy regression tests for the entrainment term (no MuJoCo / GL needed).
+      # Guards the invariant a docs page once violated: under perfect tracking the
+      # proprioceptive pull must be identically zero.
+      - name: Run entrainment invariant tests
+        run: python tests/test_entrainment.py
