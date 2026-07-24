@@ -41,8 +41,9 @@ bit-for-bit the open loop (**all prior experiments reproduce exactly**).
 
 **A — the invariant (no error → no pull).** Under perfect tracking the corrected pull
 is `≡ 0` (blue); the round-1 term was a full-amplitude `cos(2φ)` (red). This is now a
-**regression test** (`tests/test_entrainment.py`, run in CI) — the check that would
-have caught the original bug before it reached a page.
+**regression test** (`tests/test_entrainment.py`, pure-numpy) — the check that would
+have caught the original bug before it reached a page. A CI workflow is provided at
+`.github/workflows/tests.yml` (activate with a workflow-scoped push).
 
 **B — why topology matters** (5-segment body). The `"self"` ablation is a **runaway
 self-brake**: entraining an oscillator to a delayed copy of its own output can only

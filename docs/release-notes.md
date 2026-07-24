@@ -47,10 +47,10 @@ body's load or the medium. **Withdrawn.**
   its **anterior neighbour's** realized phase (offset by the head→tail lag), so the
   wave propagates *through the body* — faithful to Wen et al. 2012. The head is the
   free pacemaker. Both forms vanish under perfect tracking.
-- **Regression test in CI.** `tests/test_entrainment.py` (pure-numpy, no MuJoCo) +
-  `.github/workflows/tests.yml` now assert the invariant a docs page once violated:
-  *under perfect tracking the pull is identically zero.* This would have caught the
-  round-1 `cos(2φ)` bug.
+- **Regression test.** `tests/test_entrainment.py` (pure-numpy, no MuJoCo) asserts the
+  invariant a docs page once violated: *under perfect tracking the pull is identically
+  zero.* This would have caught the round-1 `cos(2φ)` bug. A CI workflow is provided at
+  `.github/workflows/tests.yml` (to be activated with a workflow-scoped push).
 - **The experiment is downgraded to "mechanism + open problem."** On a 5-segment body:
   the `"self"` ablation runs away toward arrest (detuning); inter-segmental is stable.
   But free-run frequency is **flat vs medium drag under both topologies** — closing the
