@@ -125,6 +125,25 @@ def decoding_skill(S, P, rng, k=8, shuffle=False):
 # --8<-- [end:decoding_skill]
 
 
+# --8<-- [start:correction_dc_ratio]
+def correction_dc_ratio(ent):
+    """Diagnostic: |mean| / std of a feedback/correction signal over time.
+
+    A well-formed *correction* term is zero-mean with ripple — it nudges toward and
+    away from the reference. The moment its DC component dominates its variance it has
+    stopped correcting and started **biasing** (e.g. a constant brake). This ratio
+    catches that: `~0` = a genuine corrector; `>> 1` = a disguised bias.
+
+    It would have flagged both entrainment bugs by inspection: the argument-order bug
+    (cos 2φ, still ripple-like) less so, but the self-feedback topology gave
+    mean=-0.75, std=0.17 -> ratio 4.4, a pure brake wearing a correction's clothes.
+    Pre-committed success criterion for the entrainment fix: ratio < 0.05 in steady
+    free swimming (see docs/experiments/entrainment.md)."""
+    ent = np.asarray(ent, dtype=float)
+    return float(abs(ent.mean()) / (ent.std() + 1e-12))
+# --8<-- [end:correction_dc_ratio]
+
+
 # --8<-- [start:ridge_skill]
 def ridge_skill(S, P, rng, lam=1.0, shuffle=False):
     """EXPERIMENTER-SIDE, dimension-robust companion to decoding_skill.

@@ -19,6 +19,13 @@ Some "predictions" are also **analytic consequences of the model's own equations
 are marked as such, and kept distinct from results that could have come out
 otherwise.
 
+**Which parts to trust, and how far.** Like any live research project, some
+consistency checks are solid and some are work-in-progress — and a couple have been
+*withdrawn* after review. The **[status ledger](status.md)** labels every experiment
+(✅ consistency-checked · 🟡 provisional · 🟠 open problem · ⛔ withdrawn), and the
+same icons appear next to each page in the navigation. A ✅ means we checked the
+*instrument*, not just the page; where a check didn't survive that, its page says so.
+
 Every experiment is **pre-committed** — hypothesis, order parameter, matched foil,
 and pass/fail fixed *in the repo* before running (self-administered, not a
 third-party registry; see the [test plan](test-plan.md)) — and exports tidy,

@@ -73,6 +73,17 @@ def test_head_is_pacemaker():
     assert np.max(np.abs(beam.ent[1:])) > 1e-3, "interior joints should feel a pull"
 
 
+def test_correction_dc_ratio_flags_a_disguised_bias():
+    # The standing diagnostic: a zero-mean ripple reads ~0; a DC-dominated signal
+    # (a constant brake, like the withdrawn self-feedback term) reads >> 1.
+    from smn_lab.metrics import correction_dc_ratio
+    phase = np.linspace(0, 40 * np.pi, 2000)
+    ripple = np.sin(phase)                          # genuine corrector: zero-mean
+    brake = -0.75 + 0.17 * np.sin(phase)            # the self-feedback signature
+    assert correction_dc_ratio(ripple) < 0.05, "zero-mean ripple must read ~0"
+    assert correction_dc_ratio(brake) > 1.0, "a DC-dominated brake must be flagged"
+
+
 def test_entrain_zero_is_open_loop():
     # entrain=0 must leave phase evolution identical whether or not theta is passed.
     a = MessagingBeam(n_joints=4, amp=AMP, freq=0.9, entrain=0.0)
