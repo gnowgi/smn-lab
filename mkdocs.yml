@@ -39,7 +39,7 @@ nav:
       - "W2 — world-geometry in the self-frame": experiments/world_geometry_self_frame.md
       - "Q1 — modulation builds the world model": experiments/sweep_q1_modulation.md
       - "S1 — more body ≠ more world (segment-count null)": experiments/sweep_geometry_worldmodel.md
-      - "S1 field-scale control — is the null real or field geometry?": experiments/sweep_geometry_worldmodel_fieldscale.md
+      - "S1 field-scale control — WITHDRAWN (order parameter confounded)": experiments/sweep_geometry_worldmodel_fieldscale.md
       - "Q1b — resolution = CAZ density, not transducer count (hinges to §7)": experiments/sweep_q1b_resolution.md
       - "Resolution exponent — R ~ ρ^a measured (a=0.49, predicted ½)": experiments/sweep_resolution_exponents.md
       - "R5 — intra-body dual-signal residual (self/world structure)": experiments/sweep_r5_dual_signal.md

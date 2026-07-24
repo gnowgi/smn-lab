@@ -94,12 +94,22 @@ geometry. It did not — correcting a naive expectation of our own. But the null
 Both make the *same* flat prediction here, so this experiment does not distinguish
 them. The clean test is a **body-scale field** (`sigma ~ body length`), where
 segments genuinely see different values: if skill still does not rise with `n_seg`,
-(1) is supported; if it does, the earlier null was the (2) artifact. That control —
-the [field-scale experiment](sweep_geometry_worldmodel_fieldscale.md) — **has now
-been run**: under a *decodable* body-scale field, skill still does not rise with
-`n_seg` (slope −0.029, indistinguishable from the large-`sigma` −0.023). So the null
-is **not** the field-geometry artifact, and we now read it as *consistent with* the
-resolution principle (1) — while keeping the decodability-not-a-model caveat above.
+(1) is supported; if it does, the earlier null was the (2) artifact.
+
+!!! danger "That control turned out to be confounded — we do NOT read this null as evidence for (1)"
+    The [field-scale control](sweep_geometry_worldmodel_fieldscale.md) was run and, on
+    a later review, **withdrawn**. Its order parameter — the slope of *kNN* decoding
+    skill vs `n_seg` — is confounded three ways: (i) kNN degrades with state dimension,
+    so it manufactures a negative slope even for a field with **no** independent
+    per-segment information; (ii) the "body-scale" field kept the broad sources, which
+    dominate and mask the body-scale signal — a properly body-scale field makes a
+    *dimension-robust* decoder's slope go **positive** (more body → more decodable);
+    (iii) the skill metric is trajectory-noisy (the curves are non-monotone with wide
+    variance). So the control does **not** separate (1) from (2). **This S1 null is
+    therefore consistent with either explanation, and must not be cited as evidence
+    for the resolution principle.** The resolution claim is carried instead by the
+    *modulation* experiments ([Q1](sweep_q1_modulation.md), [Q1b](sweep_q1b_resolution.md)),
+    where CAZ density is varied with modulation on vs off.
 
 The resolution question is separately pursued through *modulation* — does modulation
 add what geometry alone does not? That is [Q1](sweep_q1_modulation.md) (per-zone

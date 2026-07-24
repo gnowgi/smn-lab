@@ -1,25 +1,34 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 G. Nagarjuna and Durgaprasad Karnam
-"""Field-scale control for the S1 world-model null.
+"""Field-scale control for the S1 world-model null -- and why it is INCONCLUSIVE.
 
-S1 (sweep_geometry_worldmodel.py) found decoding skill FLAT in segment count and
-read it as consistent with the SMN resolution principle (resolution = CAZ density,
-not transducer count). But there is a mundane competing explanation: the S1 field's
-spatial scale (sigma ~ 0.8-0.9 m) is far larger than the body (~0.2 m), so every
-segment reads a nearly identical value -- extra segments add almost no INDEPENDENT
-information whatever the theory says. The two explanations make the same flat
-prediction under a large-sigma field, so S1 cannot separate them.
+S1 (sweep_geometry_worldmodel.py) found held-out decoding skill flat in segment count
+and read it as consistent with the resolution principle. The competing explanation is
+field geometry: under a large-sigma field every segment reads nearly the same value,
+so extra segments add no independent information whatever the theory says. This page
+was meant to separate the two with a body-scale field.
 
-This control repeats the sweep under a BODY-SCALE field (small sigma, tiled so the
-body always spans a gradient), where segments genuinely read different values:
-  - if skill STILL does not rise with n_seg -> the resolution-principle reading (1)
-    survives;
-  - if skill RISES with n_seg under the body-scale field -> the S1 null was the
-    field-geometry artifact (2), and should not be cited as evidence for (1).
+** A scientific-accuracy review checked the harness and it does NOT separate them. **
+Three confounds, all reproduced below, break the original "resolution survives" verdict:
 
-We report the contrast; we do not tune to a preferred outcome.
+  1. Decoder dimensionality. The order parameter was the slope of *kNN* skill vs
+     n_seg. kNN degrades with state dimension (2*n_seg channels), so it produces a
+     NEGATIVE slope even for `broad_only` -- a field that by construction carries NO
+     independent per-segment information. A negative slope is thus manufactured by the
+     decoder, not the world. A dimension-robust ridge readout puts `broad_only` flat.
+  2. Field masking. The "body-scale" field kept the three broad S1 sources "for
+     decodability" -- but those dominate the decodable signal and are n_seg-flat, so
+     they SWAMP the fine body-scale component whose n_seg-dependence is the whole test.
+     Remove/weaken the broad sources (`fine_only`, `weakbroad+fine`) and the ridge
+     slope goes POSITIVE: a genuinely body-scale field does show more-body-more-world.
+  3. Trajectory noise. Skill is strongly trajectory-dependent -- the curves are
+     non-monotone (a dip at n_seg=5 across *all* fields) with wide seed variance
+     (+/-0.2..0.6), so a slope at this budget cannot resolve the question.
 
-Run:  ../.venv/bin/python sweep_geometry_worldmodel_fieldscale.py
+Conclusion: the control is INCONCLUSIVE and the "resolution-principle survives"
+reading is WITHDRAWN. See docs/experiments/sweep_geometry_worldmodel_fieldscale.md.
+
+Run:  ../.venv/bin/python sweep_geometry_worldmodel_fieldscale.py     (~8-10 min)
 """
 from __future__ import annotations
 import os, sys
@@ -33,39 +42,40 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from smn_lab.crawler import build_crawler_xml, apply_anisotropic_drag
 from smn_lab.control import OpponentBoard, MessagingBeam
 from smn_lab.fields import ScalarField
-from smn_lab.metrics import decoding_skill as _knn_skill
+from smn_lab.metrics import decoding_skill as knn_skill, ridge_skill
 
 DT = 0.002
-T_END = 75.0             # match S1's coverage/sample budget for a clean-enough signal
+T_END = 75.0
 LOG_EVERY = 25
 DRAG_LONG, DRAG_TRANS = 0.5, 7.0
 N_SEGS = [3, 5, 9]
 SEEDS = list(range(8))
 STEER_TAU, STEER_SD, STEER_GAIN = 2.5, 1.6, 0.6
 
-# The original S1 world: 3 broad sources, sigma ~ 0.8 m >> body.
-FIELD_LARGE = ScalarField([(1.6, 1.1, 1.0, 0.8), (-1.4, 0.9, 0.9, 0.9),
-                           (0.2, -1.6, 1.1, 0.7)])
 
-def _bodyscale_field(sigma=0.22, n_fine=48, half=2.2, seed=0):
-    """A DECODABLE body-scale field. A periodic grid would alias position (the first
-    attempt at this control did exactly that and read ~shuffle, undecodable). So we
-    keep the three broad S1 sources -- which make absolute position globally
-    recoverable -- and ADD an aperiodic scatter of narrow Gaussians (sigma ~ body
-    length) that give body-scale texture: different segments then read different
-    values, and extra segments sample independent local gradient. Aperiodic (rng
-    placement) avoids aliasing; deterministic seed keeps it fixed across runs."""
+def _broad(scale=1.0):
+    return [(1.6, 1.1, 1.0 * scale, 0.8), (-1.4, 0.9, 0.9 * scale, 0.9),
+            (0.2, -1.6, 1.1 * scale, 0.7)]
+
+
+def _fine(sigma=0.22, n_fine=48, half=2.2, seed=0):
     rng = np.random.default_rng(seed)
-    srcs = [(1.6, 1.1, 1.0, 0.8), (-1.4, 0.9, 0.9, 0.9), (0.2, -1.6, 1.1, 0.7)]
+    out = []
     for _ in range(n_fine):
         x, y = rng.uniform(-half, half, 2)
         amp = rng.uniform(0.5, 1.0) * (1.0 if rng.random() < 0.5 else -1.0)
-        srcs.append((float(x), float(y), float(amp), sigma))
-    return ScalarField(srcs)
+        out.append((float(x), float(y), float(amp), sigma))
+    return out
 
-FIELD_BODY = _bodyscale_field()
-FIELDS = {"large_sigma (~0.85 m, original S1)": FIELD_LARGE,
-          "body_scale (broad + fine texture, ~0.22 m)": FIELD_BODY}
+
+# broad_only = the original large-sigma S1 field (= a dimensionality control: no
+# independent per-segment info). broad+fine = the first version of this control.
+# weakbroad+fine = decodable AND not broad-masked (broad only anchors global position).
+FIELDS = {
+    "broad_only (=S1 large-σ; dim. control)": ScalarField(_broad(1.0)),
+    "broad+fine (the first control field)":   ScalarField(_broad(1.0) + _fine()),
+    "weakbroad+fine (decodable, unmasked)":   ScalarField(_broad(0.35) + _fine()),
+}
 
 
 def run_one(field, n_seg, seed):
@@ -103,57 +113,57 @@ def run_one(field, n_seg, seed):
             Xs.append(hx); Ys.append(hy); Ss.append(S)
     S = np.array(Ss); P = np.column_stack([Xs, Ys])
     rng2 = np.random.default_rng(1000 + seed)
-    return _knn_skill(S, P, rng2, shuffle=False), _knn_skill(S, P, rng2, shuffle=True)
+    return knn_skill(S, P, rng2), ridge_skill(S, P, rng2)
 
 
 def main():
-    rows = {name: {N: [] for N in N_SEGS} for name in FIELDS}
-    shuf = {name: [] for name in FIELDS}
+    knn = {n: {N: [] for N in N_SEGS} for n in FIELDS}
+    rdg = {n: {N: [] for N in N_SEGS} for n in FIELDS}
     for name, field in FIELDS.items():
         print(f"=== {name} ===")
         for N in N_SEGS:
             for s in SEEDS:
-                sk, sh = run_one(field, N, s)
-                rows[name][N].append(sk); shuf[name].append(sh)
-            m = np.mean(rows[name][N])
-            print(f"   n_seg={N}: skill {m:.3f} ± {np.std(rows[name][N]):.3f}")
+                a, b = run_one(field, N, s)
+                knn[name][N].append(a); rdg[name][N].append(b)
+            print(f"   n_seg={N}: kNN {np.mean(knn[name][N]):+.3f}±{np.std(knn[name][N]):.2f}"
+                  f"   ridge {np.mean(rdg[name][N]):+.3f}±{np.std(rdg[name][N]):.2f}")
 
-    # order parameter: slope of skill vs n_seg (does more body add decodable world?)
-    def slope(name):
-        x = np.array(N_SEGS, float)
-        y = np.array([np.mean(rows[name][N]) for N in N_SEGS])
-        return np.polyfit(x, y, 1)[0]
-    s_large = slope(list(FIELDS)[0]); s_body = slope(list(FIELDS)[1])
-    print(f"\nskill-vs-n_seg slope:  large-sigma {s_large:+.4f}   body-scale {s_body:+.4f}")
-    RISE = 0.010                       # a rise of >0.01 skill per segment counts
-    if s_body > RISE and s_large <= RISE:
-        verdict = ("ARTIFACT: skill rises with n_seg under a body-scale field but not "
-                   "the large-sigma one -> the S1 flat-null was field geometry, not the "
-                   "resolution principle. Do not cite S1 as evidence for it.")
-    elif s_body <= RISE:
-        verdict = ("RESOLUTION-PRINCIPLE SURVIVES: skill stays flat in n_seg even under a "
-                   "body-scale field, so the S1 null is not merely a field-geometry artifact.")
-    else:
-        verdict = "INCONCLUSIVE: both slopes above threshold; see numbers."
-    print("verdict:", verdict)
+    def slope(d, name):
+        return float(np.polyfit(N_SEGS, [np.mean(d[name][N]) for N in N_SEGS], 1)[0])
+    names = list(FIELDS)
+    print("\nslopes (skill per segment):")
+    for n in names:
+        print(f"   {n:42s}  kNN {slope(knn,n):+.4f}   ridge {slope(rdg,n):+.4f}")
 
-    _plot(rows, shuf, s_large, s_body)
+    print("\nVERDICT: INCONCLUSIVE -- 'resolution survives' WITHDRAWN.")
+    print(f"  (1) dim. confound: broad_only kNN slope {slope(knn,names[0]):+.3f} "
+          f"(negative for a NO-info field) vs ridge {slope(rdg,names[0]):+.3f} (~flat).")
+    print(f"  (2) masking: broad+fine ridge {slope(rdg,names[1]):+.3f} (flat) vs "
+          f"weakbroad+fine ridge {slope(rdg,names[2]):+.3f} (positive -> more body helps).")
+    print("  (3) trajectory noise: non-monotone (n_seg=5 dip), wide variance.")
+    _plot(knn, rdg, slope)
 
 
-def _plot(rows, shuf, s_large, s_body):
-    fig, ax = plt.subplots(figsize=(7.2, 4.6))
-    for name, marker in zip(FIELDS, ("-o", "-s")):
-        y = [np.mean(rows[name][N]) for N in N_SEGS]
-        e = [np.std(rows[name][N]) for N in N_SEGS]
-        ax.errorbar(N_SEGS, y, yerr=e, fmt=marker, capsize=3, label=name)
-    sh = np.mean([v for vv in shuf.values() for v in vv])
-    ax.axhline(sh, ls="--", color="0.6", lw=1, label=f"shuffle control (~{sh:.2f})")
-    ax.set_xlabel("segment count  (n_seg)"); ax.set_ylabel("held-out decoding skill")
-    ax.set_xticks(N_SEGS)
-    ax.set_title("Field-scale control for the S1 world-model null\n"
-                 f"slope vs n_seg: large-sigma {s_large:+.3f}, body-scale {s_body:+.3f}",
-                 fontsize=10)
-    ax.legend(fontsize=8)
+def _plot(knn, rdg, slope):
+    fig, (axK, axR) = plt.subplots(1, 2, figsize=(13, 4.8), sharey=True)
+    for name, mk in zip(FIELDS, ("-o", "-s", "-^")):
+        yk = [np.mean(knn[name][N]) for N in N_SEGS]
+        ek = [np.std(knn[name][N]) for N in N_SEGS]
+        yr = [np.mean(rdg[name][N]) for N in N_SEGS]
+        er = [np.std(rdg[name][N]) for N in N_SEGS]
+        axK.errorbar(N_SEGS, yk, yerr=ek, fmt=mk, capsize=3,
+                     label=f"{name}  (slope {slope(knn,name):+.3f})")
+        axR.errorbar(N_SEGS, yr, yerr=er, fmt=mk, capsize=3,
+                     label=f"{name}  (slope {slope(rdg,name):+.3f})")
+    for ax, t in ((axK, "kNN decoder (dimension-cursed)"),
+                  (axR, "ridge decoder (dimension-robust)")):
+        ax.axhline(0, ls="--", color="0.6", lw=1)
+        ax.set_xlabel("segment count (n_seg)"); ax.set_xticks(N_SEGS)
+        ax.set_title(t, fontsize=10); ax.legend(fontsize=7, loc="lower left")
+    axK.set_ylabel("held-out decoding skill")
+    fig.suptitle("Field-scale control is CONFOUNDED: kNN slope is a dimensionality "
+                 "artifact;\nunmasking the body-scale field makes ridge slope positive "
+                 "-> 'resolution survives' withdrawn", fontsize=10)
     here = os.path.dirname(os.path.abspath(__file__))
     figdir = os.path.join(here, "..", "figures"); os.makedirs(figdir, exist_ok=True)
     out = os.path.join(figdir, "sweep_geometry_worldmodel_fieldscale.png")

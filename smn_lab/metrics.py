@@ -123,3 +123,33 @@ def decoding_skill(S, P, rng, k=8, shuffle=False):
     naive = float(np.mean(np.hypot(*(Pte - Ptr.mean(0)).T)))
     return 1.0 - mae / max(naive, 1e-9)
 # --8<-- [end:decoding_skill]
+
+
+# --8<-- [start:ridge_skill]
+def ridge_skill(S, P, rng, lam=1.0, shuffle=False):
+    """EXPERIMENTER-SIDE, dimension-robust companion to decoding_skill.
+
+    Same 60/40 temporal split, same standardize-on-train, same skill definition
+    (1 - MAE/MAE_naive) and shuffle control -- but a ridge-regularized LINEAR readout
+    S -> P instead of kNN. kNN degrades with state dimension (curse of
+    dimensionality): adding sensor channels can lower kNN skill even when they add
+    information, so a kNN skill *slope* vs channel count is confounded by the number
+    of channels. A regularized linear map does not have that pathology -- extra
+    channels can only help or be shrunk toward zero -- so comparing this against
+    decoding_skill separates 'the world got less decodable' from 'kNN ran out of
+    samples per dimension'. Use BOTH when the claim is about a skill slope."""
+    n = len(S)
+    cut = int(0.6 * n)
+    Str, Ptr, Ste, Pte = S[:cut], P[:cut], S[cut:], P[cut:]
+    if shuffle:
+        Ptr = Ptr[rng.permutation(len(Ptr))]
+    mu, sd = Str.mean(0), Str.std(0) + 1e-9
+    A = np.column_stack([(Str - mu) / sd, np.ones(len(Str))])   # + bias column
+    B = np.column_stack([(Ste - mu) / sd, np.ones(len(Ste))])
+    reg = lam * np.eye(A.shape[1]); reg[-1, -1] = 0.0           # don't penalize bias
+    W = np.linalg.solve(A.T @ A + reg, A.T @ Ptr)
+    pred = B @ W
+    mae = float(np.mean(np.hypot(*(pred - Pte).T)))
+    naive = float(np.mean(np.hypot(*(Pte - Ptr.mean(0)).T)))
+    return 1.0 - mae / max(naive, 1e-9)
+# --8<-- [end:ridge_skill]

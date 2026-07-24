@@ -7,6 +7,43 @@ paper v3 (the arXiv/PsyArXiv v2 is frozen).
 
 ---
 
+## 2026-07 — S1 field-scale control WITHDRAWN (decoder + field-design confounds)
+
+The same review turned to the S1 field-scale control (`sweep_geometry_worldmodel_fieldscale`),
+which had claimed the S1 flat-null "is not a field-geometry artifact → resolution
+principle survives." Checking the harness in code + simulation, that verdict does not
+hold. **Withdrawn.** The decoder itself is clean (train-only standardization, temporal
+60/40 split, sound shuffle control), but the *order parameter* — the slope of kNN
+decoding skill vs `n_seg` — is confounded three ways:
+
+- **Decoder dimensionality.** kNN degrades with state dimension (`2·n_seg` channels),
+  so it produces a **negative slope even for `broad_only`** — a field that carries *no*
+  independent per-segment information by construction. The negative slope was
+  manufactured by the decoder, not the world. A dimension-robust **ridge** readout puts
+  `broad_only` flat. (New `ridge_skill` in `metrics.py`.)
+- **Field masking.** The "body-scale" field kept the three broad S1 sources "for
+  decodability," but they dominate the signal and are `n_seg`-flat, **swamping** the
+  fine body-scale component whose `n_seg`-dependence was the whole test. Weaken/remove
+  them (`weakbroad+fine`, `fine_only`) and the ridge slope goes **positive** — a
+  genuinely body-scale field shows *more body → more decodable world*.
+- **Trajectory noise.** Skill is strongly trajectory-dependent: the published curves
+  are non-monotone (a dip at `n_seg=5` across all fields) with ±0.2–0.6 seed variance,
+  so a slope at this budget cannot resolve the question anyway.
+
+Net: the control is **inconclusive**, not confirmatory. The experiment and figure are
+rewritten to run both decoders + a dimensionality control + an unmasked field, and to
+report the withdrawal. The **S1 page no longer cites its null as evidence for the
+resolution principle** — that claim is carried only by the *modulation* experiments
+(Q1/Q1b). A clean redesign (dimension-robust decoder, decodable-and-unmasked
+body-scale field, trajectory control, many seeds) is future work.
+
+### [PAPER v3 — pending]
+- Remove any v3 use of the field-scale control as clearing the S1 field-geometry
+  confound. S1's flat-null is consistent with *either* the resolution principle or a
+  field-geometry artifact; do not adjudicate with this control. (See item 4/2.)
+
+---
+
 ## 2026-07 — Proprioceptive entrainment: closing the body → rhythm loop
 
 Second point from the same scientific-accuracy review: in the base bench the
