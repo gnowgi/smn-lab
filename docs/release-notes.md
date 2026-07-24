@@ -7,6 +7,43 @@ paper v3 (the arXiv/PsyArXiv v2 is frozen).
 
 ---
 
+## 2026-07 — Self-model audited: recoverable from *exploratory* movement, not behaviour
+
+A review pass checked the §3 self-model the same way (in code + simulation). The
+read-out (`transfer`/`coupling`) is scored under an **independent OU torque per zone**
+— exploratory/"babbling" drive. Under the **beam wave** (coordinated locomotion) it
+collapses: on an 8-segment chain neighbour-accuracy falls from 1.00 to **0.286**
+(chance = 2/8 = 0.25) and the hop-profile inverts — one oscillator driving all zones
+makes `|corr(efference, motion)|` track command *phase*, not mechanical distance.
+Independently reproduced.
+
+- **New experiment `self_model_babble_behave`** records the contrast (both hop
+  profiles + both transfer matrices) rather than burying it — a real finding.
+- **Wording corrected:** "recovered from movement" → "recovered from **exploratory**
+  movement" (`self_model.py` docstring, topology page).
+- **Metric floor flagged:** chance neighbour-accuracy is **2/n**; for the 3-segment
+  crawler (n = 2) chance is **1.00** — the metric cannot fail, so 3-segment self-model
+  numbers are uninformative.
+- **Ledger:** §3 self-model ✅ → 🟠/🟡 (the earlier ✅ was a shallower read; the audit
+  reversed it — that is the process working). Three audited claims have now not
+  survived as stated (entrainment, field-scale, self-model).
+- **Interpretation recorded (GN), kept distinct from the result:** babbling may be
+  continuous (a wake-up / calibration state) so G stays available while behaving; the
+  dissociation is a *simple-body* artifact — complex multi-subsystem bodies can babble
+  in one part while behaving in another, giving the **testable prediction** that
+  G-recovery-under-behaviour scales with independent-subsystem count; and *G is for
+  action* (Glenberg) — the model must be stored and used. Self/world/object are taken
+  as co-evolving; the document's ordering is expository, not ontological.
+
+### Next build (proposed)
+- **babble → behave → perturb** cycle: babble to learn G and freeze it; behave using
+  the stored G to address zones; perturb a joint; measure whether behaviour degrades
+  and a re-babble restores it. Closes model → use and tests "the graph is the computer."
+- **Complex-body test** of the prediction above (a multi-subsystem body babbling in one
+  part while behaving in another).
+
+---
+
 ## 2026-07 — S1 field-scale control WITHDRAWN (decoder + field-design confounds)
 
 The same review turned to the S1 field-scale control (`sweep_geometry_worldmodel_fieldscale`),

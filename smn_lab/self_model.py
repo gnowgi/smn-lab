@@ -1,6 +1,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 G. Nagarjuna and Durgaprasad Karnam
-"""The self-model: a body's own connectivity graph, recovered from movement.
+"""The self-model: a body's own connectivity graph, recovered from *exploratory*
+movement (independent per-zone drive / "babbling"). NB: under coordinated locomotion
+(one oscillator driving all zones) the read-out tracks command phase, not body
+topology, and collapses toward chance -- see experiments/self_model_babble_behave.
+Chance neighbour-accuracy for an n-zone chain is 2/n (so n=2 bodies are uninformative).
 
 This module is **the model** — the computation the SMN framework says the *agent*
 performs to build its self-model. It is deliberately kept separate from

@@ -17,10 +17,13 @@
 | 🟠 | **Open problem** | A real confound or limitation has been identified; the mechanism or claim is under **active revision**. |
 | ⛔ | **Withdrawn** | A claim **retracted after review**. Kept on its page, with the reasons, as provenance. |
 
-A ✅ means "we checked the instrument, not just the page." Two of the first three
-experiments put through that check (entrainment, the field-scale control) did **not**
-survive it — which is why most pages are honestly marked 🟡 until they get the same
-pass, rather than assumed correct.
+A ✅ means "we checked the instrument, not just the page." Of the experiments put
+through that check so far, **three did not survive it as stated** — entrainment (a
+servo-lag brake, not entrainment), the field-scale control (a decoder-dimensionality
+artifact), and the self-model (recoverable only under exploratory drive, and used by
+nothing). The self-model had even been marked ✅ on an earlier, shallower read; the
+audit reversed it. That is the point of the process, and the reason most pages stay
+🟡 until they earn the ✅ rather than being assumed correct.
 
 ## The ledger
 
@@ -35,12 +38,22 @@ pass, rather than assumed correct.
 | 🟡 | [R2 — resumption latency](experiments/sweep_r2_resumption.md) | Semi-analytic (direction built in); not fully audited. |
 
 ### §3 · The self-model
+!!! warning "Audited — the earlier ✅ was premature (see [babble vs behave](experiments/self_model_babble_behave.md))"
+    A review pass found the self-model read-out recovers the body only under
+    **exploratory (babbling)** drive; under coordinated locomotion it collapses toward
+    chance (reads command phase, not body topology). It is also never stored or used,
+    and its metric has a **2/n chance floor** (uninformative for 3-segment bodies).
+    Recovery in the babble regime is a genuine consistency check, so these are 🟠 (real
+    limitation, under revision), not ⛔ — and a testable prediction follows: complex
+    multi-subsystem bodies should keep G recoverable *while* behaving.
+
 | status | experiment | note |
 |---|---|---|
-| ✅ | [Chain — the read-out](experiments/self_model_topology.md) | Local (C3) neighbour-accuracy 1.00 ± 0.00 with working rigid/frozen foils that fail as predicted; the cross-correlation read-out is not subject to the decoder confounds that felled others. Read as an *existence proof* (buildable, homunculus-free), not a biological discovery. |
-| ✅ | [Branched body (tree)](experiments/branched_self_model.md) | Same function recovers the tree + branch point; arm-swap residual discriminates symmetric (0.10) vs asymmetric (0.32). *Recommended strengthening: a wiring-shuffle null.* |
-| ✅ | [Sheet & tube (2-D)](experiments/lattice_self_model.md) | Endpoint-recovery 1.00 / 0.99 / 0.97, tight variance. *Recommended: a wiring-shuffle / rigid null of its own.* |
-| ✅ | [Nested lattice (scale-invariance)](experiments/nested_lattice_self_model.md) | Coarse/mid 1.00; fine 0.88 with the inter-block limitation honestly reported. *Recommended: the same null.* |
+| 🟠 | [Chain — the read-out](experiments/self_model_topology.md) | Recovers topology from **exploratory** drive (neighbour-acc 1.00, clean hop-decay, working rigid/frozen foils); collapses to chance under the beam. Existence proof in the babble regime; behave-recovery, storage, and use are open. |
+| 🟠 | [Babble vs behave](experiments/self_model_babble_behave.md) | The audit itself: babble neighbour-acc 1.00 vs behave 0.286 (chance 0.25), hop-profile inverts. Records the limitation, the interpretation (babbling as a wake-up state; simple-body artifact), and the complex-body prediction. |
+| 🟡 | [Branched body (tree)](experiments/branched_self_model.md) | Recovers the tree + branch point under babble; arm-swap residual 0.10 vs 0.32. Inherits the babble-only / storage / use / metric-floor open questions. |
+| 🟡 | [Sheet & tube (2-D)](experiments/lattice_self_model.md) | Endpoint-recovery 1.00 / 0.99 / 0.97 under babble; same open questions. *Recommended: wiring-shuffle / rigid null.* |
+| 🟡 | [Nested lattice (scale-invariance)](experiments/nested_lattice_self_model.md) | Coarse/mid 1.00; fine 0.88; same open questions. |
 
 ### §4 · The world-model & self / world / other
 | status | experiment | note |

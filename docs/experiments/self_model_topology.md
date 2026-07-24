@@ -11,6 +11,17 @@ not drawn in advance.
 
 ![The two networks of this agent — mechanical body and one broadcasting canvas](../figures/two_network_self_model_topology.png)
 
+!!! warning "Scope of this result (audit, 2026-07)"
+    Everything below holds under the **exploratory (babbling)** drive this experiment
+    uses — an independent OU torque per zone. It does **not** hold under coordinated
+    locomotion: driven by the beam wave, the read-out tracks command phase, not body
+    topology, and neighbour-accuracy collapses toward chance
+    ([babble vs behave](self_model_babble_behave.md)). Also: chance neighbour-accuracy
+    is **2/n** for an *n*-zone chain, so the metric is uninformative on 3-segment
+    bodies (n = 2 → chance 1.0). Read this page as *the self-model is recoverable from
+    exploratory movement*, and see the audit page for the interpretation and the
+    complex-body prediction.
+
 ## Why this experiment
 
 Before an agent can have a world model it must have a **self-model**: a model of
