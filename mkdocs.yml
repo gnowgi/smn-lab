@@ -19,6 +19,7 @@ nav:
   - "§1 · The modular unit — the moving opponent body":
       - "C0 — it moves (non-inertial axial crawler)": experiments/c0_crawler.md
       - "S0 — locomotion is a network effect (coupling sweep)": experiments/sweep_c0_coupling.md
+      - "S0b — the body enters the rhythm (proprioceptive entrainment)": experiments/entrainment.md
       - "Antagonistic benefits — the opponent pair earns its keep": experiments/sweep_pred3_antagonistic.md
       - "R1 — tonic-load coupling (partner tone rises with load)": experiments/sweep_r1_tonic_load.md
       - "R2 — resumption latency (post-halt reversal is faster)": experiments/sweep_r2_resumption.md

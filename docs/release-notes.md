@@ -7,6 +7,41 @@ paper v3 (the arXiv/PsyArXiv v2 is frozen).
 
 ---
 
+## 2026-07 — Proprioceptive entrainment: closing the body → rhythm loop
+
+Second point from the same scientific-accuracy review: in the base bench the
+messaging beam is causally **sealed off** from the body — `MessagingBeam.command()`
+advanced its phase from `ω` + neighbour coupling only, so a wall, a load, or a gated
+halt never reached the rhythm. It was a controller commanding a body, not a
+body-and-controller in mutual entrainment — and that gap sits exactly where the SMN
+thesis ("the body is the computer") is strongest.
+
+- **Mechanism (opt-in, backward-compatible).** `MessagingBeam` gained an `entrain`
+  gain (default `0.0`); `command()` now accepts the sensed `theta`, `theta_dot` and,
+  when `entrain > 0`, pulls each oscillator toward the phase its own segment is
+  actually bent to (`dphi += entrain·sin(ψ_body − φ)`, the edge-cell / stretch-receptor
+  loop). With `entrain = 0` or no `theta`, the beam is bit-for-bit the old open-loop
+  generator, so **all existing experiments reproduce exactly**.
+- **New experiment `entrainment.py` / `entrainment.md`** (nav §1, after S0). During a
+  2 s gated halt the open-loop beam winds the full `ωT = 1.80` cycles the body never
+  executed; the closed loop (`ε=6`) is arrested to **0.75** cycles and plateaus inside
+  the halt — the body now perturbs the rhythm. Strengthens S0: the network includes
+  the body.
+- **Honest negative reported, not hidden.** Steady-state undulation frequency does
+  **not** adapt to medium drag in either loop (flat in panel C; the closed loop only
+  lowers the baseline). In this bench the drag resists translation, not joint
+  articulation, and the stiff servo imposes the bend timing — so the *C. elegans*
+  water↔agar frequency law needs a **joint-loading model** (declared next step), not
+  just the feedback path.
+
+### [PAPER v3 — pending]
+- S0 ("locomotion is a network effect") can be stated more strongly once entrainment
+  is on: with the loop closed the *body* is part of the network, not only the coupled
+  software oscillators. Add the arrest result as the concrete demonstration; keep the
+  frequency-adaptation limitation explicit (it needs joint loading).
+
+---
+
 ## 2026-07 — Honesty pass in response to an external scientific-accuracy review
 
 An independent reviewer read the docs and the source and raised well-founded

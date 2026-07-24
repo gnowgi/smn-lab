@@ -438,20 +438,34 @@ class MessagingBeam:
 
     def __init__(self, n_joints: int, amp: float = 0.6, freq: float = 0.8,
                  phase_lag: float = 1.2, coupling: float = 4.0,
-                 turn_gain: float = 0.8):
+                 turn_gain: float = 0.8, entrain: float = 0.0):
         self.n = int(n_joints)
         self.amp = amp
         self.w = 2 * np.pi * freq
         self.phase_lag = phase_lag          # desired head->tail phase difference
         self.coupling = coupling
         self.turn_gain = turn_gain
+        self.entrain = entrain              # proprioceptive-entrainment gain (0 = open loop)
         self.phase = -phase_lag * np.arange(self.n, dtype=float)
         self.msg = np.zeros(self.n)
+        self.ent = np.zeros(self.n)         # last proprioceptive pull per joint
 
     # --8<-- [start:beam_command]
-    def command(self, dt: float, bias: float = 0.0) -> np.ndarray:
+    def command(self, dt: float, bias: float = 0.0,
+                theta: np.ndarray | None = None,
+                theta_dot: np.ndarray | None = None) -> np.ndarray:
         """Advance the coupled oscillators by dt and return per-joint angle
-        commands (traveling wave + chemotactic turn bias)."""
+        commands (traveling wave + chemotactic turn bias).
+
+        Proprioceptive entrainment (the stretch-receptor / lamprey-edge-cell loop):
+        when ``entrain > 0`` and the actually-sensed joint state ``theta`` (and,
+        optionally, ``theta_dot``) is passed, each oscillator is pulled toward the
+        phase its own segment is *really* bent to, so mechanics feed back into the
+        rhythm -- the body can slow, re-phase, or arrest the wave. With
+        ``entrain == 0`` or ``theta is None`` the phase evolves from omega + neighbor
+        coupling alone (the sealed open-loop default), so prior results reproduce
+        exactly. See docs/experiments/entrainment.
+        """
         dphi = np.full(self.n, self.w)
         for i in range(self.n):
             m = 0.0
@@ -461,6 +475,15 @@ class MessagingBeam:
                 m += np.sin((self.phase[i + 1] - self.phase[i]) + self.phase_lag)
             self.msg[i] = m
             dphi[i] += self.coupling * m
+        if self.entrain > 0.0 and theta is not None:
+            # Phase of the realized bend: (theta, theta_dot/w) traces a circle whose
+            # angle is the segment's actual gait phase. Pull the oscillator toward it.
+            th = np.asarray(theta, dtype=float)
+            thd = (np.zeros(self.n) if theta_dot is None
+                   else np.asarray(theta_dot, dtype=float))
+            psi = np.arctan2(thd / self.w, th)          # body's realized phase
+            self.ent = np.sin(psi - self.phase)         # >0 speeds up, <0 slows/arrests
+            dphi += self.entrain * self.ent
         self.phase = self.phase + dphi * dt
         return self.amp * np.sin(self.phase) + self.turn_gain * bias
     # --8<-- [end:beam_command]
