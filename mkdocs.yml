@@ -33,6 +33,7 @@ nav:
       - "Phase I — overview (self, world, object)": phase1.md
       - "🟠 The read-out — one function, any body (needs exploratory movement)": experiments/self_model_topology.md
       - "🟠 Babble vs behave — when is the self-model recoverable?": experiments/self_model_babble_behave.md
+      - "🟡 Complex body — independent subsystems restore it (prediction confirmed)": experiments/self_model_complex_body.md
       - "🟡 Branched body — same function, a tree": experiments/branched_self_model.md
       - "🟡 Sheet & tube — same function, a 2-D body": experiments/lattice_self_model.md
       - "🟡 Nested lattice — same function, any level (scale-invariance)": experiments/nested_lattice_self_model.md

@@ -35,12 +35,25 @@ Independently reproduced.
   action* (Glenberg) — the model must be stored and used. Self/world/object are taken
   as co-evolving; the document's ordering is expository, not ontological.
 
+### Complex-body test — GN's prediction confirmed
+
+`self_model_complex_body.py`: hold morphology fixed (8-seg chain), partition the zones
+into `K` independent subsystems each with its own beam, sweep `K`. Distinct-frequency
+subsystems trace an **inverted-U** — neighbour-accuracy climbs from the single-beam
+collapse (0.23) to a peak of **0.86 at K=3**, then falls back toward chance as
+subsystems shrink to single low-SNR oscillators. A **same-frequency control stays
+low/erratic** (mean ≈ 0.28, no systematic recovery), so the cause is drive
+**incoherence** (distinct rhythms), not partition per se. Confirms the collapse is a *simple-single-chain
+artifact*, as predicted: complex, multi-rhythm bodies keep the self-model legible during
+behaviour, with an optimal intermediate number of subsystems. (Drive-on-fixed-chain, to
+isolate the mechanism; a real branched-morphology version is the follow-up.)
+
 ### Next build (proposed)
 - **babble → behave → perturb** cycle: babble to learn G and freeze it; behave using
   the stored G to address zones; perturb a joint; measure whether behaviour degrades
   and a re-babble restores it. Closes model → use and tests "the graph is the computer."
-- **Complex-body test** of the prediction above (a multi-subsystem body babbling in one
-  part while behaving in another).
+- **Real branched-morphology** version of the complex-body test (independent limbs /
+  layered subsystems supplying the incoherence, rather than a partitioned chain).
 
 ---
 
