@@ -28,17 +28,39 @@ thesis ("the body is the computer") is strongest.
   the halt — the body now perturbs the rhythm. Strengthens S0: the network includes
   the body.
 - **Honest negative reported, not hidden.** Steady-state undulation frequency does
-  **not** adapt to medium drag in either loop (flat in panel C; the closed loop only
-  lowers the baseline). In this bench the drag resists translation, not joint
-  articulation, and the stiff servo imposes the bend timing — so the *C. elegans*
-  water↔agar frequency law needs a **joint-loading model** (declared next step), not
-  just the feedback path.
+  **not** adapt to medium drag in either loop. In this bench the drag resists
+  translation, not joint articulation, and the stiff servo imposes the bend timing —
+  so the *C. elegans* water↔agar frequency law needs a **joint-loading model**
+  (declared next step), not just the feedback path.
+
+### Correction (second review round) — two bugs in the first entrainment term
+
+A follow-up scientific-accuracy review checked the term itself, not just the page,
+and found two defects. Both are now fixed; the experiment and figure are rebuilt.
+
+- **Swapped `arctan2` arguments.** `arctan2(thd/ω, th)` yields `psi = π/2 − φ`, so the
+  pull was `cos(2φ)` — a spurious `2ω` drive that does **not** vanish under perfect
+  tracking (independently verified: the pull equalled `cos 2φ` to ~1e-16). A
+  well-formed stretch term must be zero when the body does exactly what it was told.
+  Fixed to `arctan2(th, thd/ω)`.
+- **No magnitude gate.** The pull fired at full strength even when the body was still,
+  where `arctan2(0,0)=0` drags the phase to a fixed `0`. The first version's headline
+  **"arrest during a gated halt" was that edge case**, not the mechanism. Fixed with an
+  `r/(r+ε)` gate (a still body carries no phase — a silent stretch receptor).
+- **What changed in the result.** With both fixed, the gated-halt arrest **disappears**
+  (a slack body correctly exerts no pull) and a pinned obstruction does not cleanly
+  arrest either — so those framings are **withdrawn**. The corrected, robust result:
+  closing the loop couples the oscillator to the actually-lagging PD body, which
+  **drags the free-run frequency from 0.89 Hz down to arrest** as the gain rises
+  (panel B). Smaller than first claimed, and true. The panel-C frequency-vs-drag
+  negative is unchanged.
 
 ### [PAPER v3 — pending]
 - S0 ("locomotion is a network effect") can be stated more strongly once entrainment
   is on: with the loop closed the *body* is part of the network, not only the coupled
-  software oscillators. Add the arrest result as the concrete demonstration; keep the
-  frequency-adaptation limitation explicit (it needs joint loading).
+  software oscillators. Use the **corrected** demonstration — closing the loop drags
+  the rhythm toward the body's actual (lagging) motion — **not** the withdrawn arrest
+  figure; keep the frequency-adaptation limitation explicit (it needs joint loading).
 
 ---
 

@@ -476,13 +476,19 @@ class MessagingBeam:
             self.msg[i] = m
             dphi[i] += self.coupling * m
         if self.entrain > 0.0 and theta is not None:
-            # Phase of the realized bend: (theta, theta_dot/w) traces a circle whose
-            # angle is the segment's actual gait phase. Pull the oscillator toward it.
+            # Phase of the realized bend: the command is amp*sin(phase), so under
+            # perfect tracking th = amp*sin(phase), thd/w = amp*cos(phase). The gait
+            # phase is therefore arctan2(th, thd/w) -- with th as the sine (y) argument,
+            # so the pull sin(psi - phase) is identically zero when the body does
+            # exactly what it was told (no error -> no pull). Gate the pull by the bend
+            # magnitude r: a still body carries no phase information (arctan2(0,0) is
+            # degenerate) and, like a real stretch receptor, should exert no pull.
             th = np.asarray(theta, dtype=float)
             thd = (np.zeros(self.n) if theta_dot is None
                    else np.asarray(theta_dot, dtype=float))
-            psi = np.arctan2(thd / self.w, th)          # body's realized phase
-            self.ent = np.sin(psi - self.phase)         # >0 speeds up, <0 slows/arrests
+            psi = np.arctan2(th, thd / self.w)          # body's realized gait phase
+            r = np.hypot(th, thd / self.w)              # bend magnitude (receptor drive)
+            self.ent = (r / (r + 1e-3)) * np.sin(psi - self.phase)
             dphi += self.entrain * self.ent
         self.phase = self.phase + dphi * dt
         return self.amp * np.sin(self.phase) + self.turn_gain * bias
