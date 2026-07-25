@@ -62,12 +62,19 @@ the mechanism.
   question to modulation (Q1).
 - **Q1 — world model from *modulation*.** *Hypothesis:* modulation contributes beyond
   geometry — the coupled-vs-uncoupled gap widens with sensor count (resolution
-  principle). *Foil:* modulation off. **✅ Core supported** — per-zone dual-port
-  modulation cancels self-caused change at every size; without it, self/world
-  resolution collapses as the body grows (foil ratio 13.7 → 1.2). Closed by
-  **[Q1b](experiments/sweep_q1b_resolution.md)**: with a distributed stimulus the
-  modulated ratio **rises** with CAZ density (14 → 22.6), the foil falls toward 1 —
-  resolution scales with density, but only with modulation.
+  principle). *Foil:* modulation off. **✅ Core supported, audited 2026-07-24** —
+  per-zone dual-port modulation cancels self-caused change at every size; without
+  it, self/world resolution collapses as the body grows (foil ratio 13.7 → 1.2).
+  The audit adds a no-event null (all ratios → ~1) and two sharper foils: each zone
+  must cancel **its own** motion — a head-only (Q2) model loses 6.6–15.9× and a
+  wrong-zone model 3.6–10.4×.
+  **[Q1b](experiments/sweep_q1b_resolution.md)** was written to close the remaining
+  density question and reported the modulated ratio **rising** with CAZ density
+  (14 → 22.6). Its audit **🟠 reopens that**: the rise is a 1/√N noise-averaging
+  law — sub-sampling zones on a *fixed* body reproduces it, and extra **raw
+  transducers** on a fixed 3-zone body buy more of it than extra zones do, which
+  contradicts the clause the test was meant to support. Re-test pre-registered on
+  the page (**Q1c**: two-source *discrimination*, which transducers cannot buy).
 - **Q2 — self / world distinction (reafference).** *Hypothesis:* a forward model keyed
   on self-motion cancels self-caused but not world-caused change. *Order parameter:*
   residual ratio |exafference| / |self-test|. *Foil:* no forward model. *Pass:*
@@ -88,10 +95,16 @@ the mechanism.
 
 ## Phase I → II — the pivot (why more body ≠ more world)
 
-The flagship's null and Q1b together are the hinge: **linear scaling of identical
-zones does not enrich the world-model**; resolution scales with **CAZ density ×
-internal capacity × depth of nesting**, not raw transducer count. This motivates the
-evo-devo path of [Phase II](phase2.md).
+The flagship's null is the hinge: **linear scaling of identical zones does not
+enrich the world-model**. The framework's reading is that resolution scales with
+**CAZ density × internal capacity × depth of nesting**, not raw transducer count —
+and that clause is currently **untested rather than supported**: Q1b, which was
+written to confirm it, did not survive its
+[audit](experiments/sweep_q1b_resolution.md#audit-the-density-claim-does-not-separate-from-noise-averaging-2026-07-24)
+(the density trend is a noise-averaging law that raw transducers satisfy too). The
+motivation for the evo-devo path of [Phase II](phase2.md) therefore rests on the
+flagship null plus Q1's audited *modulation is necessary*, with **Q1c** pre-registered
+to test the density clause on a discrimination observable.
 
 ## Phase II — what the layering enables
 

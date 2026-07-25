@@ -18,10 +18,12 @@
 | ⛔ | **Withdrawn** | A claim **retracted after review**. Kept on its page, with the reasons, as provenance. |
 
 A ✅ means "we checked the instrument, not just the page." Of the experiments put
-through that check so far, **three did not survive it as stated** — entrainment (a
+through that check so far, **four did not survive it as stated** — entrainment (a
 servo-lag brake, not entrainment), the field-scale control (a decoder-dimensionality
-artifact), and the self-model (recoverable only under exploratory drive, and used by
-nothing). The self-model had even been marked ✅ on an earlier, shallower read; the
+artifact), the self-model (recoverable only under exploratory drive, and used by
+nothing), and Q1b's resolution-vs-density reading (a noise-averaging law that raw
+transducers satisfy as well as CAZs). The self-model had even been marked ✅ on an
+earlier, shallower read; the
 audit reversed it. That is the point of the process, and the reason most pages stay
 🟡 until they earn the ✅ rather than being assumed correct.
 
@@ -63,10 +65,10 @@ audit reversed it. That is the point of the process, and the reason most pages s
 | ✅ | [W3 — the cut in the self-graph](experiments/reafference_cut_self_graph.md) | **Audited (2026-07-24).** Was single-seed; now replicated over 10 seeds (reafferent discriminability 20.5±2.5, > naive 10/10). Survives a no-event null (discriminability 20.5→1.1) and a localization-specificity check (read-out tracks the source from node 6→node 2). Caveats recorded: naive reaches 8.3× (strong source — the reafferent's edge is silence under self-motion), and localization edge-undershoots for the near-tail node. |
 | 🟡 | [W1 — a world feature in the self-graph](experiments/world_in_self_graph.md) | Not yet audited. |
 | 🟡 | [W2 — world-geometry in the self-frame](experiments/world_geometry_self_frame.md) | Not yet audited. |
-| 🟡 | [Q1 — modulation builds the world model](experiments/sweep_q1_modulation.md) | Not yet audited; carries the resolution claim (with Q1b). |
+| ✅ | [Q1 — modulation builds the world model](experiments/sweep_q1_modulation.md) | **Audited (2026-07-24).** Survives a no-event null (all ratios → ~1 at every body size) and two *sharper* foils that isolate the dual-port claim: own-motion cancellation beats a head-only (Q2 single-point) model by 6.6–15.9× and a wrong-zone model by 3.6–10.4×. Strongest form: modulation holds the self-test residual flat as the body grows (0.00088→0.00055) while the foil's grows 3.8× — a world-independent property, identical in the null. ✅ is for *modulation is necessary*, not for resolution-vs-density (see Q1b). |
 | 🟡 | [S1 — more body ≠ more world](experiments/sweep_geometry_worldmodel.md) | The flat null stands as data, but its **interpretation is hedged**: it no longer supports the resolution principle (see the withdrawn control below). Decodability ≠ world-model. |
 | ⛔ | [S1 field-scale control](experiments/sweep_geometry_worldmodel_fieldscale.md) | **Withdrawn.** kNN-skill slope vs `n_seg` is confounded (decoder dimensionality; broad-masking flips a ridge slope positive on an unmasked field; trajectory noise). Cannot separate resolution principle from field-geometry artifact. |
-| 🟡 | [Q1b — resolution = CAZ density](experiments/sweep_q1b_resolution.md) | Not yet audited; where the resolution claim actually rests. |
+| 🟠 | [Q1b — resolution = CAZ density](experiments/sweep_q1b_resolution.md) | **Audited (2026-07-24) — the density reading did not survive.** The no-tide null is clean and the measurement stands, but the order parameter is a detection-SNR statistic: sub-sampling *k* zones of a **fixed** 9-segment body reproduces the whole trend (1.81× vs 1.62× from growing the body), and **raw transducers** on a fixed 3-zone body buy *more* (2.99×) — at matched transducer count 3 CAZs × 3 reads (24.2±2.6) ≈ 9 CAZs × 1 read (22.6±3.4). So it cannot separate CAZ density from any other independent samples, and contradicts the "not raw transducer count" clause it was meant to support. Fix pre-registered on the page (Q1c: two-source *discrimination*, which transducers cannot buy). |
 | 🟡 | [Resolution exponent](experiments/sweep_resolution_exponents.md) | Not yet audited. |
 | 🟡 | [R5 — dual-signal residual](experiments/sweep_r5_dual_signal.md) | Not yet audited. |
 | 🟡 | [R4 — adaptation dynamics](experiments/sweep_r4_adaptation.md) | Preregistered; not yet audited. |

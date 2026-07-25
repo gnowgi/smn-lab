@@ -6,11 +6,20 @@ Phase I ends on a result that looks like a failure and is really a signpost.
 
 Holding the world fixed and adding body segments (hence sensors) in a line **does
 not** enrich the world-model — decoding skill is flat across segment count
-([S1](experiments/sweep_geometry_worldmodel.md)). And this is not an artifact: it is
-exactly what the **resolution principle** predicts — resolution scales with **CAZ
-density × internal capacity, not raw transducer count**
-([Q1b](experiments/sweep_q1b_resolution.md)). Ungated extra sensors add nothing,
-because unmodulated input is dropped.
+([S1](experiments/sweep_geometry_worldmodel.md)). That flat null is the load-bearing
+result here, and it is what the **resolution principle** would predict — resolution
+scaling with **CAZ density × internal capacity, not raw transducer count**.
+
+!!! warning "The direct test of that clause is now 🟠, not confirmatory"
+    [Q1b](experiments/sweep_q1b_resolution.md) was cited here as showing density
+    *does* buy resolution once modulation is on. Its
+    [audit](experiments/sweep_q1b_resolution.md#audit-the-density-claim-does-not-separate-from-noise-averaging-2026-07-24)
+    found the order parameter cannot separate CAZ density from any other source of
+    independent samples — extra **raw transducers** on a fixed 3-zone body buy
+    *more* than extra zones do. So the pivot below rests on S1's flat null and on
+    [Q1](experiments/sweep_q1_modulation.md)'s audited result that modulation is
+    necessary; the "not raw transducer count" clause is **untested**, with a
+    discrimination-based re-test pre-registered (Q1c).
 
 So the way to a richer world-model is **not** linear scaling of identical zones. It
 is *architecture*.

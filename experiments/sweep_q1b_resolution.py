@@ -59,6 +59,17 @@ EXAF_RATE = 0.05                   # DISTRIBUTED exafference: a uniform global t
 
 def run_one(params, seed):
     N = int(params["n_seg"]); mode = params["mode"]
+    # --- audit hooks (defaults reproduce the committed sweep exactly) -------------
+    # n_rep   : raw transducers per sensor site. Averaging n_rep independent reads
+    #           divides sensor noise by sqrt(n_rep) -- adds transducer count WITHOUT
+    #           adding CAZs, the control for "not raw transducer count".
+    # k_zones : aggregate the residual over only k (evenly spaced) zones of an N-zone
+    #           body -- separates "denser body" from "averaged more zones".
+    n_rep = int(params.get("n_rep", 1))
+    k_zones = params.get("k_zones", None)
+    keep = (np.linspace(0, N - 1, int(k_zones)).round().astype(int)
+            if k_zones else np.arange(N))
+    s_noise = SENSOR_NOISE / np.sqrt(n_rep)
     rng = np.random.default_rng(seed)
     model = mujoco.MjModel.from_xml_string(build_crawler_xml(n_seg=N))
     data = mujoco.MjData(model)
@@ -111,8 +122,8 @@ def run_one(params, seed):
         pts, vals, r = [], [], np.zeros(N)
         for k in range(N):
             xL, yL = data.site_xpos[sL[k]][:2]; xR, yR = data.site_xpos[sR[k]][:2]
-            vL = field_now(xL, yL, t) + rng.normal(0, SENSOR_NOISE)
-            vR = field_now(xR, yR, t) + rng.normal(0, SENSOR_NOISE)
+            vL = field_now(xL, yL, t) + rng.normal(0, s_noise)
+            vR = field_now(xR, yR, t) + rng.normal(0, s_noise)
             r[k] = 0.5 * (vL + vR)
             pts += [(xL, yL), (xR, yR)]; vals += [vL, vR]
         pts = np.array(pts); vals = np.array(vals)
@@ -122,7 +133,7 @@ def run_one(params, seed):
         if r_prev is not None:
             dr = r - r_prev
             res = dr - gain * scale * basis
-            agg = float(np.mean(res))
+            agg = float(np.mean(res[keep]))
             if t < T_LEARN:
                 cal_num += dr * basis; cal_den += basis ** 2
                 phase = 0
