@@ -60,8 +60,29 @@ EXAF_AMP, EXAF_SIG = 3.0, 0.5
 EXAF_START, EXAF_VEL = (-0.6, 1.6), (0.10, -0.20)
 
 
+def remap_basis(disp, mode):
+    """Audit foils for the *dual-port* (own-motion) claim. Default is 'own'.
+
+    'shuffle' -- each zone cancels a DISTANT zone's displacement (roll by N//2):
+                 same magnitude statistics, wrong zone identity. Isolates "each
+                 zone cancels ITS OWN motion" from "subtract something the right
+                 size".
+    'single'  -- every zone cancels the HEAD zone's displacement: the Q2
+                 single-point proprioceptive model, on the same body.
+    Per-zone gains are re-calibrated for whichever basis is used, so each variant
+    gets its own best-fit scale.
+    """
+    N = len(disp)
+    if mode == "shuffle":
+        return np.roll(disp, max(1, N // 2), axis=0)
+    if mode == "single":
+        return np.repeat(disp[:1], N, axis=0)
+    raise ValueError(f"unknown basis_mode {mode!r}")
+
+
 def run_one(params, seed):
     N = int(params["n_seg"]); mode = params["mode"]
+    basis_mode = params.get("basis_mode", "own")      # audit hook; 'own' = as committed
     rng = np.random.default_rng(seed)
     model = mujoco.MjModel.from_xml_string(build_crawler_xml(n_seg=N))
     data = mujoco.MjData(model)
@@ -124,8 +145,10 @@ def run_one(params, seed):
         pts = np.array(pts); vals = np.array(vals)
         A = np.column_stack([np.ones(len(pts)), pts[:, 0], pts[:, 1]])
         _, gx, gy = np.linalg.lstsq(A, vals, rcond=None)[0]
+        disp_k = disp if basis_mode == "own" else remap_basis(disp, basis_mode)
         # --8<-- [start:modulate]
-        basis = gx * disp[:, 0] + gy * disp[:, 1]          # per-zone predicted change
+        basis = gx * disp_k[:, 0] + gy * disp_k[:, 1]      # per-zone predicted change
+                                                           # (disp_k = each zone's OWN displacement)
         if r_prev is not None:
             dr = r - r_prev
             if mode == "modulated":

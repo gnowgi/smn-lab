@@ -104,11 +104,79 @@ stimulus (or a per-zone metric that is not diluted by averaging across a long
 body). Recorded as the next refinement.
 
 ## Verdict
-The core resolution-principle claim — *modulation, not raw transducer count, yields
-resolution* — is **supported, decisively**: an unmodulated distributed body loses
-self/world resolution as it grows; the per-zone dual-port modulator restores it to
-the noise floor. The narrower "absolute resolution scales up with density" claim is
-**not** established (confounded) and is left open.
+The core claim — *modulation is what lets a distributed body resolve the world* —
+is **supported**: an unmodulated distributed body loses self/world resolution as it
+grows; the per-zone dual-port modulator holds it at the noise floor. The narrower
+"absolute resolution scales up with density" claim is **not** established
+(confounded) here and is taken up in [Q1b](sweep_q1b_resolution.md) — where the
+[audit](sweep_q1b_resolution.md#audit-the-density-claim-does-not-separate-from-noise-averaging-2026-07-24)
+finds it does not separate from noise averaging. *Nothing on this page depends on
+that narrower claim.*
+
+## Audit — null + a sharper foil for the dual-port claim (2026-07-24)
+
+The scrutiny pass. Two questions a skeptic asks here.
+
+**1. Is the separation world-caused?** Re-run with the moving source removed
+(`EXAF_AMP = 0`), so the "exafference" window contains no world event. Both ratios
+must collapse to ~1 at **every** body size.
+
+**2. Is it the *dual-port* part that does the work?** The committed foil is *no
+cancellation at all*, which confounds "cancels with the right zone's motion" with
+"cancels at all". The preprint's claim is specifically that each zone senses **its
+own** motion, so the audit adds two sharper foils that keep all the machinery and
+re-calibrate their own per-zone gains, changing only *whose* motion each zone
+cancels:
+
+- **distant zone** — each zone cancels a zone half a body away (right magnitude,
+  wrong identity);
+- **head-only** — every zone cancels the head zone's displacement: exactly
+  [Q2](q2_reafference.md)'s single-point proprioceptive model, run on this body.
+
+![Q1 audit — with the wrong zone's motion the advantage largely disappears; in the
+no-event null both ratios sit at 1 at every body size](../figures/sweep_q1_modulation_audit.png)
+
+| world/self ratio (6 seeds) | n=3 | n=5 | n=7 | n=9 |
+|---|---|---|---|---|
+| **own motion (dual-port)** | **115.8** | **51.4** | **33.2** | **26.3** |
+| distant zone (wrong identity) | 32.2 | 5.0 | 3.2 | 4.2 |
+| head-only (Q2 single-point) | 17.6 | 3.9 | 2.1 | 2.1 |
+| no cancellation (committed foil) | 13.7 | 2.7 | 1.3 | 1.2 |
+| *no-event null, modulated* | *1.06* | *0.89* | *1.10* | *0.96* |
+| *no-event null, foil* | *1.06* | *1.07* | *0.81* | *0.99* |
+
+**Survives — and the sharper foils strengthen it.** With the source removed every
+ratio collapses to ~1 at every body size, so the separation is world-caused. And
+own-motion cancellation beats the *head-only* model by **6.6× – 15.9×** and the
+*wrong-zone* model by **3.6× – 10.4×**, with the gap widening as the body grows.
+That is the dual-port claim tested directly: it is not enough to subtract something
+of the right size, or to subtract the head's motion — each zone has to cancel **its
+own**, and this matters more the longer the body. It also re-derives
+[Q2](q2_reafference.md)'s limitation from inside Q1: the head-only column *is* Q2's
+forward model, and it degrades from 17.6 to 2.1 as sensors spread over a bending
+body.
+
+Two honest refinements the audit adds:
+
+- **The core claim does not need the world event at all.** What actually carries it
+  is the *self-test residual floor*: with modulation it stays flat
+  (0.00088 → 0.00055 from n=3 to n=9), without it grows **3.8×**
+  (0.0075 → 0.0289). Both numbers are identical in the null, so this is a
+  world-independent property of the cancellation — the strongest form of the
+  claim, and the one to state.
+- **The foil's ratio collapse is not purely a resolution collapse.** Its ratio
+  falls 11× (13.7 → 1.2) while its self floor grows only 3.8×; the rest is that
+  the foil's *exafference* residual also falls 3× (0.101 → 0.033) — the same
+  localized-source dilution the [Correction](#correction-against-the-pre-registration)
+  above records for the modulated curve. Both curves are diluted; the
+  dilution-free statement is the self-floor comparison above.
+
+Reproduction:
+[`audit_q1_modulation.py`](https://github.com/gnowgi/smn-lab/blob/main/experiments/audit_q1_modulation.py).
+`run_one` now takes an optional `basis_mode` (`own` / `shuffle` / `single`); the
+default reproduces the committed sweep exactly (all four baseline numbers above are
+unchanged). Row moves 🟡 → ✅ for the *modulation-is-necessary* claim, with the
+absolute-resolution question left where the page already left it.
 
 
 ## What's measured and plotted

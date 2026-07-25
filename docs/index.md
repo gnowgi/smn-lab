@@ -104,8 +104,9 @@ The path is organized as an *argument*, not a catalogue.
   when a physical construction fixes them.
 - **[Phase I → II](phase2.md) — the pivot**: Phase I's own null result — adding
   transducers in a line does *not* enrich the world-model
-  ([S1](experiments/sweep_geometry_worldmodel.md),
-  [Q1b](experiments/sweep_q1b_resolution.md)).
+  ([S1](experiments/sweep_geometry_worldmodel.md); the companion
+  [Q1b](experiments/sweep_q1b_resolution.md) density claim is 🟠 after audit, with a
+  re-test pre-registered).
 - **[Phase II](phase2.md) — the evo-devo path** (pointed to): richer world-models
   need *architecture* — polarized → tubular → segmented → bilateral → appendicular —
   for **nested CAZ modulation**, not more identical zones.
