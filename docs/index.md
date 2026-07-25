@@ -55,6 +55,11 @@ The **framework (reference)** pages are background for the whole arc; the
 positioning against competing accounts, is argued in the preprint and has no
 bench experiment.)
 
+Experiments are labelled by series — **C** crawler, **S** sweep, **Q** core question,
+**W** world-model, **R** register, **E**/**P** exploratory —
+and [Experiment naming](notation.md) says what each letter promises about the kind of
+evidence its pages carry.
+
 ## What the lab looks like
 
 The agent's body (its morphology and sensors), the physics world it moves in, and

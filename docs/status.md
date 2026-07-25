@@ -10,6 +10,9 @@
 
 ## The labels
 
+(For the *other* labels — the `C` / `S` / `Q` / `W` / `R` / `E` / `P` prefixes on the
+experiment names below — see [Experiment naming](notation.md).)
+
 | icon | label | means |
 |---|---|---|
 | ✅ | **Consistency-checked** | The computation does what the framework says, with controls/nulls that behave and results that reproduce. A statement about the *internal consistency of the model*, not about biology. |

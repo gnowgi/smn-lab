@@ -71,6 +71,11 @@ well-characterized body; one parameter varied at a time; a matched non-modulator
 foil; replicated seeds. Results so far (the framework is confirmed and corrected
 about equally — that is the falsifiability working):
 
+Labels name the series an experiment belongs to — **C** crawler, **S** sweep,
+**Q** core question, **W** world-model, **R** register, **E**/**P** exploratory — and a
+trailing letter (`Q1b`) marks a follow-up closing a thread its parent opened. Full key:
+[Experiment naming](docs/notation.md).
+
 | experiment | what it tests | result |
 |---|---|---|
 | **C0 / C1** | the crawler moves (non-inertial); touches and halts | locomotion + chemotaxis; halt-on-contact = objecthood as resistance |
