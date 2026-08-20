@@ -176,3 +176,34 @@ def apply_anisotropic_drag(model, data, body_ids,
         data.xfrc_applied[bid, 0:3] = R @ f_local
         data.xfrc_applied[bid, 3:6] = R @ t_local
     # --8<-- [end:drag]
+
+
+def apply_ground_friction(model, data, body_ids, mu_long: float = 0.15,
+                          mu_trans: float = 3.0, g: float = 9.81, eps: float = 0.05) -> None:
+    """Weight-proportional anisotropic dry (Coulomb) GROUND friction -- the belly-scale
+    model of a body sliding on flat ground under gravity (Hu et al. 2009).
+
+    Unlike ``apply_anisotropic_drag`` (a viscous medium, gravity-independent), here the
+    friction MAGNITUDE per segment is set by the gravity-borne weight ``mu * m * g`` and is
+    (regularized) Coulomb -- opposing the direction of sliding, not scaling with speed. It is
+    anisotropic: ``mu_long`` along the body (belly scales slide forward cheaply), ``mu_trans``
+    across it (they grip sideways); ``mu_trans >> mu_long`` is what turns a lateral undulation
+    into net forward thrust. With isotropic friction (mu_trans == mu_long) net displacement
+    collapses -- exactly why the agent needs the anisotropy (and the gravity that sets it) to
+    displace at all.
+
+    The body is assumed planar-constrained (the stable 'snake on flat ground' idealization);
+    full 3-D contact where the body can lift/tip is a further refinement. Call once per step
+    before ``mj_step``; any floor present should be frictionless so this is the only tangential
+    force.
+    """
+    res = np.zeros(6)
+    for bid in body_ids:
+        nf = float(model.body_mass[bid]) * g                 # gravity-borne normal force
+        mujoco.mj_objectVelocity(model, data, mujoco.mjtObj.mjOBJ_BODY, bid, res, 1)
+        vx, vy = res[3], res[4]                              # planar velocity, segment-local frame
+        f_local = np.array([-mu_long * nf * vx / (abs(vx) + eps),
+                            -mu_trans * nf * vy / (abs(vy) + eps), 0.0])
+        R = data.xmat[bid].reshape(3, 3)
+        data.xfrc_applied[bid, 0:3] = R @ f_local
+        data.xfrc_applied[bid, 3:6] = 0.0
