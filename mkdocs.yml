@@ -10,6 +10,7 @@ nav:
       - Concepts: concepts.md
       - "Formalism ↔ code ↔ live bench": formalism-and-code.md
       - "Self-model read-out: model vs. measurement": self-model-and-measurement.md
+      - "★ The results module (one place generates every result)": results-module.md
       - Lab interface: lab-interface.md
       - Assumptions: assumptions.md
       - Datasets (generative model): datasets.md

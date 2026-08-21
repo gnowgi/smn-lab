@@ -9,6 +9,10 @@ __pycache__/
 # and IS tracked.
 data/
 
+# machine-readable results records written by smn_lab.report (regenerable from
+# fixed seeds, like data/ above)
+results/
+
 # built documentation site (mkdocs)
 site/
 

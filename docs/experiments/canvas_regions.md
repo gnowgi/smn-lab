@@ -111,18 +111,20 @@ emergent digraph — runs the morphology sweep and the two foils. Verdict **PASS
 
 ## Order parameters, in code
 
-The estimators are the single source of truth, read from the script at build time:
+The estimators are the single source of truth, now housed in the library
+(`smn_lab/canvas.py`) so this experiment and the [results module](../results-module.md)
+call the same rule; read from source at build time:
 
 ```python
---8<-- "experiments/canvas_regions.py:match"
+--8<-- "smn_lab/canvas.py:match"
 ```
 
 ```python
---8<-- "experiments/canvas_regions.py:communities"
+--8<-- "smn_lab/canvas.py:communities"
 ```
 
 ```python
---8<-- "experiments/canvas_regions.py:strata"
+--8<-- "smn_lab/canvas.py:strata"
 ```
 
 ## Run
