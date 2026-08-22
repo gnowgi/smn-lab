@@ -5,6 +5,9 @@ theme:
   name: material
 nav:
   - Home: index.md
+  # The onramp: a guided reading path, then the marquee experiment.
+  - "▶ Start here (read this first)": start-here.md
+  - "★ Hydra — the 'hello world' of SMN": experiments/hydra.md
   # Reference cluster — how to read the bench; background for the whole arc.
   - "The framework (reference)":
       - Concepts: concepts.md
@@ -32,6 +35,7 @@ nav:
       - "The Construction of Experience": construction-of-experience.md
   - "§3 · The self-model":
       - "Phase I — overview (self, world, object)": phase1.md
+      - "🟡 Two networks are forced — a double dissociation": experiments/two_networks.md
       - "🟠 The read-out — one function, any body (needs exploratory movement)": experiments/self_model_topology.md
       - "🟠 Babble vs behave — when is the self-model recoverable?": experiments/self_model_babble_behave.md
       - "🟡 Complex body — independent subsystems restore it (prediction confirmed)": experiments/self_model_complex_body.md
@@ -41,8 +45,10 @@ nav:
   - "§4 · The world-model & self / world / other":
       - "🟡 Self vs world — the reafference cut (Q2)": experiments/q2_reafference.md
       - "🟡 The cut in the self-graph (W3)": experiments/reafference_cut_self_graph.md
+      - "🟡 The self/world boundary is EARNED (constant load → self, moving prey → world)": experiments/self_world_boundary.md
       - "🟡 W1 — a world feature in the self-graph": experiments/world_in_self_graph.md
       - "🟡 W2 — world-geometry in the self-frame": experiments/world_geometry_self_frame.md
+      - "🟡 Umwelt — same world, different anatomy → different world": experiments/umwelt.md
       - "🟡 Q1 — modulation builds the world model": experiments/sweep_q1_modulation.md
       - "🟡 S1 — more body ≠ more world (interpretation hedged)": experiments/sweep_geometry_worldmodel.md
       - "⛔ S1 field-scale control — WITHDRAWN (order parameter confounded)": experiments/sweep_geometry_worldmodel_fieldscale.md

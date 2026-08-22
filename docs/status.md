@@ -71,6 +71,14 @@ audit reversed it. That is the point of the process, and the reason most pages s
 | 🟡 | [R5 — dual-signal residual](experiments/sweep_r5_dual_signal.md) | Not yet audited. |
 | 🟡 | [R4 — adaptation dynamics](experiments/sweep_r4_adaptation.md) | Preregistered; not yet audited. |
 
+### Hydra — the "hello world" programme
+| status | experiment | note |
+|---|---|---|
+| 🟡 | [Hydra — the hello world](experiments/hydra.md) | Two-layer sac: self-model recovery 0.99, localization 1.00; passive broadcast weak/attenuating (0.28→0.11); whole-net capture reflex (prey fires, 54% recruited, 81% conveyed; debris silent) with no central control. New; idealizations declared on the page (reflex reads the true mouth-ward geometry; first-cut gate; foot anchored). Not yet independently audited. |
+| 🟡 | [Two networks are forced](experiments/two_networks.md) | Double dissociation: damped net geometry 0.99 / reach 0.02; integrating net geometry 0.04 (chance) / reach 1.00. Measures differentiation vs integration, **not** coordination (which is the DFN's, via opposing zones). New; not yet audited. |
+| 🟡 | [The self/world boundary is earned](experiments/self_world_boundary.md) | Constant load absorbed into self (residual 0.22→0.009); moving prey stays world (0.095, 10×); removing the absorbed load spikes the residual (0.16) — its removal is a world-event. New; not yet audited. |
+| 🟡 | [Umwelt — same world, different anatomy](experiments/umwelt.md) | Coverage matrix (world fixed, anatomy varied): field 0.67 / touch 0.33 / vision 1.00; structural zeros where a transducer is absent; self-model 0.976 for every anatomy. New; not yet audited. |
+
 ### §5–§7 · Object-directedness, multimodal, taxonomy
 | status | experiment | note |
 |---|---|---|
