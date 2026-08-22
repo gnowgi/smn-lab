@@ -18,7 +18,7 @@ Modulation is the multiplicative **gate** (gain $\mu\in[0,1]$): $\mu=0 \to R\app
 
 ## The two networks
 
-The [two networks](../diagram-grammar.md#the-two-networks-body-and-canvas) of this
+The [two networks](../diagram-grammar.md#the-two-networks-mechanical-and-messaging) of this
 agent — the mechanical body above, and the one broadcasting **canvas** below that
 every CAZ writes to and reads from (network closure); single-interface transducers
 reach it only through a CAZ's modulation (*only modulated data enters*). The canvas
