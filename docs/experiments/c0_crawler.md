@@ -21,7 +21,7 @@ gradient is all this experiment needs.
 
 ![C0 agent — the A3 crawler with bilateral chemical sensing, in the diagram grammar](../figures/c0_agent.png)
 
-The [two networks](../diagram-grammar.md#the-two-networks-body-and-canvas) of the
+The [two networks](../diagram-grammar.md#the-two-networks-mechanical-and-messaging) of the
 same agent — the mechanical body above, and the one broadcasting **canvas** below
 that every CAZ writes to and reads from (network closure), with the bilateral
 chemical sensors reaching it only through a CAZ's modulation. C0 is simple and

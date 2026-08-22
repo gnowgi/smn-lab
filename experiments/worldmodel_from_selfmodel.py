@@ -44,6 +44,7 @@ from smn_lab.fields import ScalarField
 from smn_lab.self_model import read_all
 from smn_lab.metrics import seriation_order, order_accuracy
 from smn_lab.worldmodel import localization_weights
+from smn_lab.report import RunRecord, render
 
 DT = 0.002
 N_SEG = 8
@@ -113,7 +114,10 @@ def run(k_src, moving, seed):
         read_acc += [0.5 * (field.sample(*data.site_xpos[sL[s]][:2]) +
                             field.sample(*data.site_xpos[sR[s]][:2])) for s in range(N_SEG)]
     w = localization_weights(read_acc / 200.0)
-    return oacc, float((w * rec_pos).sum()), float((w * true_pos).sum())
+    # also return the raw arrays the canonical results module needs: the movement
+    # trace it recovers the self-model from, and the per-segment world reading.
+    return (oacc, float((w * rec_pos).sum()), float((w * true_pos).sum()),
+            OMEGA, read_acc / 200.0)
 
 
 def abs_rankcorr(x, y):
@@ -129,11 +133,14 @@ def main():
     conds = ("moving+recovered", "frozen+recovered", "frozen+true(cheat)")
     per_seed = {c: {"track": [], "oacc": []} for c in conds}
     scatter = {c: {"k": [], "node": []} for c in conds}          # seed-0 only, for the figure
+    rep = {}                                                     # representative run for the card
     for seed in SEEDS:
         nodes = {c: [] for c in conds}; oaccs = {c: [] for c in conds}
         for k in K_SRC:
-            oacc_m, node_rec_m, _ = run(k, moving=True, seed=seed)
-            oacc_f, node_rec_f, node_true_f = run(k, moving=False, seed=seed)
+            oacc_m, node_rec_m, _, omega_m, read_m = run(k, moving=True, seed=seed)
+            oacc_f, node_rec_f, node_true_f, _, _ = run(k, moving=False, seed=seed)
+            if seed == SEEDS[0] and k == K_SRC[len(K_SRC) // 2]:
+                rep = dict(omega=omega_m, read=read_m)          # mid-body source, moving, seed 0
             nodes["moving+recovered"].append(node_rec_m); oaccs["moving+recovered"].append(oacc_m)
             nodes["frozen+recovered"].append(node_rec_f); oaccs["frozen+recovered"].append(oacc_f)
             nodes["frozen+true(cheat)"].append(node_true_f); oaccs["frozen+true(cheat)"].append(oacc_f)
@@ -185,6 +192,19 @@ def main():
     os.makedirs(os.path.dirname(out), exist_ok=True)
     fig.savefig(out, dpi=130)
     print(f"figure -> {os.path.normpath(out)}")
+
+    # --- canonical results via the ONE always-invoked module ---
+    # Hand the recovered-from-movement trace and the per-segment world reading to
+    # smn_lab.report: it recovers the self-model graph-first, localizes the source on
+    # it (the self/world card), computes emergent diagnostics, and writes the record.
+    node_field = {s: float(rep["read"][s]) for s in range(N_SEG)}
+    render(RunRecord(name="worldmodel_from_selfmodel",
+                     omega=rep["omega"], node_field=node_field, modality="chem",
+                     metrics={"order_acc": float(res["moving+recovered"][0]),
+                              "tracking": float(res["moving+recovered"][1])},
+                     meta={"conditions": {c: {"order_acc": float(res[c][0]),
+                                              "tracking": float(res[c][1])} for c in conds}}),
+           spec=dict(suptitle="World-model on a self-model recovered from movement"))
 
 
 if __name__ == "__main__":

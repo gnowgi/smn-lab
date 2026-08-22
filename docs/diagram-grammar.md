@@ -22,7 +22,7 @@ The grammar gives the same body **two views**, sharing one vocabulary:
 - **Two-network view** — *the mechanical body and the messaging canvas*: the same
   body drawn as two coupled networks — the mechanical network above, the one
   broadcasting canvas (IN) below, joined through the DFN. This is the paper's
-  Figure 2; it is expanded in [The two networks](#the-two-networks--body-and-canvas)
+  Figure 2; it is expanded in [The two networks](#the-two-networks-mechanical-and-messaging)
   below.
 
 ![The SMN diagram grammar — morphology view, the two-network view, and the CAZ/DOF key](figures/diagram_grammar.png)

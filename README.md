@@ -97,6 +97,29 @@ mapping, foraging, cross-modal discrimination). Kept as provenance and read as
 proofs-of-concept, not clean ablations — see the
 [reproducibility note](docs/reproducibility.md).
 
+## Results & figures — one module, every run
+Every experiment ends by handing its run to **`smn_lab.report`** — the one place
+that turns a run into results. Fill a `RunRecord` (a movement trace is enough) and
+call `render`:
+
+```python
+from smn_lab.report import RunRecord, render
+render(RunRecord(name="my_experiment", omega=OMEGA,          # the body's own co-motion
+                 node_field=node_reading,                    # optional: the world in the self-frame
+                 metrics={"order_acc": 0.99, "tracking": 1.0}))
+```
+
+That single call recovers the self-model **graph-first** (a chain is the special
+case; branched bodies pass `jv` for directed edges), draws the SMN-native
+[self/world card](docs/diagram-grammar.md) (designed body → recovered self-graph →
+world on the graph, in ordinal units), computes the **always-on emergent
+diagnostics** (regions, algebraic connectivity, and `N_D` driver count — arm
+symmetry surfaces here), and writes `figures/<name>_self_world_card.png` plus a
+machine-readable `results/<name>_results.json`. Because results are generated in one
+place, experiments can never quietly diverge in how they score or draw. Full guide:
+**[The results module](docs/results-module.md)** · tested by
+`experiments/test_report.py`.
+
 ## Datasets & reproducibility
 All randomness is seeded; runs are reproducible and stamped with the git commit.
 The sweep harness (`smn_lab/sweep.py`) writes, per study, a tidy `summary.csv`
@@ -118,8 +141,10 @@ A GL backend renders the world; the core bench does not need streamlit. More
 detail: [the lab interface docs](docs/lab-interface.md).
 
 ## Layout (`smn_lab/`)
+- `report.py` — **the results module: one place generates every result.** An experiment hands over a canonical `RunRecord`; `render` recovers the self-model (graph-first), draws the SMN-native [self/world card](docs/results-module.md), computes the always-on emergent diagnostics, and writes a machine-readable record. See [The results module](docs/results-module.md).
 - `crawler.py` — `build_crawler_xml` (the minimal axial crawler) + `apply_anisotropic_drag` (the overdamped medium).
 - `morphology.py` — `BodySchema`/`CAZ`/`Segment` + `render_morphology`/`render_network`: the diagram grammar (one source of truth for body and figures).
+- `canvas.py` — the emergent-structure order parameters (`emergent_strata`, `graph_communities`, `community_class_match`): the single home the results module and the canvas experiments both call.
 - `control.py` — `MessagingBeam` (traveling wave + chemotaxis), `OpponentBoard`, `ReafferencePredictor`, `DeadReckoner`, and the action-pattern layers (`BAPG`, `HAPExplorer`, `DifferentialDrive`); plus the trial-line `CrossModalBoard` / `SubsumptionArbiter`.
 - `fields.py` — `ScalarField`: virtual chemical/thermal fields sampled bench-side.
 - `sweep.py` — `run_sweep` / `export_curated`: the parametric-sweep + dataset-export harness.

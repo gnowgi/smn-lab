@@ -82,6 +82,10 @@ state-space (right).*
 
 ## Start here
 
+- **First time here?** Read the **[guided reading path](start-here.md)** — what to read
+  first and in what order — then the marquee experiment,
+  **[Hydra, the "hello world" of SMN](experiments/hydra.md)** (the whole argument in one
+  brainless creature).
 - **New to the bench?** Read [The Construction of Experience](construction-of-experience.md)
   (why the minimal organism is a three-segment axial crawler), then the
   [diagram grammar](diagram-grammar.md) (how every figure of an agent is read).
