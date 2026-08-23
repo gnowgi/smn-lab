@@ -14,6 +14,10 @@ coordinated, object-directed capture with **no central controller**. If you read
 page, read that one. Everything below is the same ideas, taken one at a time and pinned
 down.
 
+Hydra is one setting of a broader dial: the **[cnidarian model system](cnidarians.md)** —
+the same two-layer body, with tentacles added or removed and the rim varied, generating
+the whole class and each form's self/world model.
+
 ## The argument, in seven steps
 
 The bench is organized as an argument in three moves — **self-model → world-model →

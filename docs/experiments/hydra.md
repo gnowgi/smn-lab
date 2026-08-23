@@ -6,6 +6,14 @@
     acts on an object — with **no brain, no ganglia, no central controller** to hide
     the work. If you read one experiment first, read this one.
 
+!!! info "One setting of a broader dial"
+    Hydra is a **polyp** — one form of the [cnidarian model system](../cnidarians.md).
+    The same two-layer sac, with tentacles added or removed and the rim varied, generates
+    the other cnidarian forms (medusae, ciliary feeders) and their self/world models. And
+    on the architecture: cnidarians have a **diffuse nerve net with no ganglia**, so the
+    integrating net (IN) invoked below is best read as the *evolutionary next step* the
+    animal does not yet have — see [the cnidarian architecture](../cnidarians.md#the-architecture-cnidarians-actually-realize-dfn-not-yet-in).
+
 ## Why Hydra earns the title
 
 Hydra removes every excuse for a central controller. It has no brain and no ganglia,

@@ -7,7 +7,11 @@ nav:
   - Home: index.md
   # The onramp: a guided reading path, then the marquee experiment.
   - "▶ Start here (read this first)": start-here.md
-  - "★ Hydra — the 'hello world' of SMN": experiments/hydra.md
+  # The cnidarian model system — the marquee arc.
+  - "🪼 Cnidarian model system":
+      - "Overview — a synthetic model system": cnidarians.md
+      - "★ The polyp (Hydra) — the 'hello world'": experiments/hydra.md
+      - "The disk experiments — what is the rim?": experiments/cnidarian_disk.md
   # Reference cluster — how to read the bench; background for the whole arc.
   - "The framework (reference)":
       - Concepts: concepts.md
