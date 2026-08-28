@@ -1,0 +1,380 @@
+<title>The CAZ &amp; the Worm Ladder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#f2f4f3; --surface:#ffffff; --surface-2:#eef1f0;
+    --ink:#191f23; --muted:#5b6772; --faint:#8a949d; --line:#dde2e1;
+    --long:#b23a48; --circ:#2f6f83;
+    --long-soft:#f5e2e4; --circ-soft:#dfeaee;
+    --ok:#3f8f5f; --ok-soft:#e0efe6;
+    --warn:#bd8730; --warn-soft:#f6ecd8;
+    --gap:#b0472f; --gap-soft:#f6e2da;
+    --shadow:0 1px 2px rgba(20,30,35,.05),0 6px 20px rgba(20,30,35,.05);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#12161a; --surface:#191f24; --surface-2:#20272d;
+      --ink:#e7ecee; --muted:#9aa6b0; --faint:#6c7883; --line:#2b333a;
+      --long:#e0788a; --circ:#68b6cf; --long-soft:#341f24; --circ-soft:#152a32;
+      --ok:#6cc490; --ok-soft:#16281d; --warn:#e0b565; --warn-soft:#2c2413;
+      --gap:#e08466; --gap-soft:#2e1c15;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 26px rgba(0,0,0,.32);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#12161a; --surface:#191f24; --surface-2:#20272d;
+    --ink:#e7ecee; --muted:#9aa6b0; --faint:#6c7883; --line:#2b333a;
+    --long:#e0788a; --circ:#68b6cf; --long-soft:#341f24; --circ-soft:#152a32;
+    --ok:#6cc490; --ok-soft:#16281d; --warn:#e0b565; --warn-soft:#2c2413;
+    --gap:#e08466; --gap-soft:#2e1c15;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 26px rgba(0,0,0,.32);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    font-size:17px; line-height:1.62; letter-spacing:.002em;
+    padding:clamp(1.1rem,4vw,3.2rem) 1.1rem 5rem;}
+  .wrap{max-width:50rem; margin:0 auto}
+  .flow>*+*{margin-top:1.05rem}
+  h1,h2,h3{font-family:"Spectral",Georgia,serif; text-wrap:balance; line-height:1.15; letter-spacing:-.01em}
+  h1{font-size:clamp(2.1rem,6vw,3.15rem); font-weight:600; margin:0}
+  h2{font-size:clamp(1.4rem,3.4vw,1.8rem); font-weight:600; margin:0}
+  h3{font-size:1.12rem; font-weight:600; margin:0}
+  p{margin:0; max-width:66ch}
+  a{color:var(--circ); text-underline-offset:.15em; text-decoration-thickness:.06em}
+  code,.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  code{font-size:.86em; background:var(--surface-2); padding:.08em .38em; border-radius:5px; color:var(--ink)}
+  .eyebrow{font-family:"IBM Plex Mono",monospace; font-size:.72rem; font-weight:500;
+    letter-spacing:.19em; text-transform:uppercase; color:var(--faint)}
+  header{border-bottom:1px solid var(--line); padding-bottom:1.6rem; margin-bottom:2.4rem}
+  .sub{font-size:1.12rem; color:var(--muted); max-width:60ch; margin-top:1rem}
+  .meta{display:flex; flex-wrap:wrap; gap:.55rem .9rem; margin-top:1.4rem;
+    font-family:"IBM Plex Mono",monospace; font-size:.76rem; color:var(--muted)}
+  .meta span{display:inline-flex; align-items:center; gap:.45rem}
+  .dot{width:.5rem;height:.5rem;border-radius:50%}
+  .mark{display:inline-block; vertical-align:-.16em}
+  section{margin-top:3.2rem}
+  .lead{font-size:1.04rem}
+  .note{background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--circ);
+    border-radius:10px; padding:1.05rem 1.2rem; box-shadow:var(--shadow)}
+  .note.finding{border-left-color:var(--long)}
+  .note .eyebrow{margin-bottom:.4rem; display:block}
+  .def{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:1.2rem 1.3rem;
+    box-shadow:var(--shadow); border-top:3px solid var(--long)}
+  .def .q{font-family:"Spectral",Georgia,serif; font-size:1.16rem; font-style:italic; line-height:1.4; max-width:60ch}
+  .chip{display:inline-flex; align-items:center; gap:.4rem; font-family:"IBM Plex Mono",monospace;
+    font-size:.72rem; font-weight:500; letter-spacing:.03em; padding:.16rem .5rem; border-radius:999px; border:1px solid transparent; white-space:nowrap}
+  .chip.ok{background:var(--ok-soft); color:var(--ok); border-color:color-mix(in srgb,var(--ok) 30%,transparent)}
+  .chip.warn{background:var(--warn-soft); color:var(--warn); border-color:color-mix(in srgb,var(--warn) 30%,transparent)}
+  .chip.gap{background:var(--gap-soft); color:var(--gap); border-color:color-mix(in srgb,var(--gap) 32%,transparent)}
+  .tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); background:var(--surface)}
+  table{border-collapse:collapse; width:100%; font-size:.9rem; min-width:34rem}
+  th,td{text-align:left; padding:.72rem .9rem; vertical-align:top; border-bottom:1px solid var(--line)}
+  thead th{font-family:"IBM Plex Mono",monospace; font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:500; background:var(--surface-2)}
+  tbody tr:last-child td{border-bottom:0}
+  .rownum{color:var(--faint); font-family:"IBM Plex Mono",monospace}
+  .glyphs{display:grid; grid-template-columns:repeat(auto-fit,minmax(15rem,1fr)); gap:1rem; margin-top:.4rem}
+  .gcard{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:1.1rem 1.15rem; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:.5rem}
+  .gcard svg{display:block}
+  .gtitle{font-weight:600; font-size:.98rem}
+  .gcard p{font-size:.86rem; color:var(--muted)}
+  .verdictline{font-family:"IBM Plex Mono",monospace; font-size:.74rem; margin-top:.2rem}
+  .loop{background:var(--surface); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); padding:1.1rem; margin-top:.4rem}
+  .loop svg{display:block; width:100%; height:auto}
+  ol.steps{list-style:none; margin:0; padding:0; counter-reset:s; display:flex; flex-direction:column; gap:1rem}
+  ol.steps li{display:grid; grid-template-columns:2.1rem 1fr; gap:.9rem; align-items:start}
+  ol.steps li::before{counter-increment:s; content:counter(s); font-family:"IBM Plex Mono",monospace;
+    font-size:.82rem; font-weight:500; color:var(--long); background:var(--long-soft);
+    width:2.1rem;height:2.1rem;border-radius:50%; display:grid; place-items:center; border:1px solid color-mix(in srgb,var(--long) 25%,transparent)}
+  ol.steps h3{margin-bottom:.15rem}
+  ol.steps p{font-size:.92rem; color:var(--muted)}
+  .opts{display:flex; flex-direction:column; gap:1rem}
+  .opt{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:1.1rem 1.2rem; box-shadow:var(--shadow); display:grid; grid-template-columns:1fr auto; gap:.3rem 1rem; align-items:baseline}
+  .opt.rec{border-color:color-mix(in srgb,var(--long) 45%,var(--line)); border-left:3px solid var(--long)}
+  .opt h3{grid-column:1}
+  .opt .tag{grid-column:2; grid-row:1; justify-self:end; font-family:"IBM Plex Mono",monospace; font-size:.68rem; letter-spacing:.05em; text-transform:uppercase; color:var(--faint)}
+  .opt p{grid-column:1/-1; font-size:.92rem; color:var(--muted); margin-top:.1rem}
+  .opt .effort{grid-column:1/-1; font-family:"IBM Plex Mono",monospace; font-size:.74rem; color:var(--muted); margin-top:.35rem}
+  .opt .effort b{color:var(--ink); font-weight:500}
+  ul.tight{margin:0; padding-left:1.15rem; display:flex; flex-direction:column; gap:.55rem}
+  ul.tight li{max-width:64ch}
+  ul.tight li::marker{color:var(--long)}
+  blockquote.flag{margin:0; background:var(--surface-2); border-radius:9px; padding:.75rem .95rem; border-left:3px solid var(--gap)}
+  blockquote.flag .src{font-family:"IBM Plex Mono",monospace; font-size:.68rem; letter-spacing:.05em; text-transform:uppercase; color:var(--gap); display:block; margin-bottom:.25rem}
+  blockquote.flag .q{font-family:"Spectral",Georgia,serif; font-style:italic; font-size:1rem}
+  blockquote.flag .fix{font-size:.86rem; color:var(--muted); margin-top:.4rem}
+  blockquote.flag .fix b{color:var(--ink); font-weight:500}
+  .flags{display:flex; flex-direction:column; gap:.8rem}
+  footer{margin-top:3.6rem; padding-top:1.4rem; border-top:1px solid var(--line); font-family:"IBM Plex Mono",monospace; font-size:.76rem; color:var(--muted)}
+  @media (prefers-reduced-motion:no-preference){a{transition:color .15s}}
+  :focus-visible{outline:2px solid var(--circ); outline-offset:2px; border-radius:3px}
+</style>
+
+<div class="wrap flow">
+<header class="flow">
+  <div class="eyebrow">SMN bench · morphology &amp; primitive review</div>
+  <h1>The CAZ &amp; the Worm Ladder
+    <svg class="mark" width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+      <path d="M17 3a14 14 0 0 0 0 28z" fill="var(--long)"/>
+      <path d="M17 3a14 14 0 0 1 0 28z" fill="none" stroke="var(--circ)" stroke-width="2"/>
+    </svg>
+  </h1>
+  <p class="sub">The morphology work to date, the <strong>now-settled</strong> definition of the CAZ,
+    and what it changes — in the models and in the paper.</p>
+  <div class="meta">
+    <span><span class="dot" style="background:var(--long)"></span>Prepared for G. Nagarjuna</span>
+    <span><span class="dot" style="background:var(--circ)"></span>rev. 2026-08-28</span>
+    <span><span class="dot" style="background:var(--ok)"></span>bench on <code>main</code> @ b09c217</span>
+  </div>
+</header>
+
+<section class="flow" id="summary">
+  <div class="eyebrow">01 · Where we are</div>
+  <h2>Three rungs built — and the central primitive finally pinned down</h2>
+  <p class="lead">This thread built and corrected the first three rungs of the ladder
+    (<strong>cnidarian → nematode → earthworm</strong>), grounded each in sourced biology, and
+    consolidated the two new morphologies plus their docs onto <code>main</code>. It then did the more
+    important thing: it <strong>settled what a CAZ is</strong>, and the settlement dissolves the
+    confusion this report opened on.</p>
+  <div class="note finding flow">
+    <span class="eyebrow" style="color:var(--long)">The resolution</span>
+    <p>The earlier finding — “CAZ names three incompatible things in the code” — was real, but it was a
+      symptom. The cause was calling the <strong>contractile unit</strong> a CAZ. Separate them, and it
+      resolves: the edge is an <strong><code>f</code></strong> (a pull-only contractile unit); the
+      <strong>CAZ</strong> is not an actuator at all but a <strong>zone of coordinated action</strong> —
+      and coordination is a property of the <strong>whole SMN</strong>, not of the neurons.</p>
+  </div>
+</section>
+
+<section class="flow" id="settled">
+  <div class="eyebrow">02 · The settled understanding</div>
+  <h2>Coordination is the SMN’s, not the neurons’</h2>
+  <p>The load-bearing commitment, above the definition: <strong>coordination is a property of the SMN
+    as a whole — the coupled network of sensing, pulling, and messaging units — not of any one kind of
+    unit.</strong> The received view hands coordination to the neurons. SMN denies it: messaging carries
+    signals but coordinates nothing on its own, pulling units can’t time themselves, sensing alone is
+    mute. Coordination is what the three do together, closed through the body’s mechanics and its own
+    reafference. There is no coordinator <em>inside</em> the system.</p>
+
+  <div class="loop" role="img" aria-label="The SMN loop: sensing, messaging, pulling, and mechanics in a cycle, with coordination as the loop's emergent output and the CAZ as a read-out of it — not a box inside the loop.">
+    <svg viewBox="0 0 560 250">
+      <defs>
+        <marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0l7 4-7 4z" fill="var(--muted)"/></marker>
+      </defs>
+      <g font-family="IBM Plex Sans, sans-serif" font-size="13" text-anchor="middle">
+        <g><circle cx="150" cy="55" r="34" fill="var(--circ-soft)" stroke="var(--circ)" stroke-width="1.5"/><text x="150" y="52" fill="var(--circ)" font-weight="600">sensing</text><text x="150" y="69" fill="var(--muted)" font-size="10">transducers</text></g>
+        <g><circle cx="410" cy="55" r="34" fill="var(--surface-2)" stroke="var(--muted)" stroke-width="1.5"/><text x="410" y="52" fill="var(--ink)" font-weight="600">messaging</text><text x="410" y="69" fill="var(--muted)" font-size="10">conduction</text></g>
+        <g><circle cx="410" cy="195" r="34" fill="var(--long-soft)" stroke="var(--long)" stroke-width="1.5"/><text x="410" y="192" fill="var(--long)" font-weight="600">pulling</text><text x="410" y="209" fill="var(--muted)" font-size="10">f · pull-only</text></g>
+        <g><circle cx="150" cy="195" r="34" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1.5"/><text x="150" y="192" fill="var(--ink)" font-weight="600">mechanics</text><text x="150" y="209" fill="var(--muted)" font-size="10">body + world</text></g>
+      </g>
+      <g fill="none" stroke="var(--muted)" stroke-width="1.6" marker-end="url(#a)">
+        <path d="M186 50 H372"/>
+        <path d="M410 91 V157"/>
+        <path d="M372 200 H188"/>
+        <path d="M150 159 V93"/>
+      </g>
+      <text x="280" y="40" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--faint)">reafference closes the loop</text>
+      <text x="280" y="120" text-anchor="middle" font-family="Spectral, serif" font-style="italic" font-size="15" fill="var(--ink)">coordination</text>
+      <text x="280" y="140" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--faint)">emergent · no controller</text>
+      <text x="280" y="171" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--long)">a CAZ = a read-out of this</text>
+    </svg>
+  </div>
+
+  <p>So the ontology has four levels, and the CAZ is derived, not a component:</p>
+  <ul class="tight">
+    <li><strong><code>s</code> — segment</strong>: a node (a body region).</li>
+    <li><strong><code>f</code> — contractile unit</strong>: an edge; it can only <em>pull</em>. A
+      spindle is a bundle of <code>f</code>s taken as one — so <code>f</code> is scale-recursive.</li>
+    <li><strong>opposition</strong>: the resistance every <code>f</code> pulls against (elastic,
+      hydrostat, the network, or a discrete antagonist). Mechanical, always present — its <em>form</em>
+      differentiates up the ladder.</li>
+    <li><strong>CAZ</strong>: the coordination of the <em>timing</em> of the <code>f</code>s — which act
+      together, which after which — realized by the whole SMN and <em>read out</em>, never imposed.</li>
+  </ul>
+
+  <div class="def flow">
+    <span class="eyebrow" style="color:var(--long)">The definition, settled</span>
+    <p class="q">A CAZ is a zone of coordinated action — a set of contractile units brought into a
+      coherent timing relation (synchronous, sequential, or opposed) by the SMN as a whole: sensing +
+      pulling + messaging, closed through the body and its reafference. It is emergent and read out,
+      never imposed by a controller; the discrete opponent pair is its fully-differentiated limit.</p>
+  </div>
+  <p style="font-size:.94rem;color:var(--muted)">Two consequences fall straight out. <b>Sensing is
+    now on the critical path</b> — the coordination loop cannot close without transducers, so they are
+    no longer an add-on for the Umwelt finale. And <b>coordination must emerge</b> from that loop: our
+    current earthworm/nematode demos <em>script</em> the wave phases, which is the neuron-as-controller
+    shortcut in disguise — the faithful version couples each pull to what it senses and lets the gait
+    fall out.</p>
+</section>
+
+<section class="flow" id="module">
+  <div class="eyebrow">03 · The code, now diagnosed</div>
+  <h2>One name, three units — and where each belongs</h2>
+  <p>The three things the code called “CAZ” aren’t rivals once <code>f</code> is separated from the
+    coordination zone. Each takes its correct place; only the actuator primitive needs fixing.</p>
+  <div class="glyphs">
+    <div class="gcard">
+      <svg width="100%" height="52" viewBox="0 0 200 52" role="img" aria-label="A single bidirectional actuator on one edge">
+        <circle cx="20" cy="26" r="6" fill="var(--ink)"/><circle cx="92" cy="26" r="6" fill="var(--ink)"/>
+        <path d="M28 26h56" stroke="var(--long)" stroke-width="3"/>
+        <path d="M40 26l-8-5v10z" fill="var(--long)"/><path d="M80 26l8-5v10z" fill="var(--long)"/>
+        <text x="104" y="20" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">lattice.py edge</text>
+        <text x="104" y="35" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--gap)">± can push</text>
+      </svg>
+      <div class="gtitle">= an <code>f</code>, not a CAZ</div>
+      <p>The lattice edge is a single contractile unit. Correctly an <code>f</code> — it just needs to
+        become <strong>pull-only</strong> (a muscle can’t push).</p>
+      <div class="verdictline" style="color:var(--warn)">keep as f · make pull-only</div>
+    </div>
+    <div class="gcard">
+      <svg width="100%" height="52" viewBox="0 0 200 52" role="img" aria-label="Two opposing pull-only arrows across a hinge">
+        <circle cx="24" cy="26" r="6" fill="var(--ink)"/>
+        <path d="M46 16h34" stroke="var(--long)" stroke-width="3" marker-end="url(#h1)"/>
+        <path d="M80 36H46" stroke="var(--circ)" stroke-width="3" marker-end="url(#h2)"/>
+        <defs><marker id="h1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0 0l6 3.5L0 7z" fill="var(--long)"/></marker><marker id="h2" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0 0l6 3.5L0 7z" fill="var(--circ)"/></marker></defs>
+        <text x="92" y="20" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">crawler.py hinge</text>
+        <text x="92" y="35" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">2 pull-only</text>
+      </svg>
+      <div class="gtitle">= a CAZ, the sharp limit</div>
+      <p>The crawler’s two pull-only motors are a <strong>fully-differentiated CAZ</strong> — the
+        appendicular opponent pair, the case that carries haltability.</p>
+      <div class="verdictline" style="color:var(--ok)">the limit case · the seed to generalize</div>
+    </div>
+    <div class="gcard">
+      <svg width="100%" height="52" viewBox="0 0 200 52" role="img" aria-label="A split-circle diagram token">
+        <circle cx="26" cy="26" r="18" fill="none" stroke="var(--faint)" stroke-width="2"/>
+        <path d="M26 8a18 18 0 0 1 0 36z" fill="var(--faint)" opacity=".35"/>
+        <line x1="26" y1="8" x2="26" y2="44" stroke="var(--faint)" stroke-width="2"/>
+        <text x="54" y="23" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">morphology.py</text>
+        <text x="54" y="38" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">glyph token</text>
+      </svg>
+      <div class="gtitle">= the drawing of the limit</div>
+      <p>The split-circle dataclass draws the differentiated CAZ. Fine as a glyph; it needs a
+        <strong>general companion</strong> for coordination zones with no discrete pair.</p>
+      <div class="verdictline" style="color:var(--warn)">add a general representation</div>
+    </div>
+  </div>
+  <p style="font-size:.94rem;color:var(--muted)">The through-line: <strong>the CAZ is none of these
+    three actuators.</strong> It is the coordination pattern <em>over</em> the <code>f</code>s — which
+    the bench already recovers as fire-together / act-after co-activation groups (our emergent
+    circular-segment and longitudinal-strand “regions” were exactly that). The concept and the
+    instrument already agree; only the label was wrong.</p>
+</section>
+
+<section class="flow" id="paper">
+  <div class="eyebrow">04 · v2 → v3 · the paper</div>
+  <h2>Where the manuscript still commits “CAZ = a pair”</h2>
+  <p>The authoritative arXiv v2 defines the CAZ <em>as</em> an opponent pair — yet also calls it
+    “a network from the word go.” v3 resolves that internal tension toward the network reading; these
+    are the passages to generalize (not discard: opponency stays the primitive, and the pair stays the
+    haltable unit).</p>
+  <div class="flags">
+    <blockquote class="flag">
+      <span class="src">v2 · §3.4, p7 — the definition</span>
+      <span class="q">“A Coordinated Action Zone (CAZ) is a pair of Sensation Modulators in
+        antagonistic relationship — two zones Z⁺ and Z⁻ … together with … the communication board B.”</span>
+      <div class="fix"><b>v3:</b> CAZ = a zone of coordinated action over a set of Sensation Modulators,
+        coordinated by the board(s) and the whole SMN; the antagonistic pair (Z⁺, Z⁻, B) is its
+        minimal, haltable case. Keep the board inside the CAZ; keep “smallest coherent/haltable scale”
+        as the definition of the <em>pair</em>.</div>
+    </blockquote>
+    <blockquote class="flag">
+      <span class="src">v2 · §11, p38 — the contradiction to exploit</span>
+      <span class="q">“the CAZ is a network from the word go” · “the CAZ is the structural-and-functional
+        unit of cognition.”</span>
+      <div class="fix"><b>v3:</b> §11 already says <em>network</em>; §3.4 says <em>pair</em>. Reconcile
+        in favour of §11 — an internal-consistency fix, the cleanest mandate for the change.</div>
+    </blockquote>
+    <blockquote class="flag">
+      <span class="src">v2 · §4.2, p11 — skeleton typing</span>
+      <span class="q">“a hydrostatic CAZ (worm, tongue, gut) is a pair of linked linear actuators …
+        whose antagonist is the structure itself.”</span>
+      <div class="fix"><b>v3:</b> v2 already types worms/hydrostats — but still as a <em>pair</em>. Add a
+        third type: <strong>distributed / network opposition</strong> (the cnidarian — a region
+        contracts against the whole connected sheet), a coordinated CAZ with no discrete pair. This is
+        the case that forces the generalization.</div>
+    </blockquote>
+  </div>
+  <p style="font-size:.9rem;color:var(--muted)">Figure 2 (“CAZ = one opponent pair = one DOF”), §4.4
+    (“an opponent pair of actuators, one CAZ”), and the commitment to <em>add</em> — “coordination is
+    the SMN’s, not the neurons’” — are itemized in <span class="mono">SMN_v3_caz_revision_flags.md</span>,
+    with the paper of record at <span class="mono">papers/preprint/</span>.</p>
+</section>
+
+<section class="flow" id="status">
+  <div class="eyebrow">05 · Model-system status</div>
+  <h2>Where each rung stands</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Rung</th><th>Coordination / opponent pattern</th><th>State</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Cnidarian</strong><br><span class="rownum">polarized</span></td>
+          <td>whole-network synchrony → condense; regional → bend (opposition = the network)</td>
+          <td><span class="chip ok">on main</span></td>
+          <td>Transducers still TODO — now on the critical path, not the finale.</td></tr>
+        <tr><td><strong>Nematode</strong><br><span class="rownum">tubular</span></td>
+          <td>dorsal ⊕ ventral antiphase (DV bend); no circular</td>
+          <td><span class="chip ok">rebuilt</span></td>
+          <td>Correct pattern; wave is <em>scripted</em> — to be made emergent.</td></tr>
+        <tr><td><strong>Earthworm</strong><br><span class="rownum">segmented</span></td>
+          <td>telescoping + lateral; sequenced peristalsis</td>
+          <td><span class="chip ok">rebuilt</span></td>
+          <td>Two disjoint tissues; hydrostat approximated; wave scripted.</td></tr>
+        <tr><td><strong>Bilateral · appendicular</strong><br><span class="rownum">next</span></td>
+          <td>steering; flexor ⊕ extensor (the sharp limit)</td>
+          <td><span class="chip gap">not started</span></td>
+          <td>Where the crawler’s correct opponent-pair CAZ already fits.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="flow" id="next">
+  <div class="eyebrow">06 · What the settlement changes — next steps</div>
+  <h2>Now the work is concrete</h2>
+  <p>With the definition settled, the choices are no longer conceptual — they’re a build order.</p>
+  <div class="opts">
+    <div class="opt rec">
+      <h3>Build the shared substrate: pull-only <code>f</code> + sensing + emergent coordination</h3>
+      <span class="tag">Recommended</span>
+      <p>One <strong>pull-only <code>f</code></strong> primitive for every body; <strong>sensing units
+        as first-class</strong>; and coordination that <strong>emerges</strong> from the
+        sense→message→pull→mechanics loop rather than a scripted schedule. This is the honest version of
+        the commitment and the “same model in all morphologies,” and it retires the three-way muddle in
+        one move. The crawler’s opponent pair is the seed to generalize off the hinge.</p>
+      <div class="effort">Leverage <b>highest</b> · Effort <b>medium–large</b> · replaces the scripted waves</div>
+    </div>
+    <div class="opt">
+      <h3>Revise the paper for v3</h3>
+      <p>Reconcile §3.4 with §11 to the general definition, add the “coordination is the SMN’s, not the
+        neurons’” commitment and a distributed-opposition CAZ type, and demote the opponent pair to the
+        differentiated limit that carries haltability — keeping every opponency and haltability result
+        intact. Flags ready in the project doc.</p>
+      <div class="effort">Leverage <b>high</b> · Effort <b>small</b> · text-only, no results touched</div>
+    </div>
+    <div class="opt">
+      <h3>Then continue the ladder</h3>
+      <p>Bilateral and appendicular rungs on the unified substrate — the appendicular rung is exactly
+        where the sharp opponent-pair CAZ belongs, so the substrate pays for itself immediately.</p>
+      <div class="effort">Leverage <b>medium</b> · Effort <b>medium</b></div>
+    </div>
+  </div>
+  <div class="note flow" style="border-left-color:var(--long)">
+    <span class="eyebrow" style="color:var(--long)">Reading</span>
+    <p>A clean sequence: <strong>fix the substrate</strong> (pull-only <code>f</code> + sensing +
+      emergent coordination), which is also the first honest test of the settled definition; do the
+      <strong>v3 text edit</strong> in parallel since it’s independent; <strong>then climb</strong>. The
+      one thing not to do is add rungs on the scripted pattern — that bakes the hidden controller deeper.</p>
+  </div>
+</section>
+
+<footer>
+  SMN bench · the CAZ, settled · biology sources in
+  <span class="mono">SMN_annelid_muscle_biology.md</span> · paper of record
+  <span class="mono">arXiv 2605.26856v2</span> · flags in <span class="mono">SMN_v3_caz_revision_flags.md</span>.
+</footer>
+</div>
