@@ -12,6 +12,12 @@ nav:
       - "Overview — a synthetic model system": cnidarians.md
       - "★ The polyp (Hydra) — the 'hello world'": experiments/hydra.md
       - "The disk experiments — what is the rim?": experiments/cnidarian_disk.md
+  # The worm ladder — the tubular and segmented rungs after the cnidarian.
+  - "🪱 The worm ladder (nematode → earthworm)":
+      - "Overview — the ladder & the opponent-pair CAZ": ladder/overview.md
+      - "Opponent-pair CAZ (reference)": ladder/opponent_pair_caz.md
+      - "The nematode — a tube that bends (DV)": experiments/nematode.md
+      - "The earthworm — a segmented hydrostat (peristalsis)": experiments/earthworm.md
   # Reference cluster — how to read the bench; background for the whole arc.
   - "The framework (reference)":
       - Concepts: concepts.md
