@@ -40,8 +40,8 @@ the layering; haltability is the next step.
 A block is a small lattice of segments (a "cell" or module); a super-block is a small
 group of blocks. A nested lattice is a lattice **of lattices of lattices**: `fine`
 links wire segments within a block, `mid` links wire block to block within a
-super-block, `coarse` links wire super-block to super-block. Each link is one CAZ (a
-spring-tendon muscle), the tissue is overdamped, and every link is driven
+super-block, `coarse` links wire super-block to super-block. Each link is one `f` (a
+spring-tendon contractile unit), the tissue is overdamped, and every link is driven
 independently — exactly as before, now at three scales at once.
 
 ## Formalism — the same read-out, coarse-grained
@@ -68,7 +68,7 @@ segments into one super-node — driven by that level's links:
 
 Define the architecture recursively. A **level-0** node is a single segment (a point
 mass). A **level-\(\ell\)** lattice is a graph whose nodes are themselves level-\((\ell-1)\)
-lattices, joined by level-\(\ell\) CAZ links:
+lattices, joined by level-\(\ell\) `f` links (contractile units):
 
 \[
 \mathcal L^{(0)} = \{\text{segment}\},\qquad

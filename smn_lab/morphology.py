@@ -80,10 +80,12 @@ class Transducer:
 
 @dataclass
 class CAZ:
-    """One Coordinated Action Zone = one opponent (flexor/extensor) pair = one
-    degree of freedom. ``dof`` is one of ``DOFS``: 'lateral' (yaw bend),
-    'dorsoventral' (pitch bend), 'roll' (axial twist), or 'telescoping' (axial
-    extend/contract -- peristalsis)."""
+    """The **differentiated (appendicular) limit** of a Coordinated Action Zone: one opponent
+    (flexor/extensor) pair = one degree of freedom, drawn as the split-circle glyph. This is the
+    *limit case* of the general CAZ, which is a **zone of coordinated action** (a coordination over
+    contractile units ``f``, realized by the whole SMN) — see ``claude/SMN_order_parameters.md``.
+    ``dof`` is one of ``DOFS``: 'lateral' (yaw bend), 'dorsoventral' (pitch bend), 'roll' (axial
+    twist), or 'telescoping' (axial extend/contract -- peristalsis)."""
     dof: str = "lateral"
 
 

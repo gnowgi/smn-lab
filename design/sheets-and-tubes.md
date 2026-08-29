@@ -150,16 +150,24 @@ cells. T2 below implements this link-driven read-out.
 
 ## Settled design (2026-07-16, with GN)
 
-- **CAZ = one muscle-tendon unit** (active actuator + series elastic + embedded
-  transducer), variable DOF. We do *not* split muscle vs tendon. This is the
-  standard biomechanical MTU idealization — valid.
+!!! warning "Terminology superseded (2026-08, GN) — this section's 'CAZ = one MTU' is the drift"
+    This section calls one muscle-tendon unit a **CAZ**. That was the source of a later confusion.
+    Settled vocabulary (see `claude/SMN_order_parameters.md`, `SMN_bench_revision_plan.md`): one
+    muscle-tendon unit is an **`f`** — a *contractile unit* / Sensation Modulator, **one side** of an
+    opponent relation. A **CAZ** is a **zone of coordinated action** over `f`s, realized by the whole
+    SMN; its differentiated limit is the opponent pair. Read every "CAZ (link/unit)" below as "**`f`**".
+
+- **One `f` (contractile unit / Sensation Modulator) = one muscle-tendon unit** (active actuator +
+  series elastic + embedded transducer), variable DOF. We do *not* split muscle vs tendon. This is
+  the standard biomechanical MTU idealization — valid. (A **CAZ** is an opponent pair / coordination
+  of such `f`s, not the single unit.)
 - **Two CAZ archetypes** (the second is new to the visual grammar and must be added):
   - **skeletal** — a flexor/extensor *pair* across a rigid lever (hinge). Needs a
     skeleton (internal or external). The current grammar.
   - **hydrostatic** — *linked linear actuators*, no skeleton; the antagonist is the
     structure itself (constant volume / turgor). Shapes tubes, worms, tongue, gut.
 - **Segments = scaffolding** — rigid mounts for sensors "when and where we need"; the
-  CAZ links are what move and what the self-model is read through.
+  `f` links are what move and what the self-model is read through.
 - **C. elegans vs earthworm** — longitudinal-only (cuticle as antagonist → bending
   waves) vs longitudinal+circular (→ peristalsis). Only the earthworm needs true
   volume coupling.
@@ -173,7 +181,7 @@ cells. T2 below implements this link-driven read-out.
 
 ### The read-out (settled): link-driven, and it is the *same framework function*
 
-Each CAZ link is driven independently; we read each **segment's** motion and ask,
+Each `f` link is driven independently; we read each **segment's** motion and ask,
 per link, which two segments it couples — its strongest positive and negative
 co-movers. That is exactly `coupling` + `recover_edges` from
 [`smn_lab.self_model`](../docs/self-model-and-measurement.md) — the identical

@@ -3,7 +3,7 @@
 These three experiments flatten the cnidarian sac into a **two-layer disk** and ask one
 question from three angles: *what is the rim?* The rim is where the outer and inner faces
 fold into each other — the seam that, in a polyp, becomes the mouth. Here the mesoglea
-between the faces carries only messaging edges, **no mechanical CAZ springs**, so the rim
+between the faces carries only messaging edges, **no mechanical `f` (muscle) springs**, so the rim
 fold is the **only mechanical bridge between the two layers**. That single fact turns out
 to shape the self-model, gate every perturbation, and — when removed — decide whether the
 body has a special place at all.
