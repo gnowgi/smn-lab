@@ -16,8 +16,8 @@ page stating which it uses:
 - **the segmented crawler** — an axial chain of massed segments with opponent hinge
   pairs, moved by a messaging-beam wave through an anisotropic drag medium
   ([C0](experiments/c0_crawler.md), [C1](experiments/c1_touch.md); `smn_lab.crawler`);
-- **spring-tendon lattices** — point-mass segments joined by spring-tendon CAZ links,
-  in the overdamped soft-tissue regime, for the self-model / sheet / tube / nested
+- **spring-tendon lattices** — point-mass segments joined by spring-tendon `f` links
+  (contractile units), in the overdamped soft-tissue regime, for the self-model / sheet / tube / nested
   experiments (`smn_lab.lattice`);
 - **the bilateral manipulator** — a two-limb contact unit for object-directedness
   ([E3](experiments/p6_haltability_aboutness.md); `smn_lab.manipulator`).
@@ -76,7 +76,7 @@ proprioception (joint velocities, body linear/angular velocity via
 
 | aspect | Organism (C0/C1) | Self (self-model · lattice) | World (Q2 · W1/W2 · Q1) | Object (E3) |
 |---|---|---|---|---|
-| **body** | axial crawler segments | point-mass segments + spring-tendon CAZ links | crawler / elastic chain | bilateral two-limb manipulator |
+| **body** | axial crawler segments | point-mass segments + spring-tendon `f` links | crawler / elastic chain | bilateral two-limb manipulator |
 | **medium** | anisotropic drag (C0 gravity off; C1 gravity on + touch skin + object) | overdamped, contacts off, gravity off | anisotropic drag | ideal torque motors + object contact |
 | **the agent computes** | messaging-beam wave | `coupling` (self-model) | `coupling` + self-frame localization + reafference | `coupling` (2 zones) + the halt pattern |
 | **the experimenter scores** | net displacement, gait loop-area | endpoint / neighbour recovery | decoding skill (+ shuffle), residual ratio | longest sustained directed halt |

@@ -1,11 +1,18 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 G. Nagarjuna and Durgaprasad Karnam
-"""Lattice body plans — chain / sheet / tube as linked linear-actuator CAZ.
+"""Lattice body plans — chain / sheet / tube as linked contractile units (``f``).
 
-A **muscle** is a chain of CAZ; a **sheet** is two such chains linked laterally; a
+Vocabulary (settled; see ``claude/SMN_order_parameters.md``, ``SMN_bench_revision_plan.md``):
+a lattice **node/segment** is an ``s``; a **link** is one ``f`` — a *contractile unit* (a
+Sensation Modulator: a spring-tendon muscle-tendon unit with its own linear actuator), which is
+**one side** of an opponent relation, NOT a CAZ. A **CAZ** is a *zone of coordinated action* — a
+coordination over ``f``s, whose differentiated limit is the opponent pair. (This module builds the
+``f`` scaffold and reads its self-model; the coordination/CAZ layer lives elsewhere.)
+
+A **muscle** is a chain of ``f``; a **sheet** is two such chains linked laterally; a
 **tube** (worm, gut, vessel) is three or more chains linked longitudinally *and*
 laterally, closed into a ring. In every case the **segments are point-mass
-scaffolding** (a place to mount sensors) and every **link is one CAZ** — a
+scaffolding** (a place to mount sensors) and every **link is one ``f``** — a
 spring-tendon muscle-tendon unit with its own linear actuator. Longitudinal links
 are longitudinal muscle; lateral links are circular muscle.
 
@@ -103,7 +110,7 @@ def nested_lattice_spec(n_super=3, mid_group=3, block_rows=2, block_cols=2,
 
 def _lattice_mjcf(pos, edges, lat_stiff, link_damp, seg_damp, seg_mass, cmax, name):
     """Shared MJCF assembly: point-mass segments (3-DOF, overdamped) + one
-    spring-tendon CAZ actuator per edge. Used by both builders."""
+    spring-tendon ``f`` (contractile unit) actuator per edge. Used by both builders."""
     bodies = []
     for i, (x, y, z) in enumerate(pos):
         bodies.append(
@@ -156,7 +163,7 @@ def build_lattice_xml(n_col=8, n_row=1, closed=False, dx=0.16, dy=0.16,
     """MJCF for an ``n_row x n_col`` lattice. ``n_row=1`` -> chain (a muscle);
     ``n_row=2`` -> sheet; ``n_row>=3, closed=True`` -> tube. Each segment is a
     3-DOF point mass (slide x/y/z, overdamped); each :func:`lattice_edges` edge is a
-    spring-tendon CAZ (``lat_stiff``) with its own linear actuator ``m{L}``."""
+    spring-tendon ``f`` (contractile unit, ``lat_stiff``) with its own linear actuator ``m{L}``."""
     pos = lattice_positions(n_col, n_row, closed, dx, dy)
     bodies = []
     for i, (x, y, z) in enumerate(pos):

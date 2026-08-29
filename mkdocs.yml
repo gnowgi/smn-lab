@@ -21,6 +21,7 @@ nav:
   # Reference cluster — how to read the bench; background for the whole arc.
   - "The framework (reference)":
       - Concepts: concepts.md
+      - "★ Vocabulary (s · f · CAZ · order parameter)": vocabulary.md
       - "Experiment naming (C · S · Q · W · R · E · P)": notation.md
       - "Formalism ↔ code ↔ live bench": formalism-and-code.md
       - "Self-model read-out: model vs. measurement": self-model-and-measurement.md
