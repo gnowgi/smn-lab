@@ -26,8 +26,10 @@ Demo: an anti-phase dorsal/ventral contraction wave → a travelling DV bend (un
 Self-contained. Run:  ../.venv/bin/python nematode.py
 """
 from __future__ import annotations
-import os
+import os, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from smn_lab.fbody import build_body   # shared pull-only f primitive (A2)
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -107,25 +109,10 @@ def spec():
 
 
 def build(S):
-    pos, edges, stiff = S["pos"], S["edges"], S["stiff"]
-    bodies = "".join(
-        f'<body name="b{i}" pos="{x:.5f} {y:.5f} {z:.5f}">'
-        f'<joint name="jx{i}" type="slide" axis="1 0 0" damping="3"/>'
-        f'<joint name="jy{i}" type="slide" axis="0 1 0" damping="3"/>'
-        f'<joint name="jz{i}" type="slide" axis="0 0 1" damping="3"/>'
-        f'<geom type="sphere" size="0.012" mass="0.04" friction="0 0 0"/>'
-        f'<site name="s{i}" size="0.005"/></body>' for i, (x, y, z) in enumerate(pos))
-    tend = "".join(
-        f'<spatial name="t{e}" stiffness="{stiff[e]:.3f}" damping="0.5" '
-        f'springlength="{np.linalg.norm(pos[a]-pos[b]):.5f}"><site site="s{a}"/>'
-        f'<site site="s{b}"/></spatial>' for e, (a, b) in enumerate(edges))
-    acts = "".join(f'<motor name="m{e}" tendon="t{e}" gear="3" ctrlrange="-4 4"/>'
-                   for e in range(len(edges)) if S["is_musc"][e])
-    xml = (f'<mujoco><option timestep="{DT}" gravity="0 0 0" integrator="implicitfast">'
-           f'<flag contact="disable"/></option><worldbody>{bodies}</worldbody>'
-           f'<tendon>{tend}</tendon><actuator>{acts}</actuator></mujoco>')
-    m = mujoco.MjModel.from_xml_string(xml); d = mujoco.MjData(m)
-    return m, d, {int(e): a for a, e in enumerate(np.where(S["is_musc"])[0])}
+    # One shared, PULL-ONLY f primitive (a muscle only contracts; non-negative ctrl = contraction
+    # amount; the elastic cuticle restores). Was gear=3/ctrlrange=-4 4 (bidirectional = could push).
+    return build_body(S["pos"], S["edges"], S["stiff"], S["is_musc"], cmax=4.0, gear=3.0,
+                      pull_only=True, seg_size=0.012, seg_mass=0.04, seg_damp=3.0, name="nematode")
 
 
 def run(S, ctrl, T):
