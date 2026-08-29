@@ -105,6 +105,32 @@ audit reversed it. That is the point of the process, and the reason most pages s
 |---|---|---|
 | 🟡 | [All P0–P2 studies](reproducibility.md) | The bench's **first exploratory series**, kept as provenance and explicitly read as proofs-of-concept (several single-seed, some metrics saturate). Not to be read as clean ablations. |
 
+## Order-parameter classification (2026-08)
+
+A separate axis from the ✅/🟡 status above: is the *quantity a claim rests on* a genuine
+**order parameter**, or a **diagnostic** (a recovery/validation metric), or a **control parameter**?
+See [Order parameters — what is, and what is not](order-parameters.md) for the test. This is
+orthogonal to consistency-status — a result can be ✅ *and* rest on a diagnostic rather than an OP.
+
+| quantity (where) | kind | note |
+|---|---|---|
+| locomotion onset vs coupling ([S0](experiments/sweep_c0_coupling.md)) | **order parameter** | emergent; a coupling-driven transition. |
+| objecthood vs coupling density ([E4b](experiments/p8_objecthood_transition.md)) | **order parameter** | a density-driven transition. |
+| self/world reafference residual ([Q2](experiments/q2_reafference.md), [boundary](experiments/self_world_boundary.md)) | **order parameter** | emergent, whole-loop; absorbed→self vs persists→world. |
+| alert energy / held-state cost ([R1](experiments/sweep_r1_tonic_load.md), [R2](experiments/sweep_r2_resumption.md)) | **order parameter** | the held-equilibrium cost; "antagonist tonic activation" is the *appendicular register* (pair-limit proxy) — state it generally. R1 is an **analytic** check. |
+| Umwelt decodable richness ([Umwelt](experiments/umwelt.md)) | **order parameter** | = f(discernible CAZ fineness); the coverage matrix is a *diagnostic of* it. |
+| self-model recovery / endpoint-recovery / neighbour-acc (all §3 self-model pages) | **diagnostic** | agreement with a *known* topology; no disordered phase, saturates. An OP only when swept until a threshold appears. |
+| NMI vs true communities ([canvas regions](experiments/canvas_regions.md)); two-network geometry/reach ([two networks](experiments/two_networks.md)); betweenness ratios, transmission % ([hydra](experiments/hydra.md)) | **diagnostic** | recovery/validation vs known structure. The *emergent* co-activation-group **count** would be an OP; NMI-vs-truth is not. |
+| resolution = CAZ density ([Q1b](experiments/sweep_q1b_resolution.md)) | **failed OP** | a detection-SNR statistic; could not separate density from other samples → not reading the coordination. Already 🟠. |
+| field-scale kNN-skill slope ([S1 control](experiments/sweep_geometry_worldmodel_fieldscale.md)) | **failed OP** | confounded by decoder dimensionality. Already ⛔. |
+| coupling, CAZ/muscle density, load, morphology | **control parameter** | inputs we tune, not OPs. |
+| scripted gait phases (earthworm/nematode demos); a single `f`'s force; by-construction tissue counts | **stipulated / microscopic** | pinned by construction — not OPs. The scripted gaits become OP-bearing only once coordination is made to *emerge* (Phase B). |
+
+Reading: several ✅/🟡 rows rest on **diagnostics**, which is fine — they validate that a read-out
+recovers known structure — but they should not be *reported as order parameters*. The two ⛔/🟠 rows
+that failed were failing exactly the OP test; making that test explicit turns reported failures into
+predicted ones.
+
 ## How an experiment earns a ✅
 
 It goes through the same pass the review campaign applied to entrainment and the
