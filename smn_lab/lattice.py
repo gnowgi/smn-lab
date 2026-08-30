@@ -13,8 +13,10 @@ A **muscle** is a chain of ``f``; a **sheet** is two such chains linked laterall
 **tube** (worm, gut, vessel) is three or more chains linked longitudinally *and*
 laterally, closed into a ring. In every case the **segments are point-mass
 scaffolding** (a place to mount sensors) and every **link is one ``f``** — a
-spring-tendon muscle-tendon unit with its own linear actuator. Longitudinal links
-are longitudinal muscle; lateral links are circular muscle.
+spring-tendon muscle-tendon unit with its own **pull-only** linear actuator: a
+non-negative ``ctrl`` *contracts* the tendon and the series spring restores, so a link
+can only pull (as a muscle does), never push. Longitudinal links are longitudinal
+muscle; lateral links are circular muscle.
 
 The point of this module is Phase I·①: the *same* self-model read-out
 (:func:`smn_lab.self_model.coupling`) recovers the body graph whatever the topology
@@ -128,7 +130,9 @@ def _lattice_mjcf(pos, edges, lat_stiff, link_damp, seg_damp, seg_mass, cmax, na
             f'    <spatial name="t{L}" stiffness="{lat_stiff}" damping="{link_damp}" '
             f'springlength="{rest:.5f}">\n'
             f'      <site site="s{a}"/>\n      <site site="s{b}"/>\n    </spatial>')
-        acts.append(f'    <motor name="m{L}" tendon="t{L}" gear="1" ctrlrange="{-cmax} {cmax}"/>')
+        # pull-only f: negative gear so a non-negative ctrl CONTRACTS the tendon;
+        # the series spring restores. ctrl is a contraction amount in [0, cmax].
+        acts.append(f'    <motor name="m{L}" tendon="t{L}" gear="-1" ctrlrange="0 {cmax}"/>')
     return f"""
 <mujoco model="{name}">
   <compiler angle="degree" autolimits="true"/>
@@ -184,8 +188,9 @@ def build_lattice_xml(n_col=8, n_row=1, closed=False, dx=0.16, dy=0.16,
             f'    <spatial name="t{L}" stiffness="{lat_stiff}" damping="{link_damp}" '
             f'springlength="{rest:.5f}">\n'
             f'      <site site="s{a}"/>\n      <site site="s{b}"/>\n    </spatial>')
-        acts.append(f'    <motor name="m{L}" tendon="t{L}" gear="1" '
-                    f'ctrlrange="{-cmax} {cmax}"/>')
+        # pull-only f: negative gear -> a non-negative ctrl CONTRACTS (see _lattice_mjcf).
+        acts.append(f'    <motor name="m{L}" tendon="t{L}" gear="-1" '
+                    f'ctrlrange="0 {cmax}"/>')
     bodies = "\n".join(bodies)
     tendons = "\n".join(tendons)
     acts = "\n".join(acts)

@@ -73,11 +73,12 @@ def recover_self_model(seed):
     VY = np.zeros((n_rec, NSEG)); VZ = np.zeros((n_rec, NSEG))
     for i in range(n_warm + n_rec):
         u += (-u / U_TC) * DT + U_SIG * np.sqrt(DT) * rng.standard_normal(nlink)
-        d.ctrl[:] = u
+        u_drive = np.clip(u, 0.0, None)               # pull-only f: contraction amount >= 0
+        d.ctrl[:] = u_drive
         mujoco.mj_step(m, d)
         if i >= n_warm:
             j = i - n_warm
-            DRV[j] = u
+            DRV[j] = u_drive
             vv = d.qvel.reshape(-1, 3)
             VX[j], VY[j], VZ[j] = vv[:, 0], vv[:, 1], vv[:, 2]
     for V in (VX, VY, VZ):
