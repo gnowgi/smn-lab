@@ -8,6 +8,14 @@ so the grammar borrows the recognizable conventions of the field where they exis
 one glyph of our own — the **split-circle CAZ** — where the SMN concept has no
 standard.
 
+!!! note "What the split-circle draws"
+    A **CAZ** in general is a *zone of coordinated action over `f`s*, realized by the
+    whole SMN and read out (see [vocabulary](vocabulary.md)). The split-circle glyph
+    draws its **differentiated (appendicular) limit** — a flexor/extensor **opponent
+    pair** across a joint, one degree of freedom. That is the register this grammar
+    is for (jointed, appendicular bodies); the undifferentiated CAZ — a distributed
+    coordination not yet resolved into a clean pair — has no glyph here.
+
 The diagrams are **generated from the body schema** (`smn_lab/morphology.py`),
 which shares its parameters with the MuJoCo body builder (`smn_lab/crawler.py`). A
 published figure therefore cannot drift from the code that ran.
@@ -59,7 +67,7 @@ none of its own.
 ### The figure: the mechanical network above, the messaging network (DFN + IN) below
 
 - The **mechanical network** (top) — segments (nodes), actuators (edges, a joint's
-  opponent pair = one CAZ = one DOF), the dual-interface CAZ, and the
+  opponent pair = one appendicular CAZ = one DOF), the dual-interface CAZ, and the
   single-interface transducers (the major source of data).
 - The **messaging network** (below) is drawn as its **two functional
   sub-networks**, distinguished by function not location:
@@ -107,8 +115,10 @@ canvas-regions study.
 
 ## CAZ and degrees of freedom
 
-The CAZ is the one glyph of our own. A **Coordinated Action Zone is one
-flexor/extensor opponent pair = one degree of freedom**. A joint between two
+The CAZ is the one glyph of our own. In the **differentiated (appendicular)
+limit** it draws — the register of this grammar — a CAZ resolves into **one
+flexor/extensor opponent pair = one degree of freedom** (in general a CAZ is a
+zone of coordinated action over `f`s; this is its limit case). A joint between two
 bodies admits at most six DOF (three rotational, three translational); the four
 that matter for creatures, and their glyphs:
 
@@ -130,9 +140,9 @@ A joint's degrees of freedom are read directly off its CAZ glyphs:
 - **two CAZs of different kind** → a multi-DOF joint (e.g. yaw + pitch);
 - **two CAZs of the same kind** → a redundant pair adding force on one DOF.
 
-This is why segments that share a single DOF show only one CAZ: the CAZ is always
-a pair (the two opposing pulls), and adding another CAZ adds either a new DOF or
-additive force — never a lone actuator.
+This is why segments that share a single DOF show only one CAZ glyph: the drawn
+(appendicular) CAZ is always a pair (the two opposing pulls), and adding another
+CAZ adds either a new DOF or additive force — never a lone actuator.
 
 !!! note "One archetype drawn; a second deferred"
     The split-circle glyph draws the **skeletal** CAZ — a flexor/extensor opponent

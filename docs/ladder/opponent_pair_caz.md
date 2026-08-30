@@ -1,24 +1,34 @@
-# The opponent-pair CAZ across the complexity ladder
+# The CAZ across the complexity ladder
 
 _Direction: G. Nagarjuna. This note fixes the CAZ ontology for the ladder model systems and
 records the two reconstructed morphologies (nematode, earthworm)._
 
 ## What a CAZ is (canonical)
 
-A **CAZ = one Coordinated Action Zone = one opponent pair = one degree of freedom** (see
-`smn_lab/morphology.py`: "one circle split in half … the opponent pair actuating ONE degree of
-freedom"; v2 evaluation C1: "opponency is the primitive"). Therefore:
+A **CAZ = a Coordinated Action Zone = a zone of coordinated action over `f`s** — the coordination of
+*which contractile units act together, and when* — realized by the **whole SMN** (sensing + pulling +
+messaging) and **read out**, never imposed by a controller. The tidy **opponent pair actuating one
+degree of freedom** — the split-circle in `smn_lab/morphology.py` — is the CAZ's **differentiated
+(appendicular) limit**, not its definition. (This corrects the earlier "opponency is the primitive"
+reading: opponency is the *differentiated form* the opposition eventually takes, not the ground of a
+CAZ.) Therefore:
 
-- a lattice **node** is a multicellular **muscle-side region** — *not* a CAZ;
-- a **muscle** (a circular ring, a longitudinal strand) is **one side** of a CAZ;
-- a **CAZ** is the **opponent pair** (two sides) across a shared zone; **opponency is intrinsic**,
-  not an edge between two CAZ.
+- a lattice **node** is an `s`, a multicellular **region** — *not* a CAZ;
+- a lattice **link** — a muscle-tendon unit (a circular ring, a longitudinal strand) — is one **`f`**:
+  a pull-only Sensation Modulator, **one side** of an opponent relation, *not* a CAZ;
+- a **CAZ** is a *coordination* over many `f`s; **antagonism is a relation between `f`s** (an edge in
+  the coordination), and at the appendicular limit two `f`s across one shared joint form the opponent
+  pair. Saying "a CAZ *is* a pair" collapses this limit case into the definition and breeds confusion.
 
-A single node — or a single muscle — has no opponent, so it is not a CAZ.
+A single `f` has no coordination partner drawn yet, and a bare pair is only the differentiated tip; a
+CAZ is the coordinated zone that the whole SMN reads out over its `f`s.
 
-## Which opponent pair — it differs by animal
+## Which differentiated opponent axis — it differs by animal
 
-| model system | opponent pair(s) = CAZ | opponent kind | locomotor DOF |
+The **appendicular limit** of a CAZ is a discrete opponent pair; up the ladder that axis
+**differentiates**, and which axis actuates a rung differs by animal:
+
+| model system | differentiated opponent axis (appendicular limit) | opponent kind | locomotor DOF |
 |---|---|---|---|
 | **cnidarian** | epitheliomuscular ⊕ mesoglea/hydrostat | muscle vs **passive** elastic | radial contraction |
 | **nematode** | dorsal-long ⊕ ventral-long (+ mouth radial ⊕ elastic) | muscle vs muscle (+ passive cuticle) | **dorsoventral bend** (no circular) |
@@ -32,12 +42,12 @@ BioScience 64(6):476).
 ## The two reconstructed models
 
 - `experiments/nematode.py` — three tissues (passive skin + transducers, passive gut with no
-  muscle, detached longitudinal muscle in four quadrants). CAZ = **dorsal ⊕ ventral longitudinal**
-  (DV bend), cuticle/hydrostat as the passive restoring side; **no circular**, so no telescoping.
+  muscle, detached longitudinal muscle in four quadrants). Differentiated axis = **dorsal ⊕ ventral
+  longitudinal** (DV bend), cuticle/hydrostat as the passive restoring side; **no circular**, so no telescoping.
   Mouth = radial ⊕ elastic recoil; anus = DV pair. Demo: an anti-phase DV contraction wave → a
   travelling dorsoventral undulation.
 - `experiments/earthworm.py` — two **disjoint** muscle tissues (circular segmental ⊕ longitudinal
-  continuous), coupled only through the coelomic hydrostat `B_i` and the ganglia. CAZ =
+  continuous), coupled only through the coelomic hydrostat `B_i` and the ganglia. Differentiated axes =
   **telescoping** (circular ⊕ longitudinal, per segment → peristalsis) + **lateral-bend**
   (left ⊕ right longitudinal → turn); **no dorsoventral** pair (that is a leech/slug rung). Demos:
   a peristaltic wave and a turn.

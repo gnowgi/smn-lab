@@ -8,9 +8,10 @@ now a family of bodies: the segmented **crawler** (C0/C1), spring-tendon
 ## Architecture → simulation
 | SMN component | In the bench |
 |---|---|
-| **Zone / CAZ** (Coordinated Action Zone) | a body element that both senses and acts (**dual-interface**); an opponent pair actuating one DOF. In the lattice bodies each link *is* a CAZ (a spring-tendon muscle). |
+| **`f` — contractile unit** | an **edge**: a *Sensation Modulator* — a spring-tendon muscle-tendon unit with its own **pull-only** actuator, **one side** of an opponent relation. In the lattice bodies each link *is* one `f` — **not** a CAZ. |
+| **CAZ** (Coordinated Action Zone) | a **zone of coordinated action** over `f`s — the coordination of *which `f`s act together, and when* — realized by the **whole SMN** (sensing + pulling + messaging) and **read out**, never imposed. The **opponent pair** (two `f`s across a shared joint, a split-circle glyph) is its **differentiated (appendicular) limit**, not its definition. See [vocabulary](vocabulary.md). |
 | **S — transducer** | a **single-interface** sensor: a bilateral field/chemical/thermal reader, a ventral touch skin, a contact/effort sensor, or a rangefinder. Not tied to any one modality. |
-| **M — modulator** | a pull-only actuator; zones are **opponent pairs** (agonist/antagonist), giving a signed net activation. |
+| **M — modulator** (an `f`'s actuator) | a **pull-only** actuator on one `f`. Opposition is against an elastic recoil, a hydrostat, or the connected network; an agonist/antagonist opponent pair — a signed net activation — is the **differentiated limit**, not every `f`. |
 | **N — messaging beam** | nearest-neighbour (Kuramoto-style) phase coupling between zones — a traveling wave from local coupling alone, no centre (`smn_lab.control.MessagingBeam`). |
 | **BAP** — basal action pattern | a central pattern generator (`CPG` / `MessagingBeam`) — the baseline drive. |
 | **HAP** — haltable action pattern | an action recruited or **halted** by a sensed affordance (contact halt in C1; the manipulator's directed halt in E3). |
@@ -20,9 +21,12 @@ now a family of bodies: the segmented **crawler** (C0/C1), spring-tendon
 
 ## Key ideas
 
-- **Opponency.** Each zone is an antagonist pair. A body with only forward-pulling
-  drives cannot rotate in place — opponent zones can (one forward, one back = pure
-  torque). Steering, turning, and *halting* require it.
+- **Opponency.** Every `f` pulls against a resistance (elastic recoil, hydrostat,
+  the connected network, or — in the differentiated limit — a discrete antagonist
+  `f`). A body with only forward-pulling drives cannot rotate in place; an opponent
+  arrangement can (one forward, one back = pure torque). Steering, turning, and
+  *halting* require it. Opponency is the *form the opposition takes*, and it
+  **differentiates up the ladder** — it is not what defines a CAZ.
 - **The substrate is elastic and overdamped.** The self-model is recoverable only
   because links transmit motion elastically with attenuation (rigid → whole-body
   common mode → nothing to read), in the overdamped, anisotropic-resistive

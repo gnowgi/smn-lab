@@ -3,7 +3,7 @@
 !!! abstract "The proposal"
     After the cnidarian (the [polarized rung](../cnidarians.md)) the ladder climbs through the
     **worms**. Each rung elaborates the **body plan**, and each elaboration adds two things at once:
-    a new **tissue differentiation** and a new **opponent axis** (a new kind of degree of freedom).
+    a new **tissue differentiation** and a new **differentiated opponent axis** (a new kind of degree of freedom).
     The two rungs built here are the **nematode** (a tube that bends dorsoventrally) and the
     **earthworm** (a segmented hydrostat that crawls by peristalsis). The point of the ladder is to
     watch the model's **tokens layer** as morphology climbs — see [Phase II](../phase2.md).
@@ -12,7 +12,7 @@
 
 Following Fig. 5 of the monograph, the model systems are:
 
-| rung | creature | new differentiation | new opponent axis (the CAZ) |
+| rung | creature | new differentiation | new differentiated opponent axis (a DOF) |
 |---|---|---|---|
 | polarized | [**cnidarian**](../cnidarians.md) | one epitheliomuscular mesh | muscle ⊕ **passive** mesoglea/hydrostat (radial) |
 | **tubular** | [**nematode**](../experiments/nematode.md) | skin · gut · muscle **detach** | **dorsal ⊕ ventral** longitudinal (DV bend) |
@@ -22,20 +22,25 @@ Following Fig. 5 of the monograph, the model systems are:
 
 ## What a CAZ is (read this before the rungs)
 
-A **CAZ = one opponent pair = one degree of freedom** — a circle split in half, the two halves the
-two opposing muscle-sides (see the [opponent-pair reference](opponent_pair_caz.md) and
-`smn_lab/morphology.py`). This matters because it is easy to get wrong:
+A **CAZ is a zone of coordinated action** — a coordination of *which `f`s act together, and when* —
+realized by the **whole SMN** (sensing + pulling + messaging) and **read out**, never imposed by a
+controller (see the [vocabulary](../vocabulary.md) and the [CAZ-across-the-ladder
+reference](opponent_pair_caz.md)). The tidy **opponent pair** — a circle split in half, two opposing
+`f`s across one joint — is the CAZ's **differentiated (appendicular) limit**, not its definition. This
+distinction is easy to get wrong:
 
-- a lattice **node** is a multicellular **muscle-side region** — *not* a CAZ;
-- a **muscle** (a circular ring, a longitudinal strand) is **one side** of a CAZ;
-- **opponency is intrinsic** to a CAZ, not a relation *between* CAZs.
+- a lattice **node** is an `s`, a multicellular **region** — *not* a CAZ;
+- a lattice **link** (a circular ring, a longitudinal strand) is one `f` — **one pull-only side** — *not*
+  a CAZ, and not a whole muscle-with-its-antagonist;
+- **opponency is the form the opposition takes**, and it differentiates up the ladder; at the appendicular
+  limit it sharpens into a discrete antagonist pair, but a CAZ is a coordination, not that pair.
 
-And crucially, **which** opponent pair actuates a rung differs by animal — the nematode has a
-dorsal⊕ventral pair and **no circular muscle**; the earthworm has a circular⊕longitudinal
-(telescoping) pair and **no dorsoventral muscle**. Reading a node, or a lone muscle, as a whole CAZ
+Up the ladder the opponent axis **differentiates**, and which axis actuates a rung differs by animal — the
+nematode has a dorsal⊕ventral axis and **no circular muscle**; the earthworm has a circular⊕longitudinal
+(telescoping) axis and **no dorsoventral muscle**. Reading a node, or a lone `f`, as a whole CAZ
 mis-states the animal's degree of freedom.
 
-![Across the ladder a CAZ is always an opponent pair, but which pair differs by animal; and the cnidarian's inter-layer rim coupling is neither DFN nor IN](../figures/caz_coordination_audit.png)
+![Across the ladder the differentiated opponent axis differs by animal; the CAZ is a coordination whose appendicular limit is the opponent pair; and the cnidarian's inter-layer rim coupling is neither DFN nor IN](../figures/caz_coordination_audit.png)
 
 ## A coordination caveat carried up from the cnidarian
 
@@ -51,5 +56,5 @@ it into the dichotomy.
   that bends dorsoventrally, with no circular muscle and the cuticle as its passive antagonist.
 - **[The earthworm](../experiments/earthworm.md)** — two disjoint muscle tissues woven around a
   segmented hydrostat; peristalsis and turning as two distinct opponent pairs.
-- **[Opponent-pair CAZ (reference)](opponent_pair_caz.md)** — the ontology and the per-animal table,
-  with sources.
+- **[CAZ across the ladder (reference)](opponent_pair_caz.md)** — the ontology and the per-animal table
+  of differentiated opponent axes, with sources.

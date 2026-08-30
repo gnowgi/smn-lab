@@ -72,8 +72,8 @@ def run_one(spec, seed):
     # common-mode removal (the reafference move), then the SAME read-out per axis
     VX -= VX.mean(1, keepdims=True); VY -= VY.mean(1, keepdims=True); VZ -= VZ.mean(1, keepdims=True)
     # --8<-- [start:readout]
-    # C[link, seg] = how much each segment moves when each CAZ link is driven,
-    # combining the planar axes -- the SAME framework read-out, unchanged.
+    # C[link, seg] = how much each segment moves when each f-link (a pull-only
+    # contractile unit) is driven -- combining the planar axes, the SAME read-out.
     C = np.abs(coupling(DRV, VX)) + np.abs(coupling(DRV, VY)) + np.abs(coupling(DRV, VZ))
     # --8<-- [end:readout]
     return C, edges
