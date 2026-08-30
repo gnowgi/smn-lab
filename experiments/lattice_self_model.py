@@ -60,11 +60,12 @@ def run_one(spec, seed):
     VX = np.zeros((n_rec, nseg)); VY = np.zeros((n_rec, nseg)); VZ = np.zeros((n_rec, nseg))
     for i in range(n_warm + n_rec):
         u += (-u / U_TC) * DT + U_SIG * np.sqrt(DT) * rng.standard_normal(nlink)
-        data.ctrl[:] = u                              # drive each LINK (muscle)
+        u_drive = np.clip(u, 0.0, None)               # pull-only f: contraction amount >= 0
+        data.ctrl[:] = u_drive                        # drive each LINK (muscle)
         mujoco.mj_step(model, data)
         if i >= n_warm:
             j = i - n_warm
-            DRV[j] = u
+            DRV[j] = u_drive
             VX[j] = data.qvel[0::3]                    # per-segment slide velocities
             VY[j] = data.qvel[1::3]
             VZ[j] = data.qvel[2::3]

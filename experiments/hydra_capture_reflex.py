@@ -40,7 +40,7 @@ DT = 0.002
 N_COL, N_ROW = 7, 6
 NSEG = N_COL * N_ROW
 SENSE_STEPS, REFLEX_STEPS = 150, 900
-CONTRACT = -3.0                       # actuator command that SHORTENS the tendon (pulls in)
+CONTRACT = 3.0                        # pull-only f: a non-negative ctrl SHORTENS the tendon (pulls in)
 THETA = 0.15                          # reafference threshold on moving-contact energy
 SEED = 0
 

@@ -50,11 +50,12 @@ def run_one(spec, seed):
     V = [np.zeros((n_rec, nseg)) for _ in range(3)]      # x, y, z segment velocities
     for i in range(n_warm + n_rec):
         u += (-u / U_TC) * DT + U_SIG * np.sqrt(DT) * rng.standard_normal(nlink)
-        data.ctrl[:] = u
+        u_drive = np.clip(u, 0.0, None)               # pull-only f: contraction amount >= 0
+        data.ctrl[:] = u_drive
         mujoco.mj_step(model, data)
         if i >= n_warm:
             j = i - n_warm
-            DRV[j] = u
+            DRV[j] = u_drive
             for ax in range(3):
                 V[ax][j] = data.qvel[ax::3]
     for ax in range(3):
