@@ -1,5 +1,11 @@
 # R1 — tonic-load coupling (partner tone rises with load)
 
+!!! note "This is the *appendicular register* of a general order parameter"
+    "Partner (antagonist) tonic activation" presumes a discrete opponent pair, so it is the
+    **pair-limit proxy**. The underlying order parameter is the **alert energy `E_R` — the cost of
+    holding a *coordinated equilibrium*** — which is defined on a hydrostat and a cnidarian too, where
+    there is no antagonist to read a tone from. See [Order parameters](../order-parameters.md).
+
 **Register 1.** During a sustained isometric hold, the SMN's haltability operator
 makes the *inactive* (partner) zone tonically engaged in proportion to the *active*
 zone's load, through the alert energy `E_R`:
