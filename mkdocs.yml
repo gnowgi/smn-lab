@@ -12,6 +12,7 @@ nav:
       - "Overview — a synthetic model system": cnidarians.md
       - "★ The polyp (Hydra) — the 'hello world'": experiments/hydra.md
       - "The disk experiments — what is the rim?": experiments/cnidarian_disk.md
+      - "★ The medusa — a moving cnidarian builds a world": experiments/medusa.md
   # The worm ladder — the tubular and segmented rungs after the cnidarian.
   - "🪱 The worm ladder (nematode → earthworm)":
       - "Overview — the ladder & the CAZ": ladder/overview.md
