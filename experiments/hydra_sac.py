@@ -173,7 +173,7 @@ def main():
 
     print("\nDiploblastic Hydra sac -- one net across two stitched layers\n" + "=" * 70)
     print(f"body: two stitched shells, {len(pos)} zones ({2*NOUT} epithelial + 2 apex), "
-          f"{len(edges)} CAZ links ({N_ROW*N_COL} radial mesoglea = the net between layers)")
+          f"{len(edges)} f-links ({N_ROW*N_COL} radial mesoglea = the net between layers)")
     print(f"self-model endpoint recovery of the two-layer sac:            {er:.2f}")
     print(f"localization (touched ectoderm node = peak of the response):  {loc_acc:.2f}")
     print(f"BROADCAST -- decode the ectoderm touch location from:")

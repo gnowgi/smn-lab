@@ -49,7 +49,7 @@ L_TENT = 3
 
 
 def disk_spec(with_tentacles: bool):
-    """Return pos, edges (CAZ springs), cls (zone class), layout, ring, index maps, tips."""
+    """Return pos, edges (the f springs), cls (zone class), layout, ring, index maps, tips."""
     pos, cls, layout, ring = [], [], {}, []
     NPF = N_RING * N_SPOKE
 
@@ -193,7 +193,7 @@ def run_case(with_tentacles, name):
 
 def report_case(R):
     order = ["rim", "interior", "tentacle"]
-    print(f"\n[{R['name']}]  {R['n']} zones, {len(R['edges'])} CAZ links   "
+    print(f"\n[{R['name']}]  {R['n']} zones, {len(R['edges'])} f-links   "
           f"(self-model endpoint recovery = {R['er']:.2f})")
     print(f"  {'zone class':<10} {'n':>4} {'betweenness (recovered)':>26} "
           f"{'betweenness (true)':>20} {'degree':>10}")

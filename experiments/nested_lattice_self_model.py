@@ -39,7 +39,7 @@ U_TC, U_SIG = 0.15, 5.0
 
 
 def run_one(spec, seed):
-    """Drive every CAZ link independently; log link drives and per-segment motion."""
+    """Drive every f-link independently; log link drives and per-segment motion."""
     model = mujoco.MjModel.from_xml_string(build_nested_lattice_xml(spec))
     data = mujoco.MjData(model)
     rng = np.random.default_rng(seed)
