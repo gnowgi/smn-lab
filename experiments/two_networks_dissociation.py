@@ -109,7 +109,7 @@ def main():
     far_gets_in = float(np.mean(brd / near))          # the broadcast board -> larger, distance-free
 
     print("\nWhy an SMN agent needs TWO networks -- a double dissociation\n" + "=" * 68)
-    print(f"body: diploblast sac, {nseg} zones, {nlink} CAZ links")
+    print(f"body: diploblast sac, {nseg} zones, {nlink} f-links")
     print(f"(coordination is the DFN's job via opposing zones, no central control -- NOT")
     print(f" measured here; the IN only integrates a globally-available snapshot.)")
     print(f"\n                        GEOMETRY(differentiation)  GLOBAL SNAPSHOT(integration)")

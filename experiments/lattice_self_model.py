@@ -8,7 +8,7 @@ chains) and a tube (>=3 chains closed into a ring). The claim (Phase I.1): the S
 framework read-out -- ``smn_lab.self_model.coupling`` -- recovers the body graph
 whatever the shape, with no change to the function.
 
-Mechanism. Each CAZ link (a spring-tendon muscle) is driven independently while the
+Mechanism. Each f-link (a spring-tendon muscle, one contractile unit) is driven independently while the
 body is overdamped (soft tissue / low Reynolds). In that regime a driven link's
 force appears only at its two endpoint segments, so correlating each link's drive
 with every segment's motion (``coupling``) makes each link discover the two segments
@@ -43,7 +43,7 @@ BODIES = [
 
 
 def run_one(spec, seed):
-    """Drive each CAZ link independently; return C[link, seg] via the framework
+    """Drive each f-link independently; return C[link, seg] via the framework
     read-out, plus the true edges."""
     xml = build_lattice_xml(n_col=spec["n_col"], n_row=spec["n_row"],
                             closed=spec["closed"])

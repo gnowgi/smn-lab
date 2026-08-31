@@ -46,7 +46,7 @@ THR = 2e-4                                   # speed threshold for 'the wavefron
 
 
 def disk_spec(rim_fold=True):
-    """Two coaxial polar-disk faces; within-face CAZ springs; the rim fold is the ONLY
+    """Two coaxial polar-disk faces; within-face f springs; the rim fold is the ONLY
     mechanical bridge (omitted when rim_fold=False). Returns pos, edges, face, ring, layout."""
     pos, face, ring, layout = [], [], [], {}
     NPF = N_RING * N_SPOKE

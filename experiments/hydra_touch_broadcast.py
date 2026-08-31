@@ -62,7 +62,7 @@ def seg_speed(d):
 
 
 def recover_self_model(seed):
-    """Babble each CAZ link independently -> coupling read-out -> endpoint recovery."""
+    """Babble each f-link independently -> coupling read-out -> endpoint recovery."""
     m, d, bid = build()
     nlink = m.nu
     rng = np.random.default_rng(seed)
@@ -138,7 +138,7 @@ def main():
     shuf = float(decoding_skill(S, P, np.random.default_rng(7), k=6, shuffle=True))
 
     print("\nHydra sac -- the net knows, everywhere, where it was touched\n" + "=" * 66)
-    print(f"body: closed tube {N_ROW}x{N_COL} = {NSEG} zones, {len(edges)} CAZ links")
+    print(f"body: closed tube {N_ROW}x{N_COL} = {NSEG} zones, {len(edges)} f-links")
     print(f"self-model endpoint recovery (the net recovers its own sac): {er:.2f}")
     print(f"localization (touched node = peak of the net's response):     {loc_acc:.2f}")
     print(f"BROADCAST -- decode touch LOCATION from the far mouth ring:")

@@ -4,7 +4,7 @@
 
 Architecture (corrected): the IN cannot command. It broadcasts the prey-SNAPSHOT -- the
 prey's location relative to the mouth, made globally available (non-decremental). Each DFN
-CAZ link reads that shared snapshot PLUS its own recovered geometry (its graph-distance to
+link (an f) reads that shared snapshot PLUS its own recovered geometry (its graph-distance to
 the mouth) and acts LOCALLY through its opposing pair: a link on the mouth-ward side of the
 prey contracts, drawing the caught region toward the mouth. The coordinated whole-net
 conveyance EMERGES from these local rules all reading one shared snapshot -- nobody
