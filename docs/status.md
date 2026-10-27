@@ -85,6 +85,12 @@ audit reversed it. That is the point of the process, and the reason most pages s
 | 🟡 | [Umwelt — same world, different anatomy](experiments/umwelt.md) | Coverage matrix (world fixed, anatomy varied): field 0.67 / touch 0.33 / vision 1.00; structural zeros where a transducer is absent; self-model 0.976 for every anatomy. New; not yet audited. |
 | 🟡 | [Medusa — a moving cnidarian builds a world](experiments/medusa.md) | Phase B: the sessile disk set free. **Swim** — coronal pulsation nets aboral translation (+0.06/24s, monotonic, ~20×), both scallop controls (linear drag, symmetric drive) collapse. **World-model razor** — decoding a distal source from self-caused tip change: skill −0.02 at α=0 (sessile → no world-model) rising monotonically to 0.45 with self-motion (x-y error only — `decoding_skill` drops z for 3-D targets; full 3-D skill 0.05 → 0.41, razor intact); shuffle never above chance (−0.10 to −0.12 once moving). Body, self-model (endpoint recovery 0.86) and one-page figure now on the page. New; idealizations on the page (quadratic-drag medium as the pond; source-independent trajectory; tips as field transducers). Not yet independently audited. |
 
+### The worm ladder
+| status | experiment | note |
+|---|---|---|
+| 🟡 | [Nematode — a tube that bends](experiments/nematode.md) | Self-model measured (`worm_self_model.py`, disk babble + endpoint read-out): **0.15** (8/54 actuated `f`s; misses mostly name two skin nodes). Cause open. Model note: the gut tube is a separate connected component, attached to nothing. No world-model (no world in the experiment). New; not yet independently audited. |
+| 🟡 | [Earthworm — a segmented hydrostat](experiments/earthworm.md) | Self-model measured (same procedure): **0.93** (41/44; longitudinal 20/20, circular 21/24). Recovers the muscle network only; the passive hydrostat coupling is outside the read-out by construction. No world-model (no world in the experiment). New; not yet independently audited. |
+
 ### §5–§7 · Object-directedness, multimodal, taxonomy
 | status | experiment | note |
 |---|---|---|

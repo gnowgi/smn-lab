@@ -9,6 +9,20 @@
     pair that drives **peristalsis**. It is also the first rung to face **gravity** directly. Model:
     `experiments/earthworm.py`.
 
+## The body as modelled
+
+![Earthworm body plan — a cross-section of one segment (outer circular square, inner longitudinal square, ventral ganglion) beside the unrolled side view of all six segments with every link kind](../figures/earthworm_body_plan.png)
+
+How to read it. On the left, one segment in true cross-section: four **circular** nodes on the
+outside, four **longitudinal** nodes inside, and the segmental **ganglion** below, joined by
+radial hydrostat struts and ganglion spokes. (The diagonal struts join neighbouring segments,
+so they appear only in the side view.) On the right, all six segments
+unrolled, head left, each tissue in its own band. The **circular** muscle `f`s run *round* each
+segment, so in the unrolled view they are the heavy red verticals (with dotted stubs where a
+ring closes round the body). The **longitudinal** muscle `f`s run *along* the body: the heavy
+blue horizontals. Everything light is passive. The model has 54 nodes and 205 links, of which 44
+are actuated, all in one connected body.
+
 ## 1 · Two disjoint muscle tissues, woven
 
 Sourced anatomy: the circular layer is *divided into rings by the intersegmental grooves* — it is
@@ -48,10 +62,39 @@ Up the next rung, the dorsoventrally flattened forms — **leeches and slugs** �
 muscle** opponent pair (and oblique muscle). So **gravity adds the dorsoventral opponent axis** one
 rung later: a clean instance of the ladder's rule that each grade adds an opponent axis.
 
+## 5 · The self-model — measured, and it largely recovers the muscle network
+
+The demos never ask whether the earthworm can recover its own body from its own movement. Here
+that is measured with the disk's procedure, unchanged: random pull-only drive on every actuated
+`f`, then the `endpoint` read-out, which takes each `f`'s two most strongly co-moving segments as
+its endpoints.
+
+![The earthworm's self-model on its unrolled body: all 20 longitudinal f's and 21 of 24 circular f's are recovered (green); the three misses are circular f's misattributed to a ganglion (red)](../figures/earthworm_self_model.png)
+
+!!! success "Endpoint recovery 0.93 (41 of 44 actuated `f`s)"
+    Longitudinal 20/20, circular 21/24. All three misses are circular `f`s that the read-out
+    attributes partly to a ganglion, the segmental node that spokes join to both tissues.
+
+What it recovers is worth stating precisely. The read-out has one row per **actuated** `f`, so
+the self-model is the muscle network only: six circular rings and four longitudinal bundles.
+The 161 passive links, including the hydrostat struts through which the two tissues oppose each
+other, are outside its reach by construction. So the earthworm recovers *both halves* of its
+telescoping CAZ but not, by this read-out, the coupling that makes them opponents. The babble
+runs with no medium and no gravity.
+
+## No world-model yet
+
+!!! info "No world-model on this rung yet"
+    This experiment has no world in it: no source, no object, no field, and the body's transducers (none are defined in this model) are
+    never read. So there is nothing to visualize as a world-model, and none is drawn. A
+    world-model here would be a new experiment with its own pre-registration (the medusa's
+    razor carried to the segmented hydrostat), not a picture of this one.
+
 ## Run it
 
 ```bash
 python experiments/earthworm.py
+python experiments/worm_self_model.py   # body plans and self-models, both worms
 ```
 
 Prints the two-tissue structure and the opponent-pair CAZ, runs the peristalsis and turn demos, and
