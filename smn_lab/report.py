@@ -360,6 +360,24 @@ def render(rec: RunRecord, spec: Optional[dict] = None) -> dict:
     return out
 
 
+def _world_model_panel(axc, canvas, node_field, source_node, lay, recov, rec):
+    """Default panel 4 of :func:`experiment_page`: the canvas, else the world on the
+    self-graph. Experiments whose world-model is a decoding order parameter rather
+    than a per-zone world signal supply ``worldmodel_draw`` instead."""
+    if canvas is not None:
+        gram.render_emergent_canvas(axc, canvas["nodes"], canvas["edges"], 0.0, 1.0, 0.0, 1.0,
+                                    core=canvas["core"], label=False)
+        axc.set_xlim(-0.12, 1.12); axc.set_ylim(-0.15, 1.15); axc.axis("off")
+        axc.set_title(f"4 · World-model (canvas): {canvas['n_regions']} region, "
+                      f"{canvas['strata']} strata", fontsize=10)
+    elif node_field is not None:
+        gram.render_world_in_self(axc, lay, recov["rec_edges"], node_field,
+                                  source_node=source_node, modality=rec.modality,
+                                  title="4 · World-model (world on the self-graph)")
+    else:
+        axc.axis("off"); axc.set_title("4 · World-model", fontsize=10)
+
+
 def experiment_page(rec: RunRecord, spec: Optional[dict] = None) -> str:
     """A ONE-PAGE, standardized figure for an experiment, in the diagram grammar:
 
@@ -372,7 +390,9 @@ def experiment_page(rec: RunRecord, spec: Optional[dict] = None) -> str:
     with the grammar renderers, so every experiment page reads the same. The two
     experiment-specific panels are supplied as draw callbacks in ``spec``:
       * ``world_draw(ax)``            -- paint the external world (objects/fields/prey);
-      * ``plots_draw(fig, cell)``     -- the data/result plots into the GridSpec ``cell``.
+      * ``plots_draw(fig, cell)``     -- the data/result plots into the GridSpec ``cell``;
+      * ``worldmodel_draw(fig, cell)`` -- panel 4, for an experiment whose world-model is
+        an order parameter (e.g. decoding skill) rather than a per-zone world signal.
     Both optional; omit and the panel shows the world-in-self / the order-parameter bars.
     Meant to double as a page-length paper figure. Returns the saved path.
     """
@@ -435,19 +455,11 @@ def experiment_page(rec: RunRecord, spec: Optional[dict] = None) -> str:
                            title="3 · Self-model (recovered from movement)")
 
     # --- 4 · world-model (canvas / IN snapshot) ---
-    axc = fig.add_subplot(g[2, 1])
-    if canvas is not None:
-        gram.render_emergent_canvas(axc, canvas["nodes"], canvas["edges"], 0.0, 1.0, 0.0, 1.0,
-                                    core=canvas["core"], label=False)
-        axc.set_xlim(-0.12, 1.12); axc.set_ylim(-0.15, 1.15); axc.axis("off")
-        axc.set_title(f"4 · World-model (canvas): {canvas['n_regions']} region, "
-                      f"{canvas['strata']} strata", fontsize=10)
-    elif node_field is not None:
-        gram.render_world_in_self(axc, lay, recov["rec_edges"], node_field,
-                                  source_node=source_node, modality=rec.modality,
-                                  title="4 · World-model (world on the self-graph)")
+    if spec.get("worldmodel_draw"):
+        spec["worldmodel_draw"](fig, g[2, 1])
     else:
-        axc.axis("off"); axc.set_title("4 · World-model", fontsize=10)
+        _world_model_panel(fig.add_subplot(g[2, 1]), canvas, node_field, source_node,
+                           lay, recov, rec)
 
     # --- 5 · data (order parameters) ---
     if spec.get("plots_draw"):
