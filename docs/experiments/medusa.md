@@ -32,6 +32,49 @@ curls, but nothing straightens it again. So each tentacle also carries passive
 the elastic side that re-extends the tentacle. It is opponency in its most
 primitive form (muscle vs passive elastic), not a discrete opponent pair.
 
+![The medusa's designed body (top view) and its self-model recovered from movement alone](../figures/medusa_self_world_card.png)
+
+**Reading the numbers.** The body has 49 segments and 90 `f`s. Segment `0` is the
+aboral apex; `1–8`, `9–16` and `17–24` are the three bell rings, inner to outer,
+so `17–24` is the **margin**. The six tentacles hang from margin spokes 0, 1, 3, 4, 5
+and 7, each four segments long, root-to-tip:
+
+| tentacle | hangs from margin segment | segments (root → tip) |
+|---|---|---|
+| T1 | 17 | 25 · 26 · 27 · **28** |
+| T2 | 18 | 29 · 30 · 31 · **32** |
+| T3 | 20 | 33 · 34 · 35 · **36** |
+| T4 | 21 | 37 · 38 · 39 · **40** |
+| T5 | 22 | 41 · 42 · 43 · **44** |
+| T6 | 24 | 45 · 46 · 47 · **48** |
+
+The tips (bold) are the world-model's transducers in §2. Margin segments 19 and 23
+carry no tentacle: six tentacles cannot sit evenly on eight spokes.
+
+**The self-model.** The right-hand panel is recovered by the disk's procedure,
+unchanged: random pull-only drive on every `f`, no medium, and the `endpoint`
+read-out (each `f`'s two strongest co-moving segments are taken as its endpoints).
+Red edges are the misses. Endpoint recovery is **0.86**, and the errors are not where
+one might guess. The tentacles are recovered almost perfectly (22 of 24 tentacle
+`f`s, all 18 braces). The misses cluster at the **bell's centre**: 7 of the 8
+apex-to-inner-ring spokes, and 7 of the 8 inner-ring coronal links. Why the hub
+reads worst is not yet established. One plausible reading, unverified, is that
+eight `f`s converge on the apex, so no single link's drive dominates its motion.
+
+## The experiment on one page
+
+![The medusa as a one-page experiment figure — body plan, world, recovered self-model, world-model as decoded versus true source location (sessile beside swimming), and the razor](../figures/medusa_page.png)
+
+Panel 4 departs from the [Hydra](hydra.md) page on purpose. The Hydra's world-model
+is a per-zone world signal, so it can be painted onto the self-graph. The medusa's
+is not: it is the **decodability** of a hidden source from the tips' self-caused
+change (§2). Painting the tips' raw readings onto the graph would show the sessile
+medusa "localizing" the source, because a still tip does register it. That is
+exactly the static reading the experiment excludes. So panel 4 draws the order
+parameter itself: on held-out trials, each true source (●) joined to its decoded
+location (×). Sessile, the decoder can only guess the centre. Swimming, the guesses
+move out toward the sources.
+
 ## 1 · The medusa swims — coordinated pulsation nets locomotion
 
 The disk cannot move; the medusa can. Its coronal `f`s **pulsate** — a fast power
@@ -86,23 +129,39 @@ sweep **self-motion amplitude `α`** (the control parameter — coronal + tentac
 drive; `α = 0` is the sessile disk) and read **world-model skill** (the order
 parameter).
 
-![World-model skill rises monotonically from chance at zero self-motion to 0.45 as the medusa moves, tracking the self-generated tip baseline; the shuffle control stays at zero throughout](../figures/medusa_world_model.png)
+![World-model skill rises monotonically from chance at zero self-motion to 0.45 as the medusa moves, tracking the self-generated tip baseline; the shuffle control never rises above chance](../figures/medusa_world_model.png)
 
-| self-motion α | world-model skill | shuffle |
-|---|---|---|
-| **0.0 (sessile)** | **−0.02** | −0.03 |
-| 2.0 | 0.12 | −0.07 |
-| 4.0 | 0.26 | −0.09 |
-| 7.0 | 0.36 | −0.09 |
-| 10.0 | 0.41 | −0.07 |
-| 13.0 | 0.45 | −0.04 |
+| self-motion α | world-model skill (x-y) | skill (3-D) | shuffle |
+|---|---|---|---|
+| **0.0 (sessile)** | **−0.02** | 0.05 | 0.02 |
+| 2.0 | 0.12 | 0.18 | −0.10 |
+| 4.0 | 0.26 | 0.29 | −0.12 |
+| 7.0 | 0.36 | 0.36 | −0.12 |
+| 10.0 | 0.41 | 0.39 | −0.12 |
+| 13.0 | 0.45 | 0.41 | −0.10 |
+
+*The shuffle column was corrected on 27 Oct 2026. The earlier table
+(−0.03 … −0.04) matched neither the committed figure nor a re-run of the committed
+script; the values above are the re-run, and agree with the figure.*
+
+!!! warning "Scoring caveat — the published skill is horizontal only"
+    `smn_lab.metrics.decoding_skill` measures error as `np.hypot(*(pred − P).T)`,
+    written for 2-D positions. Given the medusa's 3-D source locations, NumPy treats
+    the third column as hypot's output buffer, so the score counts **x-y error
+    only** and silently drops the vertical, which is the swim axis. The x-y column
+    reproduces the published numbers exactly. The 3-D column is the full error,
+    computed in `medusa_self_world.py`. The razor survives: 0.05 sessile to 0.41
+    swimming. The only other callers, the two Hydra scripts, decode 2-D
+    positions and are unaffected. The fix to `decoding_skill` is left to its own change,
+    because it moves the medusa's headline number from 0.45 to 0.41.
 
 !!! success "Result — the razor"
     At `α = 0` the source location is **undecodable** (skill ≈ chance): the sessile
     animal, one fixed projection with no self-caused change, has **no world-model**.
     As the medusa moves, skill **rises monotonically** to 0.45, tracking the
     self-generated tip **baseline** (parallax). The world-model is **emergent in
-    self-motion**, not stipulated — the shuffle control sits at zero throughout. This
+    self-motion**, not stipulated. The shuffle control never rises above chance
+    (it sits slightly below zero, at −0.10 to −0.12, once the animal moves). This
     is *a sessile cnidarian is unlikely to construct a valuable world-model* turned
     from an assertion into a measured transition.
 
@@ -121,4 +180,5 @@ finely, it moves — becomes the cross-morphology order parameter.
 ```bash
 cd experiments && ../.venv/bin/python medusa_swim.py          # the swim + scallop controls
 cd experiments && ../.venv/bin/python medusa_world_model.py   # the world-model razor
+cd experiments && ../.venv/bin/python medusa_self_world.py    # body, self-model, one-page figure
 ```
