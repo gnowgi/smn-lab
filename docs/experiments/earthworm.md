@@ -69,11 +69,15 @@ that is measured with the disk's procedure, unchanged: random pull-only drive on
 `f`, then the `endpoint` read-out, which takes each `f`'s two most strongly co-moving segments as
 its endpoints.
 
-![The earthworm's self-model on its unrolled body: all 20 longitudinal f's and 21 of 24 circular f's are recovered (green); the three misses are circular f's misattributed to a ganglion (red)](../figures/earthworm_self_model.png)
+![The earthworm's self-model on its unrolled body: all 20 longitudinal f's and 21 of 24 circular f's are recovered exactly (green); of the three circular f's that are not, two keep one true endpoint (amber) and one names a ganglion and a longitudinal node (red)](../figures/earthworm_self_model.png)
 
-!!! success "Endpoint recovery 0.93 (41 of 44 actuated `f`s)"
-    Longitudinal 20/20, circular 21/24. All three misses are circular `f`s that the read-out
-    attributes partly to a ganglion, the segmental node that spokes join to both tissues.
+!!! success "Endpoint recovery 0.95 (41 of 44 actuated `f`s exact, 2 half)"
+    Scored by the bench's standard metric (1 per `f` with both endpoints right, 0.5 with
+    one). Exactly right: longitudinal 20/20, circular 21/24. All three circular `f`s that are
+    not name a **ganglion**, the segmental node that spokes join to both tissues: two pair it
+    with one true endpoint, the third with a longitudinal node.
+
+*Corrected 27 Oct 2026: this section first gave 0.93, the fraction of `f`s with both endpoints right. The figure the bench reports everywhere else, `metrics.endpoint_recovery`, gives half credit for one right endpoint; the number above is that one, so it compares directly with the medusa, Hydra and disk.*
 
 What it recovers is worth stating precisely. The read-out has one row per **actuated** `f`, so
 the self-model is the muscle network only: six circular rings and four longitudinal bundles.

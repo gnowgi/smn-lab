@@ -15,11 +15,14 @@ This script does two things for each worm, without changing either body.
 
 * **Self-model.** The disk's procedure, unchanged (``diploblast_disk_self_model.py``):
   Ornstein-Uhlenbeck babble on every actuated ``f``, no medium, then the ``endpoint``
-  read-out (each ``f``'s two strongest co-moving segments are taken as its endpoints).
+  read-out (each ``f``'s two strongest co-moving segments are taken as its endpoints),
+  scored by the house metric :func:`smn_lab.metrics.endpoint_recovery` (1 per ``f`` with
+  both endpoints right, 0.5 with one), the same number the medusa, Hydra and disk report.
+  The exact-match fraction (both endpoints right) is reported beside it.
   The read-out has one row per *actuated* ``f``, so it can recover the muscle network
   only; passive links (skin, cuticle, hydrostat struts, gut) are outside its reach by
   construction. The result is drawn on the body's own unrolled layout, green where the
-  read-out named an ``f``'s true endpoints and red where it named two other nodes. The
+  read-out named both of an ``f``'s endpoints, amber where it named one, red where neither. The
   house self/world card (``report.render``) is not used for the picture: its abstract
   force layout is illegible for a 195-node body. ``render`` still writes the
   machine-readable record.
@@ -43,6 +46,7 @@ import mujoco
 _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(_HERE)); sys.path.insert(0, _HERE)
 from smn_lab.self_model import coupling
+from smn_lab.metrics import endpoint_recovery
 from smn_lab.report import RunRecord, render
 import nematode as NE
 import earthworm as EW
@@ -72,15 +76,19 @@ def babble(mod, S):
 
 
 def score(S, C, edge_of_act):
-    ok, tot, picks = Counter(), Counter(), Counter()
+    """Per kind: exact matches (both endpoints right) and half matches (one right). The
+    house metric, ``metrics.endpoint_recovery``, scores these 1 and 0.5."""
+    ok, half, tot, picks = Counter(), Counter(), Counter(), Counter()
     tis = S["tissue"]
     for a, e in enumerate(edge_of_act):
-        truth = tuple(sorted(S["edges"][e]))
-        top = tuple(sorted(int(s) for s in np.argsort(C[a])[::-1][:2]))
-        k = str(S["etype"][e]); tot[k] += 1; ok[k] += (top == truth)
-        if top != truth:
-            picks[" + ".join(sorted(str(tis[t]) for t in top))] += 1
-    return ok, tot, picks
+        truth = set(S["edges"][e])
+        top = set(int(s) for s in np.argsort(C[a])[::-1][:2])
+        k = str(S["etype"][e]); tot[k] += 1
+        hit = len(truth & top)
+        ok[k] += hit == 2; half[k] += hit == 1
+        if hit < 2:
+            picks[" + ".join(sorted(str(tis[t]) for t in top)) + f" ({hit} right)"] += 1
+    return ok, half, tot, picks
 
 
 def components(S):
@@ -244,7 +252,7 @@ def body_plan_figure(name, S, lay, bands, section_nodes, section_title, wrap_kin
     print("figure ->", os.path.normpath(out))
 
 
-def self_model_figure(name, S, lay, bands, C, eoa, er, ok, tot, out):
+def self_model_figure(name, S, lay, bands, C, eoa, er, ex, ok, tot, out):
     """Each actuated f's recovered endpoints, drawn on the body's own unrolled layout:
     green = the read-out named the f's true endpoints; red = it named two other nodes
     (the red line joins the nodes it DID name). Passive structure faint, for orientation."""
@@ -260,14 +268,15 @@ def self_model_figure(name, S, lay, bands, C, eoa, er, ok, tot, out):
     for a, e in enumerate(eoa):
         truth = tuple(sorted(S["edges"][e]))
         top = tuple(sorted(int(v) for v in np.argsort(C[a])[::-1][:2]))
-        good = top == truth
+        hit = len(set(top) & set(truth)); good = hit == 2
+        col = {2: "#1e8449", 1: "#e0a800", 0: "#c0392b"}[hit]
         (x0, y0), (x1, y1) = lay[top[0]], lay[top[1]]
         if good and abs(y1 - y0) > 1.5 and x0 == x1:          # a correctly recovered ring closure
             ax.plot([x0, x0 + 0.18], [max(y0, y1), max(y0, y1) + 0.45], color="#1e8449", lw=2.2, ls=":")
             ax.plot([x0, x0 + 0.18], [min(y0, y1), min(y0, y1) - 0.45], color="#1e8449", lw=2.2, ls=":")
             continue
-        ax.plot([x0, x1], [y0, y1], color="#1e8449" if good else "#c0392b",
-                lw=2.4 if good else 1.6, alpha=0.95 if good else 0.8, zorder=3 if good else 4)
+        ax.plot([x0, x1], [y0, y1], color=col,
+                lw=2.4 if good else 1.6, alpha=0.95 if good else 0.85, zorder=3 + (2 - hit))
         n_bad += not good
     for nm, ya, yb, rows in bands:
         ax.text(-0.9 if nm != "skin" else -2.3, -(ya + yb) / 2, nm, ha="right", va="center",
@@ -275,13 +284,14 @@ def self_model_figure(name, S, lay, bands, C, eoa, er, ok, tot, out):
     ax.set_aspect("equal"); ax.axis("off")
     per = " · ".join(f"{k} {ok[k]}/{tot[k]}" for k in tot)
     ax.set_title(f"{name.capitalize()} — self-model recovered from movement, on the body's "
-                 f"unrolled layout\nendpoint recovery {er:.2f}   ({per})", fontsize=11)
-    ax.legend(handles=[Line2D([], [], color="#1e8449", lw=2.4, label="f recovered correctly"),
+                 f"unrolled layout\nendpoint recovery {er:.2f}   (exact, both endpoints: {per})", fontsize=11)
+    ax.legend(handles=[Line2D([], [], color="#1e8449", lw=2.4, label="both endpoints right"),
+                       Line2D([], [], color="#e0a800", lw=1.6, label="one endpoint right (half credit)"),
                        Line2D([], [], color="#c0392b", lw=1.6,
-                              label="f misread — line joins the two nodes the read-out named"),
+                              label="neither right — line joins the two nodes the read-out named"),
                        Line2D([], [], color="#d5dbe0", lw=1.0,
                               label="passive structure (not addressable by this read-out)")],
-              loc="upper center", bbox_to_anchor=(0.5, -0.01), ncol=3, fontsize=8, frameon=False)
+              loc="upper center", bbox_to_anchor=(0.5, -0.01), ncol=2, fontsize=8, frameon=False)
     fig.savefig(out, dpi=130, bbox_inches="tight"); plt.close(fig)
     print("figure ->", os.path.normpath(out))
 
@@ -291,15 +301,19 @@ def run_worm(name, mod, S, lay, bands, section_nodes, section_title, wrap_kinds,
     comps = components(S)
     n_act = int(S["is_musc"].sum()); n_e = len(S["edges"])
     C, eoa = babble(mod, S)
-    ok, tot, picks = score(S, C, eoa)
-    er = sum(ok.values()) / n_act
+    ok, half, tot, picks = score(S, C, eoa)
+    act_edges = [S["edges"][e] for e in eoa]
+    er = float(endpoint_recovery(C, act_edges))          # the house metric (partial credit)
+    ex = sum(ok.values()) / n_act                         # exact: both endpoints right
+    assert abs(er - (sum(ok.values()) + 0.5 * sum(half.values())) / n_act) < 1e-9
     print(f"\n[{name}] {len(S['pos'])} nodes, {n_e} links ({n_act} actuated f, "
           f"{n_e - n_act} passive); connected components: {len(comps)}")
     for c in comps:
         print(f"    component of {c[-1]} nodes: {', '.join(c[:-1])}")
-    print(f"  self-model endpoint recovery over actuated f: {er:.2f}")
+    print(f"  self-model endpoint recovery over actuated f: {er:.3f} (house metric, partial "
+          f"credit); exact {sum(ok.values())}/{n_act} = {ex:.3f}")
     for k in tot:
-        print(f"    {k:13s} {ok[k]}/{tot[k]}")
+        print(f"    {k:13s} exact {ok[k]}/{tot[k]}, half {half[k]}, neither {tot[k]-ok[k]-half[k]}")
     if picks:
         print("  misses name instead:", "; ".join(f"{v}× {k}" for k, v in picks.most_common()))
 
@@ -312,15 +326,15 @@ def run_worm(name, mod, S, lay, bands, section_nodes, section_title, wrap_kinds,
     body_plan_figure(name, S, lay, bands, section_nodes, section_title, wrap_kinds,
                      headline, note, os.path.join(FIGDIR, f"{name}_body_plan.png"))
 
-    self_model_figure(name, S, lay, bands, C, eoa, er, ok, tot,
+    self_model_figure(name, S, lay, bands, C, eoa, er, ex, ok, tot,
                       os.path.join(FIGDIR, f"{name}_self_model.png"))
     # the machine-readable record, through the one results module (no card: the house
     # card's abstract force layout is illegible for a 195-node body; see the docstring)
-    act_edges = [S["edges"][e] for e in eoa]
     render(RunRecord(name=name, coupling_matrix=C, recovery="endpoint",
                      positions=lay, true_edges=act_edges,
-                     metrics={"endpoint_recovery": er},
-                     meta={"per_kind": {k: f"{ok[k]}/{tot[k]}" for k in tot},
+                     metrics={"endpoint_recovery": er, "endpoint_exact": ex},
+                     meta={"per_kind_exact": {k: f"{ok[k]}/{tot[k]}" for k in tot},
+                           "per_kind_half": {k: int(half[k]) for k in tot},
                            "components": comps, "misses_name": dict(picks)}),
            dict(prefix=name, op_plot=False, card=False))
     return er

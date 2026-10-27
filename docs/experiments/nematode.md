@@ -83,13 +83,16 @@ movement. Here that is measured with the disk's procedure, unchanged: random pul
 every actuated `f`, then the `endpoint` read-out, which takes each `f`'s two most strongly
 co-moving segments as its endpoints.
 
-![The nematode's self-model on its unrolled body: six of the 44 longitudinal muscle f's and both anal f's are recovered (green); the rest are misread, most often as a pair of skin nodes (red)](../figures/nematode_self_model.png)
+![The nematode's self-model on its unrolled body: six of the 44 longitudinal muscle f's and both anal f's are recovered exactly (green); 18 keep one true endpoint (amber); 28 name two other nodes, all of them skin (red)](../figures/nematode_self_model.png)
 
-!!! failure "Endpoint recovery 0.15 (8 of 54 actuated `f`s)"
-    Longitudinal muscle 6/44, pharyngeal radial 0/8, anal 2/2. In 32 of the 46 misses the
-    read-out names two **skin** nodes; in the other 14, one muscle node and one skin node.
-    For comparison, the same procedure gives 0.86 on the [medusa](medusa.md) and 0.93 on the
-    [earthworm](earthworm.md).
+!!! failure "Endpoint recovery 0.31 (8 of 54 actuated `f`s exact, 18 half)"
+    Scored by the bench's standard metric (1 per `f` with both endpoints right, 0.5 with
+    one). Exactly right: longitudinal muscle 6/44, pharyngeal radial 0/8, anal 2/2. Of the
+    46 that are not, 18 keep one true endpoint and 28 name two **skin** nodes, neither of them
+    an endpoint. For comparison, the same procedure gives 0.86 on the [medusa](medusa.md),
+    0.95 on the [earthworm](earthworm.md), and 0.99+ on the [Hydra](hydra.md) sac.
+
+*Corrected 27 Oct 2026: this section first gave 0.15, the fraction of `f`s with both endpoints right. The figure the bench reports everywhere else, `metrics.endpoint_recovery`, gives half credit for one right endpoint; the number above is that one, so it compares directly with the medusa, Hydra and disk.*
 
 Why it fails is **not established**. It is suggestive that the failure falls on the nematode's
 defining feature: its muscle is detached from the skin and rides on it through stiff attachment

@@ -54,8 +54,10 @@ carry no tentacle: six tentacles cannot sit evenly on eight spokes.
 **The self-model.** The right-hand panel is recovered by the disk's procedure,
 unchanged: random pull-only drive on every `f`, no medium, and the `endpoint`
 read-out (each `f`'s two strongest co-moving segments are taken as its endpoints).
-Red edges are the misses. Endpoint recovery is **0.86**, and the errors are not where
-one might guess. The tentacles are recovered almost perfectly (22 of 24 tentacle
+Red edges are the misses. Endpoint recovery is **0.86** on the bench's standard metric,
+which scores each `f` 1 if both endpoints are right and 0.5 if one is; 71 of the 90 `f`s
+have both right, and the counts that follow are of those exact matches. The errors are
+not where one might guess. The tentacles are recovered almost perfectly (22 of 24 tentacle
 `f`s, all 18 braces). The misses cluster at the **bell's centre**: 7 of the 8
 apex-to-inner-ring spokes, and 7 of the 8 inner-ring coronal links. Why the hub
 reads worst is not yet established. One plausible reading, unverified, is that
