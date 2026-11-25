@@ -35,6 +35,7 @@ audit reversed it. That is the point of the process, and the reason most pages s
 ### §1 · The modular unit
 | status | experiment | note |
 |---|---|---|
+| 🟡 | [The canonical SM block](experiments/sm_block.md) | **Pre-registered, unrun** (25 Nov 2026). One Hill-type block (contractile + series elastic + parallel elastic, pull-only, same-tissue afferents) for every body. Statics fixed by `tests/test_sm_block.py`; it already shows that a series spring alone supplies no restoring k(q − q0). |
 | ✅ | [C0 — it moves](experiments/c0_crawler.md) | Non-inertial locomotion; reproduces (net displacement PASS), re-run repeatedly as a backward-compat anchor. |
 | 🟡 | [S0 — locomotion is a network effect](experiments/sweep_c0_coupling.md) | Coupling sweep; not yet audited. |
 | 🟠 | [S0b — proprioceptive entrainment](experiments/entrainment.md) | Three review rounds: two withdrawn claims; topology now correct + CI-guarded, but the payoff (body shapes the rhythm) needs an articulation-load model. Fix plan pre-committed on the page. |

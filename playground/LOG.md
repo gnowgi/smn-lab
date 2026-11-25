@@ -200,6 +200,60 @@ broadcast Π under network closure, §4.4).
 4. One body-and-habitat specification that both the browser and the Python bench load, so that
    every playground finding is auditable on the bench (the parity discipline above, generalized).
 
+## 2026-11-25 · Uneven ground recorded; a correction; the canonical SM block pre-registered
+
+**Uneven ground.** The code and its log entry are in commit `82aa3ff`. Republishing the public page
+awaits GN's explicit go-ahead.
+
+**Correction to the elasticity entry above.** The statement that "the crawler has k = 0" holds for
+the *locomotion* experiments (C0, gravity_locomotion) and for the playground's chain. It does not
+hold for the bench's chain self-model test: `self_model_topology.py` sets a parallel joint spring
+(`joint_stiffness=0.6`, with 80 for the rigid foil). That test already implements Eq. 3's
+k(q − q0). The v3 alignment table should be read with this in mind: k = 0 applies to the playground
+chain, not to every bench chain.
+
+**The canonical SM block** (`smn_lab/sm_block.py`, from MuJoCo constructors). It is the
+three-element Hill-type muscle:
+
+- a pull-only contractile element: a motor on an internal slide DOF, with viscosity;
+- a series elastic element: a fixed tendon L = ∓r·q + x with a dead band, so it pulls only when
+  stretched;
+- a parallel elastic element: the joint stiffness, i.e. Eq. 3's k(q − q0);
+- afferents read from the same tissue: tendon length/tension, CE force, joint angle and velocity.
+
+r·F_max equals the bench torque motors' peak torque. Its statics are fixed by
+`tests/test_sm_block.py`, all passing: series equilibrium (tension = CE force to 10⁻³ N),
+pull-only slack, q = rF/k_pee, and co-contraction holding the joint with both tendons taut.
+
+**Finding for v3, from the construction itself.** A force-producing contractile element in series
+with a spring gives no restoring stiffness. At co-contraction 2 + 2 N with no parallel element, a
+0.02 N·m push moves the joint 0.79 rad and it never returns; with k_pee = 0.6 it moves 0.033 rad
+and returns to zero. So §3.5's "a contractile element in series with a passive elastic one" does
+not by itself supply Eq. 3's k(q − q0). *Suggested wording for v3:* the SM has a series and a
+parallel elastic element, and the restoring term of Eq. 3 is the parallel one (or a CE
+force–length relation).
+
+**A second v3 note.** Table 2 classes self-model graph recovery as a *diagnostic*, while §5.2 calls
+recovery quality the *order parameter*. The pre-registration follows Table 2 and §12: the test is
+the separation from matched foils.
+
+**Pre-registration** (`docs/experiments/sm_block.md`, written before any run, linked from the nav
+and the status ledger as "pre-registered, unrun"):
+
+- **H1.** The self-model on the block, replicating `self_model_topology.py`. Conditions: block,
+  PEE-only, SEE-only, rigid foil, frozen foil.
+  - P1: block neighbour accuracy ≥ 0.90 and order accuracy ≥ 0.80.
+  - P2: rigid foil ≤ 0.60, and ≥ 0.30 below the block.
+  - P3 (X): PEE-only within 0.10 of the block.
+  - P4 (X): SEE-only — two competing outcomes, both reported.
+- **H2.** No regression: C0 and gravity_locomotion on the block reach ≥ 50% of the torque-motor
+  displacement, with gains unchanged and no retuning within this pre-registration.
+- **H3 (X).** Whether the tendon afferent and the joint lag carry ground friction while the command
+  does not.
+
+Status: awaiting GN's approval of the hypotheses and thresholds before `experiments/sm_block.py` is
+written and run.
+
 ## Publication
 
 - Live page: <https://claude.ai/artifact/PepmNmqmfnP6vyWuaAi3eD> (public).
