@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>smn-playground</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: a natural-history vivarium — calm, exact, nothing oversold.
+   IDEA: a specimen cabinet: one live tank, a parts tray of identical blocks, a museum label per specimen.
+   PICTURE: the live MuJoCo tank itself, large, at the top.
+   COLOUR and TYPE: deep pond teal / warm loam per habitat; ink; coral accent for food; bench red/blue for opponent muscles. Sora + Inter.
+   LAYOUT: tank left (wide), parts tray right; below, what you see, and the proof that it is the bench. */
+:root{color-scheme:light dark;
+  --bg:light-dark(#f3f1ec,#0f1416);--panel:light-dark(#ffffff,#172024);--ink:light-dark(#14201f,#e6ecea);
+  --mute:light-dark(#5b6967,#97a6a3);--line:light-dark(#dcd8cf,#2a3639);
+  --pond:#0d4b57;--loam:#9b7a4a;--coral:#ff6a4d;--musR:#d8453c;--musL:#3b6fd8;--ok:#2f8f5b;--prov:#c99212;--off:#8a8f8e}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Sora,Inter,sans-serif;line-height:1.08;text-wrap:balance;margin:0}
+h1{font-size:clamp(32px,4.4vw,50px);font-weight:700;letter-spacing:-.02em}
+h2{font-size:clamp(24px,2.6vw,32px);font-weight:600}
+h3{font-size:17px;font-weight:600}
+.band{padding:clamp(22px,3.2vw,48px) max(4vw,16px)}
+.wrap{max-width:1320px;margin:0 auto}
+header.band{padding-bottom:14px}
+.lede{font-size:17px;color:var(--mute);max-width:68ch;margin:10px 0 0}
+.lede b{color:var(--ink);font-weight:600}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;padding-top:6px}
+@media(max-width:980px){.main{grid-template-columns:minmax(0,1fr)}}
+.stage{position:relative;border-radius:16px;overflow:hidden;background:var(--pond);min-height:min(66vh,640px);display:grid;grid-template-columns:1fr}
+.stage.split{grid-template-columns:1fr 1fr;gap:3px;background:#0a0f10}
+@media(max-width:700px){.stage.split{grid-template-columns:1fr;grid-template-rows:1fr 1fr;min-height:760px}}
+.view{position:relative;min-height:300px;overflow:hidden}
+.view canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:none}
+.tabs{position:absolute;top:12px;left:12px;z-index:10;display:flex;gap:4px;padding:4px;border-radius:12px;background:rgba(8,16,18,.55);backdrop-filter:blur(6px)}
+.tabs button,.ctl button{font:500 14px Inter,sans-serif;color:#e9f1ef;background:transparent;border:0;border-radius:9px;padding:0 13px;min-height:40px;cursor:pointer}
+.tabs button[aria-pressed=true]{background:#fff;color:#10201f}
+.ctl{position:absolute;top:12px;right:12px;z-index:10;display:flex;gap:4px;padding:4px;border-radius:12px;background:rgba(8,16,18,.55);backdrop-filter:blur(6px)}
+.ctl button[aria-pressed=true]{background:rgba(255,255,255,.2)}
+button:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
+.hname{position:absolute;top:62px;left:14px;z-index:4;color:#fff;font:600 13px Sora,sans-serif;opacity:.85;text-shadow:0 1px 3px #0008}
+.label{position:absolute;left:12px;bottom:12px;z-index:4;max-width:min(470px,calc(100% - 24px));background:#fbf8f1;color:#1a2321;border-radius:4px;padding:10px 13px 11px;box-shadow:0 6px 22px #0006;font-size:13px;line-height:1.45;border-left:4px solid var(--st,#888)}
+.label .t{font:600 14px Sora,sans-serif;margin-bottom:2px}
+.label .s{font-weight:600;color:var(--st)}
+.read{position:absolute;right:12px;bottom:12px;z-index:4;display:flex;gap:14px;color:#fff;background:rgba(8,16,18,.55);backdrop-filter:blur(6px);border-radius:10px;padding:8px 13px;font-size:13px}
+.read b{display:block;font:600 19px Sora,sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}
+@media(max-width:700px){.ctl{top:62px;left:12px;right:auto}.hname{display:none}.read{bottom:auto;top:116px;left:12px;right:auto}.tabs button,.ctl button{padding:0 10px}}
+.stage.split .read{bottom:auto;top:92px;right:auto;left:12px}
+@media(max-width:700px){.stage.split .view .read{top:auto;bottom:auto;top:12px;left:auto;right:12px;font-size:12px}.stage.split .view.first .read{top:116px;left:12px;right:auto}.stage.split .label{font-size:12px;padding:7px 10px}}.stage.split .view:last-child .read{left:auto;right:12px}.stage.split .hint{display:none}
+.stage.split .view:last-child .hname{top:62px;left:auto;right:14px}.stage.split .view:last-child .read{top:92px}
+.void{position:absolute;inset:0;z-index:6;display:grid;place-items:center;padding:24px;background:linear-gradient(#b99b6c,#8a6c42);color:#1d1408;text-align:center}
+.void div{max-width:340px;background:#fbf8f1;border-radius:6px;padding:16px 18px;box-shadow:0 8px 24px #0005;font-size:14px}
+.void h3{margin-bottom:6px}
+.hint{position:absolute;top:62px;right:14px;z-index:4;color:#fff;font-size:13px;opacity:.85;text-shadow:0 1px 3px #0008;max-width:230px;text-align:right}
+@media(max-width:700px){.hint{display:none}}
+aside{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card p{margin:6px 0 0;color:var(--mute);font-size:14px}
+.seg2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.seg2 button,.stepper button,.toggle{font:500 15px Inter,sans-serif;min-height:44px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.seg2 button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.block svg{width:100%;height:auto;display:block;margin-top:8px}
+.chain{display:flex;align-items:center;gap:10px;margin-top:12px}
+.stepper{display:flex;gap:6px}.stepper button{width:44px;font-size:22px;line-height:1}
+.tray{flex:1;display:flex;flex-wrap:wrap;gap:3px;align-items:center}
+.tray i{width:15px;height:15px;border-radius:3px;background:#5a7fbf;display:block;animation:snap .35s ease-out}
+.tray i:first-child{background:#2f5fd0}
+@keyframes snap{from{transform:translateY(-9px) scale(1.3);opacity:0}to{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){.tray i{animation:none}}
+.count{font:600 15px Sora,sans-serif;white-space:nowrap}
+.toggle{width:100%;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px}
+.toggle[aria-pressed=true]{background:var(--coral);border-color:var(--coral);color:#fff}
+h4{font:600 13px Inter,sans-serif;color:var(--mute);margin:14px 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{font:500 14px Inter,sans-serif;min-height:40px;padding:0 12px;border-radius:99px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.chips button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chips #t-food[aria-pressed=true]{background:var(--coral);border-color:var(--coral);color:#fff}
+.flash{position:absolute;left:50%;top:62px;transform:translateX(-50%);z-index:12;background:#fbf8f1;color:#1a2321;border-radius:8px;padding:8px 12px;font-size:14px;box-shadow:0 6px 20px #0005;margin:0}
+.glnote{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:var(--panel);border:1px solid var(--prov);font-size:14px}
+.selfps{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin-top:14px}
+.selfps.two{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media(max-width:900px){.selfps.two{grid-template-columns:minmax(0,1fr)}}
+.selfp{padding:12px 14px}
+.sp-h{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.sp-st{font-size:13px;color:var(--prov)}
+.sp-fig{position:relative;height:230px;margin-top:8px}.sp-fig canvas{position:absolute;inset:0;width:100%;height:100%}
+.sp-note{margin-top:10px}
+.locked{display:grid;gap:8px;margin-top:10px}
+.locked div{border:1px dashed var(--line);border-radius:10px;padding:9px 11px;font-size:13px;color:var(--mute)}
+.locked b{color:var(--ink);font-weight:600;display:block;font-size:14px}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:16px}
+@media(max-width:800px){.cols{grid-template-columns:minmax(0,1fr)}}
+.cols p{margin:6px 0 0;color:var(--mute)}
+table{border-collapse:collapse;width:100%;margin-top:14px;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;font-size:13px;color:var(--mute)}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill{display:inline-block;border-radius:99px;padding:1px 9px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap}
+.note{color:var(--mute);font-size:14px;max-width:80ch}
+code{font-size:.9em;overflow-wrap:anywhere}
+.scroll{overflow-x:auto}
+footer{color:var(--mute);font-size:13px}
+@media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--mute)}.stack td:empty{display:none}}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+<script type="importmap">{"imports":{"three":"./three.module.js"}}</script>
+</head>
+<body>
+<header class="band"><div class="wrap">
+  <h1>smn-playground</h1>
+  <p class="lede"><b>One block, many bodies, two habitats.</b> Every creature here is built by snapping together the same unit: a segment, pull-only muscle units and a pair of sensors. Each one is the smn-lab simulation itself, running live in your browser on MuJoCo, with no recorded video.</p>
+</div></header>
+
+<section class="band" style="padding-top:0"><div class="wrap main">
+  <div>
+    <div class="stage" id="stage">
+      <div class="tabs" role="group" aria-label="Habitat">
+        <button id="h-aquarium" aria-pressed="true">Aquarium</button>
+        <button id="h-terrarium" aria-pressed="false">Terrarium</button>
+        <button id="h-split" aria-pressed="false">Side by side</button>
+      </div>
+      <div class="ctl" role="group" aria-label="Playback">
+        <button id="sp1" aria-pressed="true" title="real time">×1</button>
+        <button id="sp4" aria-pressed="false" title="time-lapse, four times real time">×4</button>
+        <button id="pause" aria-pressed="false">Pause</button>
+        <button id="reset">Reset</button>
+      </div>
+      <p id="flash" class="flash" role="status" hidden></p>
+    </div>
+    <p id="glnote" class="glnote" hidden>This browser would not start 3D graphics (WebGL), so you are seeing a flat top view of the same simulation. Reason given: <span></span>. In Firefox, check that hardware acceleration is on and that WebGL is not disabled in about:config (webgl.disabled).</p>
+    <div id="selfPanels" class="selfps"></div>
+    <p class="note sp-note">Each row is one block, head at the top, and time runs left to right. <b>Felt change</b> is how much each block's chemical reading changed. <b>Change caused by the world</b> is what remains after the block subtracts what its own movement should have produced. This is Q1's per-zone reafference, consistency-checked on the bench. Crawl through a still field and the world band stays quiet. Move the food while it crawls, and the world band lights up. Q1 was audited on a linear chemical slope. The food's field is curved, so here the subtraction is approximate. <b>Touch</b> is the contact force on each block's skin. <b>Bend it achieves</b> is how far each joint actually bends, measured against what its rhythm commands. On uneven ground in the terrarium it shrinks on rough patches, where the muscles reach their limit, and swells on slick ones. The rhythm itself does not change: every oscillator still runs at 0.9 Hz. The ground reshapes the wobble only mechanically. Getting the rhythm to answer the ground is an open problem on the bench ledger (S0b, proprioceptive entrainment).</p>
+  </div>
+
+  <aside>
+    <div class="card">
+      <h3>The block</h3>
+      <p>A segment, pull-only muscle units and a sensor on each side. In a chain, two units oppose each other across every joint, and that opposed pair is the CAZ. In the bell, the same units form rings and spokes. No central controller sits above any of it.</p>
+      <div class="block"><svg viewBox="0 0 300 120" role="img" aria-label="One block: a segment with an opponent muscle pair at its joint and bilateral sensors">
+        <rect x="58" y="42" width="130" height="36" rx="7" fill="#5a7fbf"/>
+        <rect x="198" y="42" width="60" height="36" rx="7" fill="#5a7fbf" opacity=".35"/>
+        <rect x="180" y="34" width="28" height="7" rx="3" fill="#c8503c"/><rect x="180" y="79" width="28" height="7" rx="3" fill="#c8503c"/>
+        <circle cx="194" cy="60" r="9" fill="#fff" stroke="#1d2b2a" stroke-width="2"/><path d="M194 51 a9 9 0 0 1 0 18z" fill="#1d2b2a"/>
+        <circle cx="123" cy="24" r="6" fill="#d8453c"/><circle cx="123" cy="96" r="6" fill="#3b6fd8"/>
+        <line x1="123" y1="30" x2="123" y2="42" stroke="#9aa" stroke-width="1.5"/><line x1="123" y1="78" x2="123" y2="90" stroke="#9aa" stroke-width="1.5"/>
+        <text x="6" y="29" font-size="11" fill="currentColor">sensor L</text><text x="6" y="100" font-size="11" fill="currentColor">sensor R</text>
+        <text x="210" y="22" font-size="11" fill="currentColor">muscle pair</text><text x="214" y="104" font-size="11" fill="currentColor">CAZ joint</text>
+      </svg></div>
+    </div>
+
+    <div class="card">
+      <h3>Build a body</h3>
+      <div class="seg2" role="group" aria-label="Body plan">
+        <button id="b-chain" aria-pressed="true">Chain of blocks</button>
+        <button id="b-bell" aria-pressed="false">Bell of muscle units</button>
+      </div>
+      <div id="chainCtl">
+        <div class="chain">
+          <div class="stepper"><button id="minus" aria-label="Remove a block">−</button><button id="plus" aria-label="Add a block">+</button></div>
+          <div class="tray" id="tray" aria-hidden="true"></div>
+          <span class="count" id="count">3 blocks</span>
+        </div>
+        <h4>Mount transducers</h4>
+        <div class="chips">
+          <button id="m-chem" aria-pressed="true">Chemical, both sides</button>
+          <button id="m-touch" aria-pressed="true">Touch skin</button>
+        </div>
+        <h4>Shape the world</h4>
+        <div class="chips">
+          <button id="t-food" aria-pressed="false">Drop food</button>
+          <button id="t-rock" aria-pressed="false">Place rock</button>
+          <button id="m-walls" aria-pressed="true">Tank walls</button>
+          <button id="m-ground" aria-pressed="false" title="Terrarium only">Uneven ground</button>
+          <button id="t-clear">Clear rocks and food</button>
+        </div>
+      </div>
+      <p id="bodyNote"></p>
+    </div>
+
+    <div class="card">
+      <h3>Blocks still on the drawing board</h3>
+      <div class="locked">
+        <div><b>Limb (a chain branching off the trunk)</b>The bench recovers a branched body's self-model, but that body has no sensors, no floor and no gravity yet, so it can't live in a tank.</div>
+        <div><b>Pitch, roll and telescoping joints</b>These are drawn in the diagram grammar. The simulator still builds every joint as a side-to-side hinge.</div>
+        <div><b>Halt on contact</b>On the bench (C1, provisional), touch recruits a halt: the object's resistance stops the wave. Here the body only feels the rock and keeps pushing. Halting is the next block.</div>
+        <div><b>Movable objects</b>The crawler's builder makes only fixed obstacles. Objects that yield to a push exist only on the manipulator bench.</div>
+      </div>
+    </div>
+  </aside>
+</div></section>
+
+<section class="band" style="padding-top:8px"><div class="wrap">
+  <h2>What you are watching</h2>
+  <div class="cols">
+    <div><h3>No choreography</h3><p>Each joint runs its own oscillator and exchanges phase messages only with its neighbours. The wave that travels down the body comes out of that local exchange. Nothing scripts the gait.</p></div>
+    <div><h3>The habitat completes the motion</h3><p>The same body in the same rhythm meets water in one tank and ground in the other. In water, sideways drag is much stronger than drag along the body. On ground, belly friction is weight-set and grips sideways. Both resistances are anisotropic, and that turns undulation into forward travel.</p></div>
+    <div><h3>The world pushes back</h3><p>Walls and rocks are solid, using the same contact geometry the bench builds. A block that meets one is stopped, its skin registers the force (the block glows amber), and the rest of the body keeps undulating against it.</p></div>
+    <div><h3>Food is a direction</h3><p>Drop food and a chemical field spreads from it. The two head sensors read it, and their difference bends the wave toward the richer side. The creature does not stop at the food. The bench gives it no halt on arrival.</p></div>
+  </div>
+</div></section>
+
+<section class="band"><div class="wrap">
+  <h2>Is this really the bench?</h2>
+  <p class="note">The bodies are not redrawn for the web. Each model below is the MJCF that smn-lab's own builders produce at commit <code id="sha"></code>. The controllers (messaging beam, opponent board) and the two media were ported line for line to JavaScript. We ran each configuration through the Python bench and through this page's engine and compared the trajectories.</p>
+  <div class="scroll"><table class="stack" id="parity"><thead><tr><th>Configuration</th><th>Bench source</th><th>Largest deviation</th><th>Verdict</th><th>Status on the bench ledger</th></tr></thead><tbody></tbody></table></div>
+  <p class="note">The MJCF for every chain body, with or without walls, rocks and skin, is built in the page by a port of <code>build_crawler_xml</code>. Across 73 configurations its output is byte-for-byte identical to the Python builder's. Without contact, the chain creatures match the Python bench to the last bit of double precision. With contact against rocks, the match is as close as the bench can match itself: perturbing the Python run by 10<sup>−15</sup> moves it by the same 10<sup>−3</sup> m. The bell is chaotic in the same way: over 24 s it rises 0.065 here, against 0.058 to 0.064 across perturbed Python runs (the bench reports +0.061).</p>
+  <p class="note">One finding for the bench came out of this check. The touch skin's sensing site is exactly the size of the segment's box. A contact at a box corner therefore sits on the site's boundary, and whether it is counted is decided by round-off. Native Python dropped two 0.0096 N corner contacts that the browser counted. Making the site slightly larger than the box would remove the ambiguity.</p>
+  <p class="note">What this page does not show: entrainment of the rhythm by the body (still an open problem on the ledger), self-models and world-models (the bench measures them, nothing here consumes them), and any claim about real animals. The media are explicit drag and friction laws, not fluid or soil simulations, and every body moves in a plane except the bell.</p>
+</div></section>
+
+<footer class="band" style="padding-top:0"><div class="wrap">smn-lab · Nagarjuna &amp; Karnam, arXiv:2605.26856 · github.com/gnowgi/smn-lab · physics by MuJoCo (WebAssembly build)</div></footer>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>

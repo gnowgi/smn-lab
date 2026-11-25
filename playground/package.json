@@ -1,0 +1,9 @@
+{
+  "name": "smn-playground",
+  "private": true,
+  "type": "module",
+  "description": "smn-lab bodies running live in the browser on MuJoCo WASM",
+  "license": "GPL-3.0-or-later",
+  "scripts": { "parity": "bash tools/parity.sh", "build": "bash tools/build.sh" },
+  "dependencies": { "@mujoco/mujoco": "4.0.1", "three": "0.187.0" }
+}

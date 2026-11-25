@@ -1,0 +1,40 @@
+--- a/mujoco.js
++++ b/mujoco.js
+@@ -5155,6 +5155,24 @@
+       return requiredArgCount;
+     }
+   
++  function smnInvokerNoEval(humanName, argTypes, isClassMethodFunc, returns, cppInvokerFunc, cppTargetFunc, minArgs, maxArgs) {
++      var needsDestructorStack = usesDestructorStack(argTypes);
++      var argCount = argTypes.length - 2;
++      return function (...a) {
++        checkArgCount(a.length, minArgs, maxArgs, humanName, throwBindingError);
++        var destructors = needsDestructorStack ? [] : null;
++        var wired = [cppTargetFunc], thisWired, argW = [];
++        if (isClassMethodFunc) { thisWired = argTypes[1]['toWireType'](destructors, this); wired.push(thisWired); }
++        for (var i = 0; i < argCount; ++i) { var w = argTypes[i + 2]['toWireType'](destructors, a[i]); argW.push(w); wired.push(w); }
++        var rv = cppInvokerFunc(...wired);
++        if (needsDestructorStack) runDestructors(destructors);
++        else for (var i = isClassMethodFunc ? 1 : 2; i < argTypes.length; ++i) {
++          if (argTypes[i].destructorFunction !== null) argTypes[i].destructorFunction(i === 1 ? thisWired : argW[i - 2]);
++        }
++        if (returns) return argTypes[0]['fromWireType'](rv);
++      };
++    }
++
+   function craftInvokerFunction(humanName, argTypes, classType, cppInvokerFunc, cppTargetFunc, /** boolean= */ isAsync) {
+       // humanName: a human-readable string name for the function to be generated.
+       // argTypes: An array that contains the embind type objects for all types in the function signature.
+@@ -5205,7 +5223,11 @@
+       closureArgs.push(checkArgCount, minArgs, expectedArgCount);
+   
+       let [args, invokerFnBody] = createJsInvoker(argTypes, isClassMethodFunc, returns, isAsync);
+-      var invokerFn = new Function(...args, invokerFnBody)(...closureArgs);
++      // smn-playground patch: fall back to a closure invoker (Emscripten's DYNAMIC_EXECUTION=0
++      // semantics) when the page's content-security policy forbids eval / new Function.
++      var invokerFn;
++      try { invokerFn = new Function(...args, invokerFnBody)(...closureArgs); }
++      catch (e) { invokerFn = smnInvokerNoEval(humanName, argTypes, isClassMethodFunc, returns, cppInvokerFunc, cppTargetFunc, minArgs, expectedArgCount); }
+       return createNamedFunction(humanName, invokerFn);
+     }
+   
