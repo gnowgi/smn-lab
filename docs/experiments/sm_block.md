@@ -121,6 +121,35 @@ With torque motors the force "afferent" *is* the command, so it can carry no gro
 No pass threshold is set: this is the measurement that would ground step 3 of the S0b fix plan
 (the load-limited actuator).
 
+## Addendum — fixed before the first run (26 Nov 2026)
+
+GN approved the hypotheses and thresholds above on 26 Nov 2026 ("start a series of experiments
+with the canonical block"). Committed before `experiments/sm_block.py` was run. Details the page
+left open are fixed here, so none can be chosen after seeing a result:
+
+- **Engine.** MuJoCo **3.9.0**, the version in the bench's own `.venv`, so the block is compared
+  with the torque-motor bench under the same engine. A cross-check on 4.0.1 is reported, but it
+  does not decide any verdict. The statics tests pass on both.
+- **H1 drive.** The bench's OU process unchanged (`tau_tc = 0.15`, `tau_sig = 8.0`): flexor force
+  `clip(τ, 0, 2.5)·(F_max/2.5)`, extensor force `clip(−τ, 0, 2.5)·(F_max/2.5)`. The efference
+  passed to `transfer` is τ, as in the bench. Joint damping 0.05 and bend limit 45° are as in
+  `self_model_topology.py`. Seeds 0–4; mean and s.d. reported.
+- **H1 torque-motor reference.** `self_model_topology.py`'s own "elastic" condition is rerun in
+  the same script, on the same engine and seeds, so that P1's comparison is like with like.
+- **H2.** C0: 3 segments, water, source (1.6, 0.9), amplitude 1, σ 0.9, 60 s; board kp 4, kd 0.4,
+  c_max 2.5, turn gain 4. gravity_locomotion: 8 segments, μ = 0.15 / 3.0, joint damping 0.03,
+  bend limit 50°, 15 s. Block k_pee = 0 in both, as those experiments have no joint spring.
+  Metrics: net head displacement, and for C0 also the distance closed to the source. Both runs
+  are deterministic, so one run each.
+- **H3.** 8 segments on ground, friction (μ_long and μ_trans together) scaled ×0.3, ×1 and ×3,
+  20 s, first 5 s discarded. Reported per condition, averaged over joints:
+  - mean SEE tension (flexor + extensor);
+  - the lag of joint angle behind command (peak of their cross-correlation);
+  - realized bend amplitude.
+
+  The same quantities are reported for the torque-motor bench, whose "force afferent" is the
+  command itself.
+
 ## Run
 
 ```bash
