@@ -1,10 +1,10 @@
 # The canonical SM block — pre-registration
 
-!!! warning "Pre-registered, unrun"
-    Written and committed on 25 Nov 2026 **before any self-model or locomotion run on this block**.
-    The block's mechanical statics are fixed by `tests/test_sm_block.py`; nothing below has been
-    measured. When results exist they are added beneath this page, and the predictions here are
-    not edited.
+!!! warning "Pre-registered 25 Nov 2026; run 26 Nov 2026"
+    The predictions below were committed **before any self-model or locomotion run on this block**
+    (commit `c1ca992`; addendum `aa21507`; protocol deviation `1ce0068`) and have not been edited.
+    The results follow the pre-registration, under [Results](#results-26-nov-2026). Exploratory
+    probes run after the results were seen are labelled as such.
 
 ## Why this block
 
@@ -165,5 +165,102 @@ torque-reference and block rows of H1.
 
 ```bash
 python tests/test_sm_block.py                 # statics of the block (already passing)
-cd experiments && python sm_block.py          # H1–H3 (to be written after this page is approved)
+cd experiments && python sm_block.py          # H1–H3, pre-registered
+cd experiments && python sm_block_probes.py   # exploratory probes, after the results
 ```
+
+## Results (26 Nov 2026)
+
+`experiments/sm_block.py`, MuJoCo 3.9.0 (the bench's engine). Rerun under 4.0.1, the same numbers to
+the precision shown. Summary: `samples/sm_block/summary.json`.
+
+![H1 self-model recovery by condition; H2 locomotion on the block against the torque-motor bench; H3 force afferent and lag against ground friction](../figures/sm_block.png)
+
+### Pre-registered verdicts
+
+| | condition | neighbour | order | threshold | verdict |
+|---|---|---|---|---|---|
+| reference | torque motors (bench) = PEE-only | 1.00 ± 0.00 | 0.89 ± 0.08 | | |
+| **P1** | **block** | **1.00 ± 0.00** | **0.89 ± 0.08** | ≥ 0.90 / ≥ 0.80 | **pass** |
+| **P2** | rigid foil | 0.23 ± 0.15 | 0.30 ± 0.28 | ≤ 0.60, and ≥ 0.30 below the block | **pass** |
+| P2 | frozen foil | 0.14 | 0.43 | chance | **pass** |
+| **P3** (X) | PEE-only vs block | Δ 0.00 | Δ 0.00 | within 0.10 | **pass** |
+| **P4** (X) | SEE-only | 1.00 ± 0.00 | 0.91 ± 0.06 | report | outcome (b), *but see below*; 72% of the time at a bend limit |
+
+| **H2** | torque motors | block | ratio | threshold | verdict |
+|---|---|---|---|---|---|
+| C0 net displacement (m) | 1.366 | 1.327 | 0.97 | ≥ 0.50 | **pass** |
+| C0 distance closed to source (m) | 1.273 | 1.233 | 0.97 | > 0 | **pass** |
+| ground crawler net displacement (m) | 2.156 | 1.965 | 0.91 | ≥ 0.50 | **pass** |
+
+**What the passes show.** The canonical block is a drop-in replacement for the bench's torque
+motors:
+- the self-model read-out recovers the chain as well on the block as on the torque motors;
+- the rigid foil still collapses, so C7's falsifier survives on the new block;
+- the block crawls and steers with unchanged gains, losing 3–9% of the distance. That is the cost of
+  a compliant tendon between the contractile element and the joint.
+
+**What they do not show.** The block and the torque-motor chain are indistinguishable on H1, to two
+decimals. Series compliance at k_see = 1800 neither helps nor hurts the read-out. P3 therefore says
+that *parallel* compliance is what the read-out uses, which matches the construction-time finding
+that the series spring supplies no restoring force.
+
+### H3 (exploratory): its premise was wrong
+
+| friction | block: tendon tension (N) | torque motors: commanded force (N) | block lag (s) | torque lag (s) | block bend (rad) | torque bend (rad) |
+|---|---|---|---|---|---|---|
+| ×0.3 | 2.715 | 2.643 | 0.187 | 0.183 | 0.355 | 0.367 |
+| ×1 | 3.226 | 3.192 | 0.203 | 0.199 | 0.226 | 0.234 |
+| ×3 | 3.362 | 3.337 | 0.222 | 0.216 | 0.181 | 0.187 |
+
+The pre-registration asserted that the torque motors' force "afferent" *is* the command and so can
+carry no ground information. That is false. The command is produced by a feedback board that reads
+the joint, so it changes with the ground too: +26% from ×0.3 to ×3, against +24% for the block's
+tendon tension. Both lags rise by about 0.035 s.
+
+The genuine difference is one of *kind*, not of information:
+- on the block, the ground's resistance reaches the body as an **afferent** from the tissue that
+  pulls (Eq. 2, s = Ψ(q, q̇, F));
+- on the torque motors, it is present only in the **efference** the board computes.
+
+At this tendon stiffness the two carry nearly the same quantity. A softer tendon, or a force–length
+CE, would be needed for the afferent to carry something the command does not. That is a question
+for the S0b load-limited-actuator step, not one this run answers.
+
+### Exploratory probes (after the results; not pre-registered): what carried SEE-only?
+
+P4's SEE-only body has no parallel spring, so by the construction-time finding nothing should
+restore its joints. Yet it recovered perfectly while spending 72% of its time at the 45° bend
+limits. `experiments/sm_block_probes.py` asks whether the stops did the work.
+
+| probe | neighbour | order | at bend limit | CE at a travel stop | |
+|---|---|---|---|---|---|
+| SEE-only, bend limit 45° | 1.00 | 0.91 | 72% | 8% | |
+| SEE-only, bend limit 90° | 1.00 | 0.89 | 16% | 18% | |
+| SEE-only, bend limit 170° | 1.00 | 0.90 | 0% | 20% | |
+| SEE-only, 170°, CE stops out of reach | 0.31 | 0.47 | 2% | 0% | unstable 5/5 |
+| torque motors, k = 0, 45° | 1.00 | 0.91 | | | |
+| torque motors, k = 0, 170° | 0.40 | 0.26 | | | unstable 5/5 |
+| torque motors, k = 0.6 / 5 / 20 / 80, 45° | 1.00 / 0.94 / 0.60 / 0.40 | 0.89 / 0.89 / 0.68 / 0.47 | | | |
+
+**Reading.** SEE-only's recovery was carried by the stops.
+- When the bend limits are opened, the contractile elements take over the role: they sit at their
+  travel stops 20% of the time. A contractile element pinned at its stop turns its tendon into a
+  fixed spring across the joint, which is a hidden parallel elastic element.
+- With every stop removed, the chain is no longer a well-posed body. It folds through itself, the
+  solver diverges in all five seeds, and recovery collapses.
+- The torque-motor chain without a joint spring behaves the same way: it recovers while its 45°
+  stops hold it and diverges without them.
+
+**Consequences.**
+1. The self-model needs a *restoring* element: a parallel spring or a stop. Series compliance alone
+   does not provide one. This is C7 in its correct form. It is the restoring term of Eq. 3, not the
+   series tendon of §3.5's wording, that bears the load.
+2. The stiffness ladder shows a graded loss between k = 5 and k = 80, not a cliff. The usable regime
+   of k is bounded on both sides: too stiff and the body moves as one; with nothing restoring it, the
+   body is not a body.
+3. Joint stops are an undeclared restoring element in every bench chain with a bend limit. Any claim
+   that rests on "k = 0" in those bodies should say so.
+
+*Status: provisional (🟡). The pre-registered verdicts pass on the bench's engine and on 4.0.1; not
+yet independently audited.*

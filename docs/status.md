@@ -35,7 +35,7 @@ audit reversed it. That is the point of the process, and the reason most pages s
 ### §1 · The modular unit
 | status | experiment | note |
 |---|---|---|
-| 🟡 | [The canonical SM block](experiments/sm_block.md) | **Pre-registered, unrun** (25 Nov 2026). One Hill-type block (contractile + series elastic + parallel elastic, pull-only, same-tissue afferents) for every body. Statics fixed by `tests/test_sm_block.py`; it already shows that a series spring alone supplies no restoring k(q − q0). |
+| 🟡 | [The canonical SM block](experiments/sm_block.md) | Pre-registered 25 Nov, run 26 Nov 2026 (MuJoCo 3.9.0; same on 4.0.1). All pre-registered verdicts pass: the block recovers the chain as the torque motors do (1.00/0.89), the rigid foil collapses (0.23), and locomotion keeps 91–97% with unchanged gains. Exploratory probes show the SEE-only body's recovery was carried by joint or contractile-element stops; with no restoring element the chain is not well-posed. H3's premise was wrong (the torque command also carries the ground). Not yet audited. |
 | ✅ | [C0 — it moves](experiments/c0_crawler.md) | Non-inertial locomotion; reproduces (net displacement PASS), re-run repeatedly as a backward-compat anchor. |
 | 🟡 | [S0 — locomotion is a network effect](experiments/sweep_c0_coupling.md) | Coupling sweep; not yet audited. |
 | 🟠 | [S0b — proprioceptive entrainment](experiments/entrainment.md) | Three review rounds: two withdrawn claims; topology now correct + CI-guarded, but the payoff (body shapes the rhythm) needs an articulation-load model. Fix plan pre-committed on the page. |

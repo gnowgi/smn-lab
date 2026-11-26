@@ -38,7 +38,7 @@ nav:
   # Nav icons = epistemic status of each consistency check (see status.md):
   # ✅ consistency-checked · 🟡 provisional · 🟠 open problem · ⛔ withdrawn.
   - "§1 · The modular unit — the moving opponent body":
-      - "🟡 The canonical SM block — pre-registered, unrun": experiments/sm_block.md
+      - "🟡 The canonical SM block — drop-in for the torque motors; restoring element needed": experiments/sm_block.md
       - "✅ C0 — it moves (non-inertial axial crawler)": experiments/c0_crawler.md
       - "🟡 S0 — locomotion is a network effect (coupling sweep)": experiments/sweep_c0_coupling.md
       - "🟠 S0b — proprioceptive entrainment (mechanism + open problem)": experiments/entrainment.md

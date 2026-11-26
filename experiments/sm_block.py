@@ -200,7 +200,7 @@ def figure(r1, r2, r3, path):
     ax[0].bar(x - w / 2, [r1[n]["nbr"][0] for n in names], w, yerr=[r1[n]["nbr"][1] for n in names], label="neighbour", color="#2c6fbb")
     ax[0].bar(x + w / 2, [r1[n]["order"][0] for n in names], w, yerr=[r1[n]["order"][1] for n in names], label="order", color="#9ab8de")
     ax[0].axhline(0.9, ls="--", color="#2c6fbb", lw=1); ax[0].axhline(0.6, ls=":", color="#c0392b", lw=1)
-    ax[0].set_xticks(x); ax[0].set_xticklabels(names, rotation=25, ha="right", fontsize=8); ax[0].set_ylim(0, 1.05)
+    ax[0].set_xticks(x); ax[0].set_xticklabels([n.replace("torque motors (bench)", "torque motors\n(bench) = PEE-only") for n in names], rotation=25, ha="right", fontsize=8); ax[0].set_ylim(0, 1.05)
     ax[0].set_title("H1 — self-model recovery (5 seeds)"); ax[0].legend(fontsize=8)
     keys = list(r2); x = np.arange(len(keys))
     ax[1].bar(x - w / 2, [r2[k][0] for k in keys], w, label="torque motors (bench)", color="#888")
@@ -211,7 +211,8 @@ def figure(r1, r2, r3, path):
         f = [r["friction"] for r in r3[name]]
         ax[2].plot(f, [r["tension"] for r in r3[name]], "o-", color=col, label=f"{name}: force afferent (N)")
         ax[2].plot(f, [10 * r["lag"] for r in r3[name]], "s--", color=col, label=f"{name}: lag ×10 (s)")
-    ax[2].set_xscale("log"); ax[2].set_xlabel("ground friction ×"); ax[2].set_title("H3 (exploratory) — does the afferent carry the ground?")
+    ax[2].set_xscale("log"); ax[2].set_xticks([0.3, 1, 3]); ax[2].set_xticklabels(["×0.3", "×1", "×3"]); ax[2].minorticks_off()
+    ax[2].set_xlabel("ground friction"); ax[2].set_title("H3 (exploratory) — does the afferent carry the ground?")
     ax[2].legend(fontsize=7)
     fig.tight_layout(); fig.savefig(path, dpi=130)
 

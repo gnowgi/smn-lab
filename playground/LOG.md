@@ -254,8 +254,49 @@ and the status ledger as "pre-registered, unrun"):
 Status: awaiting GN's approval of the hypotheses and thresholds before `experiments/sm_block.py` is
 written and run.
 
+## 2026-11-26 · Public page republished; the canonical block's first series
+
+**Published.** With GN's go-ahead, the uneven-ground update (terrarium floor at belly height, uneven
+ground, the bend band) is live on the public page.
+
+**Run order, so that nothing was chosen after the fact.**
+- GN approved the pre-registration.
+- An addendum fixed the engine (MuJoCo 3.9.0, the bench's own) and every detail the page left open:
+  `aa21507`.
+- The first run stopped at t = 12 ms in the PEE-only condition: k_see = 10⁶ on a 1 g CE is unstable
+  at dt = 2 ms. Before any PEE-only data existed, a protocol deviation was committed: PEE-only, the
+  infinitely stiff tendon limit, is scored on the torque-motor reference, which is that limit
+  (`1ce0068`).
+- The series was then run.
+
+**Pre-registered verdicts (all pass; identical on 4.0.1).**
+- H1: the block recovers the chain as the torque motors do (neighbour 1.00, order 0.89). The rigid
+  foil collapses (0.23 / 0.30), and the frozen foil sits at chance.
+- P3: PEE-only matches the block, with no difference.
+- H2: C0 keeps 97% of its displacement and distance closed; the ground crawler keeps 91%, with
+  gains unchanged.
+
+The block is a drop-in replacement for the torque motors.
+
+**H3's premise was wrong, and the page says so.** The torque motors' commanded force is not blind
+to the ground: the board reads the joint, so the command rises with friction by about as much as
+the block's tendon tension (+26% against +24%). The difference is one of kind: an afferent from
+the pulling tissue, against an efference. At this tendon stiffness it is not a difference in
+information.
+
+**Exploratory probes, after the results** (`experiments/sm_block_probes.py`). P4's SEE-only body
+recovered while sitting at its bend limits 72% of the time.
+- With the limits opened, the contractile elements sit at their travel stops 20% of the time, which
+  turns the tendon into a hidden parallel spring.
+- With every stop removed, the chain folds through itself, the solver diverges in 5/5 seeds, and
+  recovery collapses (0.31). The torque-motor chain with k = 0 behaves the same way.
+
+So the self-model needs a *restoring* element, a parallel spring or a stop; series compliance alone
+does not supply one. This is C7 in its correct form, and it bears on the v3 wording noted on
+25 Nov. Joint stops are an undeclared restoring element in every bench chain with a bend limit.
+
 ## Publication
 
 - Live page: <https://claude.ai/artifact/PepmNmqmfnP6vyWuaAi3eD> (public).
-- v1 and v2 are live. The 25 Nov changes (terrarium floor height, uneven ground, the bend band) are
-  built and tested, and await GN's go-ahead to republish the public page.
+- v1, v2 and the 25 Nov changes (terrarium floor height, uneven ground, the bend band) are live;
+  the last was republished on 26 Nov with GN's go-ahead.
