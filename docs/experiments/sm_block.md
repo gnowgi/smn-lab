@@ -150,6 +150,17 @@ left open are fixed here, so none can be chosen after seeing a result:
   The same quantities are reported for the torque-motor bench, whose "force afferent" is the
   command itself.
 
+## Protocol deviation (26 Nov 2026, before any PEE-only data)
+
+On the first run, the PEE-only condition, implemented as k_see = 10⁶ on the CE's 1 g numerical
+mass, was numerically unstable at dt = 2 ms: the solver diverged at t = 12 ms, with no data
+recorded. The limit this condition stands for, an infinitely stiff tendon, transmits the CE force
+directly to the joint. That is exactly the bench's torque-motor chain with the same parallel spring
+(k_pee = 0.6), and `self_model_topology.py`'s "elastic" condition, which this script already runs
+as its torque-motor reference. **PEE-only is therefore scored on that reference row.** P3's
+threshold is unchanged. Before the deviation was committed, the only outputs seen were the
+torque-reference and block rows of H1.
+
 ## Run
 
 ```bash
